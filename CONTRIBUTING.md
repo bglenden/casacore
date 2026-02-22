@@ -17,6 +17,9 @@ quality high we have written down some guidelines for contributing, see below.
  * If you add a function or method, add a test for it add it to the doxygen
    documentation.
  * The tested code coverage line count should increase, not decrease.
+ * For substantive C++ logic changes in a module, record a module coverage
+   baseline before refactoring and keep/raise it afterward (use
+   `build-tools/casacore_cov` in a coverage-instrumented build).
  * Follow the google style code as much as possible [2].
 
 ## Contribution procedure

@@ -170,6 +170,19 @@ In progress:
   - `casa/Arrays/test/CMakeLists.txt`:
     - removed hard dependency on Boost `system` component
     - modernized Boost linkage using imported targets when available
+- Coverage tooling bootstrap for Wave 1 gating:
+  - added explicit CMake option `ENABLE_COVERAGE` (legacy `cov/` dirname behavior retained)
+  - hardened `build-tools/casacore_cov` for modern `lcov/genhtml` behavior and module-scoped
+    summary output
+  - documented and published initial module baseline in `WAVE1_COVERAGE_BASELINE.md`
+- Initial strict-warning cleanup progress:
+  - fixed intentional switch fallthroughs with `CASACORE_FALLTHROUGH` in:
+    - `casa/Quanta/Unit.cc`
+    - `tables/TaQL/ExprConeNode.cc`
+    - `tables/TaQL/ExprFuncNode.cc`
+    - `tables/TaQL/ExprFuncNodeArray.cc`
+  - adjusted strict-warning gate so `implicit-fallthrough` is currently warning-only
+    (generated flex/bison sources still emit unavoidable fallthrough patterns)
 
 Wave 1 validation snapshot:
 
@@ -184,6 +197,25 @@ Wave 1 validation snapshot:
   - `48/48` passing for migrated `Functionals`, `Fitting` (excluding known floating-baseline
     `tLSQaips`/`tLSQFit`), and `Mathematics` test subsets.
 
+Wave 1 coverage baseline snapshot:
+
+- Baseline run published in `WAVE1_COVERAGE_BASELINE.md` from a fresh clang coverage build.
+- Module snapshots:
+  - `casa`: `2.8%` lines (`251/9065`), `0.5%` branches (`92/19624`) using
+    `arraytest|tTypes|tError|tInput|tParam|tLogSink` (`6/6` passing).
+  - `tables`: `20.5%` lines (`1345/6551`), `3.9%` branches (`629/16102`) using
+    `tDysco|altmantest|dLogging|dLogging2|tLoggerHolder|tLogging` (`6/6` passing).
+  - `measures`: `15.6%` lines (`253/1619`), `7.3%` branches (`261/3582`) using
+    `dMeasure|tEarthField|tMeasJPL|measurestest` (`4/4` passing).
+  - `scimath`: `65.9%` lines (`9151/13878`), `16.0%` branches (`11691/73267`) with full
+    module tests excluding known floating-baseline `tLSQaips|tLSQFit` (`58/58` passing).
+
+Next Wave 1 gating task:
+
+- Prioritize targeted regression tests for low-coverage/high-risk paths discovered by the
+  baseline (starting with `casa`, `tables`, and `measures`) before major C++
+  implementation refactors.
+
 ---
 
 ## Ranked Initiatives
@@ -196,6 +228,9 @@ Scope:
   structured framework).
 - Preserve test coverage while improving diagnostics and refactor-safety.
 - Normalize CMake test registration to direct `add_test()` without `cmake_assay` wrapper.
+- Establish and publish coverage baseline by module for core libraries.
+- Identify low-coverage/high-risk areas and add targeted regression tests before large
+  implementation refactors.
 
 Why rank #1:
 
@@ -684,6 +719,9 @@ Additional gates:
   compatibility for existing datasets.
 - Array strategy gate: Decide array/tensor direction (retain + adapters vs targeted backend
   adoption) before any broad `Array`/`Vector` API migration.
+- Coverage gate: Before major C++ implementation changes in a module (especially initiatives
+  3, 5, 7, and 8), coverage must be measured for that module and skimpy/high-risk paths must
+  have targeted tests added first.
 
 ---
 
@@ -697,6 +735,8 @@ Every wave must pass these gates before it is committed and pushed:
 3. **Warnings:** No new warnings introduced beyond the current baseline (see ramp-up below).
 4. **Lint:** No new clang-tidy diagnostics beyond the current baseline (once configured).
 5. **Format:** All modified files pass `.clang-format` check (once configured).
+6. **Coverage:** For modules with substantive C++ logic changes, coverage baseline must be
+   recorded and targeted tests added for identified skimpy/high-risk paths before merge.
 
 ---
 

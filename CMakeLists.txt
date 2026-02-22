@@ -42,6 +42,7 @@ set (CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 # By default build Python3 bindings
 option (BUILD_PYTHON3 "Build the python3 bindings" YES)
 option (ENABLE_STRICT_WARNINGS "Enable initial strict warning checks for modernization" NO)
+option (ENABLE_COVERAGE "Enable gcov/lcov style coverage instrumentation" NO)
 
 option (BUILD_DEPRECATED "build and install deprecated classes (such as Map)" NO)
 option (BUILD_FFTPACK_DEPRECATED "build FFTPack" NO)
@@ -190,29 +191,45 @@ if (ENABLE_STRICT_WARNINGS)
         add_compile_options(
             $<$<COMPILE_LANGUAGE:CXX>:-Werror=return-type>
             $<$<COMPILE_LANGUAGE:CXX>:-Werror=uninitialized>
-            $<$<COMPILE_LANGUAGE:CXX>:-Werror=implicit-fallthrough>
+            # Keep as warning for now; generated flex/bison sources still emit intentional fallthroughs.
+            $<$<COMPILE_LANGUAGE:CXX>:-Wimplicit-fallthrough>
         )
     endif ()
 endif ()
 
 # Set build type if not given.
+set(_enable_coverage_from_dirname NO)
 if (NOT CMAKE_BUILD_TYPE)
     # Use debug mode if building in dbg or debug directory.
     get_filename_component(_cmpvar ${CMAKE_BINARY_DIR} NAME)
     if(_cmpvar STREQUAL "dbg" OR _cmpvar STREQUAL "debug")
         set (CMAKE_BUILD_TYPE Debug)
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DAIPS_DEBUG")
-    else()
+    elseif(_cmpvar STREQUAL "cov" OR ENABLE_COVERAGE)
+        set (CMAKE_BUILD_TYPE Debug)
         if(_cmpvar STREQUAL "cov")
-            set (CMAKE_BUILD_TYPE Debug)
-            set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -O0 --coverage")
-            set(CMAKE_LD_FLAGS "${CMAKE_LD_FLAGS} --coverage")
-        else()
-            set (CMAKE_BUILD_TYPE Release)
-            set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DNDEBUG")
-        endif(_cmpvar STREQUAL "cov")
+            set(_enable_coverage_from_dirname YES)
+        endif()
+    else()
+        set (CMAKE_BUILD_TYPE Release)
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DNDEBUG")
     endif(_cmpvar STREQUAL "dbg" OR _cmpvar STREQUAL "debug")
 endif (NOT CMAKE_BUILD_TYPE)
+
+set(CASACORE_COVERAGE_ENABLED NO)
+if (ENABLE_COVERAGE OR _enable_coverage_from_dirname)
+    if(_enable_coverage_from_dirname AND NOT ENABLE_COVERAGE)
+        message(STATUS "Enabling coverage instrumentation from legacy 'cov' build-directory convention.")
+    endif()
+    if (CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang|AppleClang")
+        set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} --coverage")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --coverage")
+        set(CMAKE_LD_FLAGS "${CMAKE_LD_FLAGS} --coverage")
+        set(CASACORE_COVERAGE_ENABLED YES)
+    else ()
+        message(WARNING "Coverage requested but compiler does not support '--coverage' flags.")
+    endif ()
+endif ()
 
 # Sisco requires a C++20 compatible compiler. If Sisco is not built, fall back to C++17 for the
 # time being.
@@ -606,6 +623,8 @@ message (STATUS "BUILD_DYSCO ........... = ${BUILD_DYSCO}")
 message (STATUS "BUILD_SISCO ........... = ${BUILD_SISCO}")
 message (STATUS "BUILD_PYTHON3 ......... = ${BUILD_PYTHON3}")
 message (STATUS "ENABLE_STRICT_WARNINGS = ${ENABLE_STRICT_WARNINGS}")
+message (STATUS "ENABLE_COVERAGE ....... = ${ENABLE_COVERAGE}")
+message (STATUS "COVERAGE_ACTIVE ....... = ${CASACORE_COVERAGE_ENABLED}")
 
 if (BUILD_PYTHON3)
     message (STATUS "PYTHON3_EXECUTABLE ......... = ${PYTHON3_EXECUTABLE}")

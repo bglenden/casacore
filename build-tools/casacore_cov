@@ -1,44 +1,111 @@
 #!/bin/sh
 
-# Get directory of module or package to test.
-# It can be run in something like build, build/<module> or
-# build/<module>/<part>/test.
-# If run in the test directory, the directory containing the object files
-# should be included. Its name is ../../CMakeFiles/casa_<module>.dir/<part>.
-cwd=`pwd`
-cwd1=`echo "$cwd" | sed -e "s%/test$"%%`
-srcdir=
-if [ "$cwd" != "$cwd1" ]; then
-  part=`echo $cwd1 | sed -e "s%.*/%%"`    # remove till last slash
-  module=`echo $cwd1 | sed -e "s%/${part}$%%" -e "s%.*/%%"`
-  srcdir="--directory ../../CMakeFiles/casa_${module}.dir/${part}"
+set -eu
+
+usage() {
+  cat <<'EOF'
+Usage: casacore_cov
+
+Run from a casacore build tree (root, module directory, or */test directory).
+
+Environment:
+  CTEST_REGEX  Optional regex passed via ctest -R.
+  CTEST_ARGS   Additional arguments forwarded to ctest (for example: "--output-on-failure").
+EOF
+}
+
+if [ "${1:-}" = "-h" ] || [ "${1:-}" = "--help" ]; then
+  usage
+  exit 0
 fi
-mod=`pwd | sed -e "s%.*/build/[^/]*/%/%" -e "s%.*/build/[^/]*$%%" -e "s%/test$%%"`
 
-# Clear coverage counters.
-echo "Initializing coverage info for module $mod ..."
-lcov --zerocounters --directory . $srcdir > testcov.log 2>&1
-# Create baseline coverage data.
-lcov --rc lcov_function_coverage=0 --capture --initial --directory . $srcdir --output-file testcov.bl >> testcov.log 2>&1
-#lcov --capture --initial --directory $cwd --output-file testcov
+for tool in ctest lcov genhtml; do
+  if ! command -v "${tool}" >/dev/null 2>&1; then
+    echo "Missing required tool: ${tool}" >&2
+    exit 2
+  fi
+done
 
-# Run the tests and extract line and branch coverage information.
-echo "Running tests ..."
-ctest >> testcov.log 2>&1
-echo "Collecting coverage info ..."
-lcov --rc lcov_function_coverage=0 --rc lcov_branch_coverage=1 --no-checksum --capture --directory . $srcdir --output-file testcov.data >> testcov.log 2>&1
-#lcov --no-checksum --capture --directory $cwd --output-file testcov.info
-# Combine with baseline.
-lcov --rc lcov_function_coverage=0 --rc lcov_branch_coverage=1 -a testcov.bl -a testcov.data -o testcov.info >> testcov.log 2>&1
+start_dir="$(pwd)"
+lcov_ignore="${LCOV_IGNORE_ERRORS:-deprecated,gcov,inconsistent,unused}"
+build_dir="${start_dir}"
+while [ "${build_dir}" != "/" ] && [ ! -f "${build_dir}/CMakeCache.txt" ]; do
+  build_dir="$(dirname "${build_dir}")"
+done
+if [ ! -f "${build_dir}/CMakeCache.txt" ]; then
+  echo "Could not locate CMakeCache.txt; run this inside a casacore build tree." >&2
+  exit 2
+fi
 
-# Get information for this module only.
-echo "Filtering coverage info ..."
-lcov --rc lcov_function_coverage=0 --rc lcov_branch_coverage=1 --output-file testcov.full --extract testcov.info "*casacore$mod/*" >> testcov.log 2>&1
-# Get it without the test programs.
-lcov --rc lcov_function_coverage=0 --rc lcov_branch_coverage=1 --output-file testcov.module --remove testcov.full "*/test/*" >> testcov.log 2>&1
+case "${start_dir}" in
+  "${build_dir}")
+    rel_dir=""
+    ;;
+  "${build_dir}"/*)
+    rel_dir="${start_dir#${build_dir}}"
+    ;;
+  *)
+    echo "Current directory is not under detected build tree: ${build_dir}" >&2
+    exit 2
+    ;;
+esac
 
-# Convert to html.
-echo "Converting coverage info to ./cov/index.html ..."
+# If running from a test directory, scope coverage to its parent module part.
+scope_dir="${rel_dir%/test}"
+if [ -z "${scope_dir}" ]; then
+  scope_glob="*casacore/*"
+  scope_label="all modules"
+else
+  scope_glob="*casacore${scope_dir}/*"
+  scope_label="${scope_dir#/}"
+fi
+
+echo "Initializing coverage counters for scope: ${scope_label}"
+lcov --ignore-errors "${lcov_ignore}" --zerocounters --directory "${build_dir}" > testcov.log 2>&1
+lcov --rc lcov_function_coverage=0 --capture --initial \
+     --ignore-errors "${lcov_ignore}" \
+     --directory "${build_dir}" --output-file testcov.bl >> testcov.log 2>&1
+
+echo "Running tests from ${start_dir}"
+set -- ctest
+if [ -n "${CTEST_REGEX:-}" ]; then
+  set -- "$@" -R "${CTEST_REGEX}"
+fi
+if [ -n "${CTEST_ARGS:-}" ]; then
+  # shellcheck disable=SC2086
+  set -- "$@" ${CTEST_ARGS}
+fi
+"$@" >> testcov.log 2>&1
+
+echo "Collecting coverage traces"
+lcov --rc lcov_function_coverage=0 --rc lcov_branch_coverage=1 --no-checksum \
+     --ignore-errors "${lcov_ignore}" \
+     --capture --directory "${build_dir}" --output-file testcov.data >> testcov.log 2>&1
+lcov --rc lcov_function_coverage=0 --rc lcov_branch_coverage=1 \
+     --ignore-errors "${lcov_ignore}" \
+     -a testcov.bl -a testcov.data -o testcov.info >> testcov.log 2>&1
+
+echo "Filtering scope traces"
+lcov --rc lcov_function_coverage=0 --rc lcov_branch_coverage=1 \
+     --ignore-errors "${lcov_ignore}" \
+     --output-file testcov.full --extract testcov.info "${scope_glob}" >> testcov.log 2>&1
+lcov --rc lcov_function_coverage=0 --rc lcov_branch_coverage=1 \
+     --ignore-errors "${lcov_ignore}" \
+     --output-file testcov.module --remove testcov.full "*/test/*" >> testcov.log 2>&1
+
+echo "Rendering HTML report at ./cov/index.html"
 rm -rf cov
-genhtml --rc lcov_function_coverage=0 --rc lcov_branch_coverage=1 --output-directory=cov testcov.module >> testcov.log 2>&1
-echo "Ready; log output in ./testcov.log"
+if ! genhtml --ignore-errors "${lcov_ignore},corrupt" \
+             --rc lcov_function_coverage=0 --rc lcov_branch_coverage=1 \
+             --output-directory=cov testcov.module >> testcov.log 2>&1; then
+  echo "genhtml reported issues; summary data is still available in testcov.summary" \
+    >> testcov.log
+fi
+
+lcov --rc lcov_function_coverage=0 --rc lcov_branch_coverage=1 \
+     --ignore-errors "${lcov_ignore}" \
+     --summary testcov.module > testcov.summary 2>> testcov.log
+
+echo "Coverage summary (${scope_label}):"
+grep -E "lines\\.|functions\\.|branches\\." testcov.summary || true
+echo "Ready; details in ./testcov.log and ./testcov.summary"

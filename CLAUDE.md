@@ -41,6 +41,33 @@ make install
 - `-DUSE_HDF5=ON` — Enable HDF5 support (default: NO)
 - `-DDATA_DIR=<path>` — Path to Measures data tables (required for measures tests)
 - `-DBUILD_PYTHON3=ON` — Build Python 3 bindings (default: YES)
+- `-DENABLE_COVERAGE=ON` — Enable gcov/lcov instrumentation (works on GCC/Clang toolchains)
+
+### Coverage Baseline Workflow
+
+Use this for Wave 1 coverage gating before substantive C++ refactors in a module.
+
+```bash
+# Configure a fresh coverage build
+cmake -S . -B cov \
+  -DCMAKE_C_COMPILER=/usr/bin/clang \
+  -DCMAKE_CXX_COMPILER=/usr/bin/clang++ \
+  -DBISON_EXECUTABLE=/opt/homebrew/opt/bison/bin/bison \
+  -DDATA_DIR=/path/to/measures/data \
+  -DENABLE_COVERAGE=ON
+
+# Build what you plan to measure (or build all)
+cmake --build cov -j$(sysctl -n hw.ncpu)
+
+# Run module-level coverage from inside a build subdirectory
+cd cov/casa
+CTEST_REGEX="arraytest|tError" CTEST_ARGS="--output-on-failure" ../../build-tools/casacore_cov
+# Outputs: testcov.summary + cov/index.html
+```
+
+Notes:
+- `casacore_cov` can be run from build root, module dir, or `*/test` dir.
+- If `CTEST_REGEX`/`CTEST_ARGS` are omitted, it runs all tests visible from the current directory.
 
 ## Module Dependency Chain
 
