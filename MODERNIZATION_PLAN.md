@@ -154,6 +154,11 @@ In progress:
   - `casa/test/CMakeLists.txt`
   - `scimath/StatsFramework/test/CMakeLists.txt`
   - `tables/LogTables/test/CMakeLists.txt`
+- Sidecar-aware mixed-directory conversion (direct CTest where possible, assay retained where
+  per-test sidecars exist):
+  - `scimath/Functionals/test/CMakeLists.txt`
+  - `scimath/Fitting/test/CMakeLists.txt`
+  - `scimath/Mathematics/test/CMakeLists.txt`
 - Boost-test registration and linkage cleanup:
   - `measures/Measures/test/CMakeLists.txt`:
     - `measurestest` switched to direct CTest registration
@@ -175,6 +180,9 @@ Wave 1 validation snapshot:
   - `dLogging`, `dLogging2`, `tLoggerHolder`, `tLogging`
   - all `scimath/StatsFramework` tests in that directory
   - Result: `23/23` passing in the targeted run.
+- Additional scimath mixed-directory migration validation:
+  - `48/48` passing for migrated `Functionals`, `Fitting` (excluding known floating-baseline
+    `tLSQaips`/`tLSQFit`), and `Mathematics` test subsets.
 
 ---
 
