@@ -1,0 +1,7 @@
+Checks: >-
+  -*,
+  bugprone-use-after-move,
+  modernize-use-nullptr
+WarningsAsErrors: ''
+HeaderFilterRegex: '^(casa|tables|scimath|scimath_f|measures|ms|msfits|lattices|coordinates|images|fits|derivedmscal)/'
+FormatStyle: file

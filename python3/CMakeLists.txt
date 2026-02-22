@@ -60,23 +60,20 @@ ARCHIVE DESTINATION lib${LIB_SUFFIX}
 LIBRARY PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE
 )
 
-# don't install headers if python2 cmake logic already installs it
-if (NOT BUILD_PYTHON)
-    install (FILES
-    ../python/Converters/PycArray.h
-    ../python/Converters/PycArrayComCC.h
-    ../python/Converters/PycArrayComH.h
-    ../python/Converters/PycArrayNP.h
-    ../python/Converters/PycBasicData.h
-    ../python/Converters/PycExcp.h
-    ../python/Converters/PycRecord.h
-    ../python/Converters/PycValueHolder.h
-    ../python/Converters/PycArray.tcc
-    DESTINATION include/casacore/python/Converters
-    )
+install (FILES
+../python/Converters/PycArray.h
+../python/Converters/PycArrayComCC.h
+../python/Converters/PycArrayComH.h
+../python/Converters/PycArrayNP.h
+../python/Converters/PycBasicData.h
+../python/Converters/PycExcp.h
+../python/Converters/PycRecord.h
+../python/Converters/PycValueHolder.h
+../python/Converters/PycArray.tcc
+DESTINATION include/casacore/python/Converters
+)
 
-    install (FILES
-    ../python/Converters.h
-    DESTINATION include/casacore/python
-    )
-endif (NOT BUILD_PYTHON)
+install (FILES
+../python/Converters.h
+DESTINATION include/casacore/python
+)

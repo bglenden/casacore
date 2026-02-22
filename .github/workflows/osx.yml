@@ -36,7 +36,7 @@ jobs:
 
       - name: set up build and install dir with WSRT measures
         run: |
-          wget ftp://ftp.astron.nl/outgoing/Measures/WSRT_Measures.ztar -O WSRT_Measures.ztar
+          wget https://www.astron.nl/iers/WSRT_Measures.ztar -O WSRT_Measures.ztar
           mkdir -p build install
           cd build
           tar zxvf ../WSRT_Measures.ztar
@@ -51,7 +51,6 @@ jobs:
             -DCMAKE_PREFIX_PATH=/usr/local/ \
             -DBoost_NO_BOOST_CMAKE=True \
             -DBUILD_TESTING=ON \
-            -DBUILD_PYTHON=OFF \
             -DBUILD_PYTHON3=ON \
             -DPython3_EXECUTABLE=$(which python3) \
             -DUSE_HDF5=ON \

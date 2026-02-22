@@ -102,6 +102,47 @@
 # Get the current directory (resolving symlinks).
   curdir=`pwd -P`
 
+# Ensure HOME is writable for tests that create/update ~/.aipsrc.
+# Some constrained environments provide a non-writable HOME.
+  if [ "$HOME" = "" ] || [ ! -d "$HOME" ] || [ ! -w "$HOME" ]
+  then
+     TEST_HOME="$curdir/.casacore_test_home"
+     mkdir -p "$TEST_HOME"
+     HOME="$TEST_HOME"
+     export HOME
+     CLEANUP="$CLEANUP $TEST_HOME"
+  fi
+
+# If no CASARCFILES is set, try to auto-discover DATA_DIR from the active
+# CMake build and inject a temporary aipsrc stanza for measures.directory.
+  if [ "$CASARCFILES" = "" ]
+  then
+     pkg=`echo $curdir | sed -e 's%.*\(/[^/][^/]*/[^/][^/]*/[^/][^/]*\)$%\1%'`
+     buildroot=`echo $curdir | sed -e "s%$pkg\$%%"`
+     if [ ! -f "$buildroot/CMakeCache.txt" ]
+     then
+        buildroot="$curdir"
+     fi
+     datadir=`sed -n 's/^DATA_DIR:PATH=//p' "$buildroot/CMakeCache.txt" 2>/dev/null | head -n 1`
+     if [ "$datadir" != "" ]
+     then
+        case "$datadir" in
+           /*) datadir_abs="$datadir" ;;
+           *)  datadir_abs="$buildroot/$datadir" ;;
+        esac
+        if [ -d "$datadir_abs/ephemerides" ] || [ -d "$datadir_abs/geodetic" ]
+        then
+           TEST_CASARC="$curdir/.casacore_test_autorc"
+           cat > "$TEST_CASARC" << eof
+measures.directory: $datadir_abs
+eof
+           CASARCFILES="$TEST_CASARC"
+           export CASARCFILES
+           CLEANUP="$CLEANUP $TEST_CASARC"
+        fi
+     fi
+  fi
+
 # If there is a .run file then use it without checktool.
 # Start it using sh if not executable.
   if [ -f "$1.run" ]

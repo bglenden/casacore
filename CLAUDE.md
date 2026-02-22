@@ -26,6 +26,14 @@ ctest -R tArray              # run a single test by name
 make install
 ```
 
+### macOS Notes
+
+- Prefer Homebrew Bison over the system `/usr/bin/bison` on macOS:
+  - `-DBISON_EXECUTABLE=/opt/homebrew/opt/bison/bin/bison`
+- `clang`/`clang++` builds are supported and commonly used:
+  - `-DCMAKE_C_COMPILER=/usr/bin/clang`
+  - `-DCMAKE_CXX_COMPILER=/usr/bin/clang++`
+
 ### Key CMake Options
 
 - `-DMODULE=<name>` — Build subset: `casa`, `tables`, `measures`, `ms`, `msfits`, `images`, or `all` (default)
@@ -66,8 +74,19 @@ Additional modules: `mirlib` (MIRIAD format), `python3` (Python bindings), `buil
 - Each module has a `test/` subdirectory
 - Test executables are prefixed with `t` (e.g., `tArray.cc`, `tTable.cc`)
 - Tests use `build-tools/casacore_assay` as the test harness (wrapped by `cmake/cmake_assay`)
+- The harness auto-handles constrained environments:
+  - If `HOME` is missing/non-writable, it creates a writable per-test home under the test working directory.
+  - If `CASARCFILES` is not set, it reads `DATA_DIR` from the active build's `CMakeCache.txt` and injects a temporary `measures.directory` resource when `ephemerides/` or `geodetic/` exist there.
 - Some tests use `.run` shell scripts, `.out` files for expected output comparison, and `.in` files for input data
 - Test CMakeLists.txt pattern: executables listed in a `set(tests ...)` variable, iterated with `foreach`
+
+### Test Data Expectations
+
+- `DATA_DIR` must contain casacore Measures tables, typically with at least:
+  - `ephemerides/`
+  - `geodetic/`
+- If measures tests fail with messages like `Cannot read leap second table TAI_UTC`, `Cannot read table of Observatories`, or `Corrupted JPL table DE200`, verify that `DATA_DIR` points to a populated Measures data tree.
+- CI workflows and Docker images fetch `WSRT_Measures.ztar`; local builds must either do the same or point `-DDATA_DIR` at an existing populated directory.
 
 ## Compiler Warnings
 

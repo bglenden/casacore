@@ -39,9 +39,9 @@ set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Astronomical data processing library")
 
 set (CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 
-# By default build only Python3 bindings
-option (BUILD_PYTHON "Build the python2 bindings" NO)
+# By default build Python3 bindings
 option (BUILD_PYTHON3 "Build the python3 bindings" YES)
+option (ENABLE_STRICT_WARNINGS "Enable initial strict warning checks for modernization" NO)
 
 option (BUILD_DEPRECATED "build and install deprecated classes (such as Map)" NO)
 option (BUILD_FFTPACK_DEPRECATED "build FFTPack" NO)
@@ -97,7 +97,6 @@ if( CASA_BUILD )
    set(USE_OPENMP ON)
    set(USE_THREADS ON)
    set(BUILD_FFTPACK_DEPRECATED ON)
-   set(BUILD_PYTHON OFF)
    set(Boost_NO_BOOST_CMAKE 1)
    if (EXISTS "/opt/casa/02/include/python2.7")
       ### RHEL7
@@ -184,6 +183,17 @@ if (NOT CMAKE_CXX_FLAGS)
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-unneeded-internal-declaration")
     endif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
 endif (NOT CMAKE_CXX_FLAGS)
+
+if (ENABLE_STRICT_WARNINGS)
+    # Start warning cleanup with a small, high-signal set.
+    if (CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang|AppleClang")
+        add_compile_options(
+            $<$<COMPILE_LANGUAGE:CXX>:-Werror=return-type>
+            $<$<COMPILE_LANGUAGE:CXX>:-Werror=uninitialized>
+            $<$<COMPILE_LANGUAGE:CXX>:-Werror=implicit-fallthrough>
+        )
+    endif ()
+endif ()
 
 # Set build type if not given.
 if (NOT CMAKE_BUILD_TYPE)
@@ -277,10 +287,6 @@ if (_usefits)
     set (_modules ${_modules} fits)
 endif()
 set (_modules ${_modules} ${_modules2})
-
-if (BUILD_PYTHON)
-    set (_modules ${_modules} python)
-endif (BUILD_PYTHON)
 
 if (BUILD_PYTHON3)
     set (_modules ${_modules} python3)
@@ -552,11 +558,6 @@ foreach (module ${_modules})
           VERSION "${LIB_VERSION}"
           SOVERSION "${LIB_SOVERSION}"
     )
-    if (CASA_BUILD)
-        if (PYTHON_SHARED_LINKER_FLAGS AND ${module} STREQUAL python)
-            set_target_properties(casa_python PROPERTIES LINK_FLAGS ${PYTHON_SHARED_LINKER_FLAGS})
-        endif (PYTHON_SHARED_LINKER_FLAGS AND ${module} STREQUAL python)
-    endif (CASA_BUILD)
     if (APPLE)
         if (${module} STREQUAL scimath_f OR ${module} STREQUAL fits OR ${module} STREQUAL mirlib OR ${module} STREQUAL coordinates)
             set_target_properties(casa_${module} PROPERTIES LINK_FLAGS -single_module)
@@ -603,16 +604,8 @@ message (STATUS "BUILD_FFTPACK_DEPRECATED= ${BUILD_FFTPACK_DEPRECATED}")
 message (STATUS "BUILD_DEPRECATED ...... = ${BUILD_DEPRECATED}")
 message (STATUS "BUILD_DYSCO ........... = ${BUILD_DYSCO}")
 message (STATUS "BUILD_SISCO ........... = ${BUILD_SISCO}")
-message (STATUS "BUILD_PYTHON .......... = ${BUILD_PYTHON}")
 message (STATUS "BUILD_PYTHON3 ......... = ${BUILD_PYTHON3}")
-
-if (BUILD_PYTHON)
-    message (STATUS "PYTHON2_EXECUTABLE ......... = ${PYTHON2_EXECUTABLE}")
-    message (STATUS "PYTHON2_LIBRARIES........... = ${PYTHON2_LIBRARIES}")
-    message (STATUS "PYTHON2_NUMPY_INCLUDE_DIRS . = ${PYTHON2_NUMPY_INCLUDE_DIRS}")
-    message (STATUS "PYTHON2_Boost_LIBRARIES .... = ${PYTHON2_Boost_LIBRARIES}")
-    message (STATUS "PYTHON2_Boost_INCLUDE_DIRS . = ${PYTHON2_Boost_INCLUDE_DIRS}")
-endif (BUILD_PYTHON)
+message (STATUS "ENABLE_STRICT_WARNINGS = ${ENABLE_STRICT_WARNINGS}")
 
 if (BUILD_PYTHON3)
     message (STATUS "PYTHON3_EXECUTABLE ......... = ${PYTHON3_EXECUTABLE}")
@@ -623,8 +616,7 @@ if (BUILD_PYTHON3)
 endif (BUILD_PYTHON3)
 
 # List of build variables and defaults.
-#  BUILD_PYTHON                  YES
-#  BUILD_PYTHON3                 NO
+#  BUILD_PYTHON3                 YES
 #  BUILD_DEPRECATED            NO
 #  ENABLE_SHARED                 YES
 #  ENABLE_RPATH                  YES

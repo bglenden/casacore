@@ -16,9 +16,10 @@ jobs:
           - ubuntu2204_gcc
           - ubuntu2404_clang
           - ubuntu2404_gcc
+          - ubuntu2404_gcc_sisco
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Build container
         run: docker build . -t ${{ matrix.dist }} -f docker/${{ matrix.dist }}.docker
