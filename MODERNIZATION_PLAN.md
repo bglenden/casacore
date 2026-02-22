@@ -147,6 +147,34 @@ In progress:
 - First conversions completed:
   - `casa/Arrays/test/CMakeLists.txt` (`arraytest`)
   - `tables/AlternateMans/test/CMakeLists.txt` (`altmantest`)
+- Additional Wave 1 conversions completed (sidecar-free directories):
+  - `casa/Exceptions/test/CMakeLists.txt`
+  - `casa/Inputs/test/CMakeLists.txt`
+  - `casa/Logging/test/CMakeLists.txt`
+  - `casa/test/CMakeLists.txt`
+  - `scimath/StatsFramework/test/CMakeLists.txt`
+  - `tables/LogTables/test/CMakeLists.txt`
+- Boost-test registration and linkage cleanup:
+  - `measures/Measures/test/CMakeLists.txt`:
+    - `measurestest` switched to direct CTest registration
+    - `tIAU2000` switched to direct CTest registration
+    - removed hard dependency on Boost `system` component for `measurestest`
+  - `tables/Dysco/CMakeLists.txt`:
+    - moved `tDysco` to direct CTest registration style
+    - modernized Boost linkage using imported targets when available
+  - `casa/Arrays/test/CMakeLists.txt`:
+    - removed hard dependency on Boost `system` component
+    - modernized Boost linkage using imported targets when available
+
+Wave 1 validation snapshot:
+
+- Reconfigure/build succeeds after the above CMake test registration changes.
+- Targeted direct-CTest migration batch passes:
+  - `arraytest`, `measurestest`, `altmantest`, `tDysco`
+  - `tTypes`, `tError`, `tInput`, `tParam`, `tLogSink`
+  - `dLogging`, `dLogging2`, `tLoggerHolder`, `tLogging`
+  - all `scimath/StatsFramework` tests in that directory
+  - Result: `23/23` passing in the targeted run.
 
 ---
 

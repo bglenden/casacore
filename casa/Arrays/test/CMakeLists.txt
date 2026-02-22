@@ -51,13 +51,17 @@ set (testfiles
   tVectorSTLIterator.cc
 )
 
-find_package(Boost COMPONENTS filesystem unit_test_framework system)
+find_package(Boost COMPONENTS filesystem unit_test_framework)
 if(Boost_FOUND)
 	include_directories(${Boost_INCLUDE_DIR})
 
 	add_executable (arraytest ${testfiles})
 	add_pch_support(arraytest)
-	target_link_libraries(arraytest casa_casa ${Boost_FILESYSTEM_LIBRARY} ${Boost_SYSTEM_LIBRARY} ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY})
+	if(TARGET Boost::filesystem AND TARGET Boost::unit_test_framework)
+		target_link_libraries(arraytest casa_casa Boost::filesystem Boost::unit_test_framework)
+	else()
+		target_link_libraries(arraytest casa_casa ${Boost_FILESYSTEM_LIBRARY} ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY})
+	endif()
 	add_test (NAME arraytest COMMAND arraytest)
 	add_dependencies(check arraytest)
 endif(Boost_FOUND)
