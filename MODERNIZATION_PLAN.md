@@ -91,6 +91,65 @@ Related findings: 9.1, 9.2, 10.1, 2.5b, 6.2.
 
 ---
 
+## Execution Status (As Of 2026-02-22)
+
+### Wave Zero
+
+Completed:
+
+- Updated GitHub Actions checkout action to `actions/checkout@v4` in Linux CI.
+- Replaced insecure transport URLs with HTTPS in:
+  - `.github/workflows/osx.yml`
+  - `docker/py_wheel.docker`
+- Added baseline editor/style files:
+  - `.editorconfig`
+  - `.clang-format`
+- Removed dead CMake 2.8.3 compatibility branches in:
+  - `cmake/FindWCSLIB.cmake`
+  - `cmake/FindCFITSIO.cmake`
+- Removed Python 2 build path:
+  - deleted `python/CMakeLists.txt`
+  - removed `BUILD_PYTHON` option and related top-level wiring
+  - retained/normalized Python 3 path
+- Added CI matrix coverage for SISCO/C++20 mode:
+  - new Docker image `docker/ubuntu2404_gcc_sisco.docker`
+  - new Linux CI matrix entry using that image
+
+Additional Wave Zero hardening completed:
+
+- Added minimal warning/lint bootstrap:
+  - CMake option `ENABLE_STRICT_WARNINGS` with targeted high-value warning gates
+  - baseline `.clang-tidy` with a minimal check set
+- Improved test harness robustness for clean/sandboxed runs:
+  - `build-tools/casacore_assay` now auto-creates a writable test `HOME` when needed
+  - harness now auto-discovers `DATA_DIR` from the active build cache and injects
+    temporary `CASARCFILES` with `measures.directory` when Measures tables exist
+
+Validation snapshot:
+
+- Clean out-of-source reconfigure/build with clang and modern bison succeeds.
+- Representative previously environment-dependent tests now pass when data path is available
+  (`tAipsrc`, `tAipsrcValue`, `dMeasure`, `tEarthField`, `tMeasJPL`, `tMSFieldEphem`,
+  `tMSSummary`, `tNewMSSimulator`, `tFrequencyAligner`, `tSpectralCoordinate`).
+- Remaining known failures in that targeted run are numerical-baseline diffs in
+  `tLSQaips` and `tLSQFit`, not data-path/home-directory setup failures.
+
+Wave Zero still open:
+
+- Record and publish a warning baseline per module (formalized metric output).
+
+### Wave One Kickoff
+
+In progress:
+
+- Begin migrating Boost.Test-based directories from `cmake_assay` wrapper to direct CTest
+  registration (`add_test(NAME ... COMMAND <target>)`) module-by-module.
+- First conversions completed:
+  - `casa/Arrays/test/CMakeLists.txt` (`arraytest`)
+  - `tables/AlternateMans/test/CMakeLists.txt` (`altmantest`)
+
+---
+
 ## Ranked Initiatives
 
 ### 1) Test Architecture Unification
