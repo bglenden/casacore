@@ -374,7 +374,7 @@ void TableExprFuncNodeArray::tryToConst()
             getAlternate (0);
             constAlt_p = True;
         }
-        // fall through
+        CASACORE_FALLTHROUGH;
     case TableExprFuncNode::arrayFUNC:
         if (operands()[axarg]->isConstant()) {
           getArrayShape (0, axarg);            // fills ipos_p
@@ -1584,7 +1584,8 @@ MArray<Double> TableExprFuncNodeArray::getArrayDouble (const TableExprId& id)
         return partialMeans (arr, getAxes(id, arr.ndim()));
       }
     case TableExprFuncNode::arrvariances0FUNC:
-      ddof = 0;    // fall through
+      ddof = 0;
+      CASACORE_FALLTHROUGH;
     case TableExprFuncNode::arrvariances1FUNC:
       {
         if (operands()[0]->dataType() == NTComplex) {
@@ -1595,7 +1596,8 @@ MArray<Double> TableExprFuncNodeArray::getArrayDouble (const TableExprId& id)
         return partialVariances (arr, getAxes(id, arr.ndim()), ddof);
       }
     case TableExprFuncNode::arrstddevs0FUNC:
-      ddof = 0;    // fall through
+      ddof = 0;
+      CASACORE_FALLTHROUGH;
     case TableExprFuncNode::arrstddevs1FUNC:
       {
         if (operands()[0]->dataType() == NTComplex) {
@@ -1662,7 +1664,8 @@ MArray<Double> TableExprFuncNodeArray::getArrayDouble (const TableExprId& id)
         return slidingMeans (arr, getArrayShape(id));
       }
     case TableExprFuncNode::runvariance0FUNC:
-      ddof = 0;    // fall through
+      ddof = 0;
+      CASACORE_FALLTHROUGH;
     case TableExprFuncNode::runvariance1FUNC:
       {
         if (operands()[0]->dataType() == NTComplex) {
@@ -1673,7 +1676,8 @@ MArray<Double> TableExprFuncNodeArray::getArrayDouble (const TableExprId& id)
         return slidingVariances (arr, getArrayShape(id), ddof);
       }
     case TableExprFuncNode::runstddev0FUNC:
-      ddof = 0;    // fall through
+      ddof = 0;
+      CASACORE_FALLTHROUGH;
     case TableExprFuncNode::runstddev1FUNC:
       {
         if (operands()[0]->dataType() == NTComplex) {
@@ -1739,7 +1743,8 @@ MArray<Double> TableExprFuncNodeArray::getArrayDouble (const TableExprId& id)
         return boxedMeans (arr, getArrayShape(id));
       }
     case TableExprFuncNode::boxvariance0FUNC:
-      ddof = 0;    // fall through
+      ddof = 0;
+      CASACORE_FALLTHROUGH;
     case TableExprFuncNode::boxvariance1FUNC:
       {
         if (operands()[0]->dataType() == NTComplex) {
@@ -1750,7 +1755,8 @@ MArray<Double> TableExprFuncNodeArray::getArrayDouble (const TableExprId& id)
         return boxedVariances (arr, getArrayShape(id), ddof);
       }
     case TableExprFuncNode::boxstddev0FUNC:
-      ddof = 0;    // fall through
+      ddof = 0;
+      CASACORE_FALLTHROUGH;
     case TableExprFuncNode::boxstddev1FUNC:
       {
         if (operands()[0]->dataType() == NTComplex) {

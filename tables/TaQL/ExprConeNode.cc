@@ -300,7 +300,8 @@ TableExprNodeRep::NodeDataType TableExprConeNode::checkOperands
   case TableExprFuncNode::conesFUNC:
   case TableExprFuncNode::anyconeFUNC:
   case TableExprFuncNode::findconeFUNC:
-    nrarg = 2;      // fall through
+    nrarg = 2;
+    CASACORE_FALLTHROUGH;
   // The 3 argument cone functions accept a scalar or array as the 3rd argument.
   // The result is a Bool scalar or array.
   case TableExprFuncNode::cones3FUNC:

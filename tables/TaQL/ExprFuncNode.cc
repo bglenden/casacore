@@ -222,7 +222,7 @@ void TableExprFuncNode::fillUnits()
       break;
     case normangleFUNC:
       setUnit ("rad");
-      // fall through
+      CASACORE_FALLTHROUGH;
     case sinFUNC:
     case cosFUNC:
     case tanFUNC:
@@ -255,7 +255,7 @@ void TableExprFuncNode::fillUnits()
     case angdistFUNC:
     case angdistxFUNC:
       setUnit ("rad");
-      // fall through
+      CASACORE_FALLTHROUGH;
     case conesFUNC:
     case cones3FUNC:
     case anyconeFUNC:
@@ -786,7 +786,8 @@ Double TableExprFuncNode::getDouble (const TableExprId& id)
         }
         return operands_p[0]->getDouble (id);
     case arrvariance0FUNC:
-      ddof = 0;     // fall through
+      ddof = 0;
+      CASACORE_FALLTHROUGH;
     case arrvariance1FUNC:
         if (operands_p[0]->valueType() == VTArray) {
           if (operands_p[0]->dataType() == NTComplex) {
@@ -796,7 +797,8 @@ Double TableExprFuncNode::getDouble (const TableExprId& id)
         }
         return 0;
     case arrstddev0FUNC:
-      ddof = 0;     // fall through
+      ddof = 0;
+      CASACORE_FALLTHROUGH;
     case arrstddev1FUNC:
         if (operands_p[0]->valueType() == VTArray) {
           if (operands_p[0]->dataType() == NTComplex) {

@@ -193,7 +193,8 @@ void pass_two( char *source, char *dest )
 	while ( *source && go ) {
 	  switch ( *source ) {
 	  case '/':
-	    dotslash = '/';     // fall through
+	    dotslash = '/';
+	    CASACORE_FALLTHROUGH;
 	  case '.':
 	    ++source;
 	    continue;
@@ -244,4 +245,3 @@ void Unit::check()
 }
 
 } //# NAMESPACE CASACORE - END
-
