@@ -1,0 +1,78 @@
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+## Project Overview
+
+Casacore is a C++17 astronomical data processing library used primarily in radio astronomy. It provides core functionality for CASA (Common Astronomy Software Applications) including array handling, table storage, measurement sets, coordinate systems, and image processing.
+
+## Build Commands
+
+```bash
+# Configure and build (out-of-source build required)
+mkdir build && cd build
+cmake .. -DCMAKE_BUILD_TYPE=Debug    # or Release
+make -j$(nproc)
+
+# Build and run all tests
+make check
+
+# Run tests (after building)
+ctest                        # all tests
+ctest --output-on-failure    # with failure details
+ctest -R tArray              # run a single test by name
+
+# Install
+make install
+```
+
+### Key CMake Options
+
+- `-DMODULE=<name>` — Build subset: `casa`, `tables`, `measures`, `ms`, `msfits`, `images`, or `all` (default)
+- `-DBUILD_TESTING=ON` — Enable test building (default: YES)
+- `-DUSE_HDF5=ON` — Enable HDF5 support (default: NO)
+- `-DDATA_DIR=<path>` — Path to Measures data tables (required for measures tests)
+- `-DBUILD_PYTHON3=ON` — Build Python 3 bindings (default: YES)
+
+## Module Dependency Chain
+
+```
+casa  (base: Arrays, IO, Logging, OS, Quanta, Utilities, etc.)
+└─ tables  (Table system, TaQL query language, storage managers)
+   └─ scimath + scimath_f  (scientific math, Fortran components)
+      └─ measures + meas  (coordinates, astronomical calculations)
+         ├─ ms + derivedmscal  (Measurement Set format)
+         │  └─ msfits  (MS ↔ FITS conversion)
+         └─ fits  (FITS file I/O)
+      ├─ lattices  (N-dimensional array operations)
+      ├─ coordinates  (world coordinate systems, requires WCSLIB)
+      └─ images  (uses coordinates, lattices, fits)
+```
+
+Additional modules: `mirlib` (MIRIAD format), `python3` (Python bindings), `build-tools` (test infrastructure).
+
+## Code Conventions
+
+- **Namespace**: All code lives in `namespace casacore`
+- **C++ standard**: C++17 (C++20 if BUILD_SISCO=ON)
+- **Style**: Google C++ Style Guide with 4-space indentation
+- **Naming**: PascalCase classes, camelCase methods/variables, `_p` suffix for pointer members
+- **Includes**: Always use full path: `#include <casacore/casa/Arrays/Array.h>`
+- **Templates**: Implementations in `.tcc` files, headers in `.h`
+- **Documentation**: Doxygen markup with `// <summary>`, `// <synopsis>` blocks in headers
+
+## Test Structure
+
+- Each module has a `test/` subdirectory
+- Test executables are prefixed with `t` (e.g., `tArray.cc`, `tTable.cc`)
+- Tests use `build-tools/casacore_assay` as the test harness (wrapped by `cmake/cmake_assay`)
+- Some tests use `.run` shell scripts, `.out` files for expected output comparison, and `.in` files for input data
+- Test CMakeLists.txt pattern: executables listed in a `set(tests ...)` variable, iterated with `foreach`
+
+## Compiler Warnings
+
+Default flags: `-Wextra -Wall -W -Wpointer-arith -Woverloaded-virtual -Wwrite-strings -pedantic -Wno-long-long`. Debug builds define `AIPS_DEBUG`; Release builds define `NDEBUG`.
+
+## External Dependencies
+
+Core: BLAS, LAPACK, CFITSIO, WCSLIB, FFTW3, Flex, Bison. Optional: HDF5, ADIOS2, Boost-Python, Readline, SOFA (testing only).
