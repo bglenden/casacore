@@ -13,7 +13,34 @@ cmake -S . -B cov \
 cmake --build cov -j8
 ```
 
-Coverage collection used `build-tools/casacore_cov` from module build directories.
+Coverage collection used `build-tools/casacore_cov` from module build directories and from
+the build root.
+
+## Full-Project Baseline (Root Scope)
+
+Run from build root:
+
+```bash
+cd cov
+CTEST_ARGS='--output-on-failure -E tLSQaips|tLSQFit' ../build-tools/casacore_cov
+```
+
+Result:
+
+- Tests: `495/495` passing (`tLSQaips` and `tLSQFit` excluded due known numeric-baseline
+  diffs)
+- Line coverage: `57.4%` (`143521/250144`)
+- Branch coverage: `24.0%` (`148145/617563`)
+
+Notes:
+
+- The full run now includes `tPath`; harness fallback HOME handling was adjusted so
+  non-writable HOME environments do not change `tPath` semantics.
+- `tLatticeStatistics` is long-running under coverage instrumentation (roughly 4 minutes).
+- `genhtml` can encounter missing generated-source paths (for example
+  `tables/TaQL/TableGram.ll`); `casacore_cov` now uses `genhtml --filter missing` so HTML
+  generation remains non-fatal while summary metrics stay authoritative in
+  `testcov.summary`.
 
 ## Module Baselines
 

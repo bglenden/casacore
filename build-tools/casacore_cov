@@ -95,7 +95,8 @@ lcov --rc lcov_function_coverage=0 --rc lcov_branch_coverage=1 \
 
 echo "Rendering HTML report at ./cov/index.html"
 rm -rf cov
-if ! genhtml --ignore-errors "${lcov_ignore},corrupt" \
+if ! genhtml --filter missing \
+             --ignore-errors "${lcov_ignore},corrupt" \
              --rc lcov_function_coverage=0 --rc lcov_branch_coverage=1 \
              --output-directory=cov testcov.module >> testcov.log 2>&1; then
   echo "genhtml reported issues; summary data is still available in testcov.summary" \

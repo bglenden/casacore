@@ -104,13 +104,28 @@
 
 # Ensure HOME is writable for tests that create/update ~/.aipsrc.
 # Some constrained environments provide a non-writable HOME.
+# tPath validates HOME expansion semantics, so keep original HOME there.
   if [ "$HOME" = "" ] || [ ! -d "$HOME" ] || [ ! -w "$HOME" ]
   then
-     TEST_HOME="$curdir/.casacore_test_home"
-     mkdir -p "$TEST_HOME"
-     HOME="$TEST_HOME"
-     export HOME
-     CLEANUP="$CLEANUP $TEST_HOME"
+     testname=`basename "$1"`
+     if [ "$testname" != "tPath" ]
+     then
+        test_home_root="${TMPDIR:-/tmp}"
+        test_home_root=`echo "$test_home_root" | sed -e 's%/*$%%'`
+        if [ "$test_home_root" = "" ]
+        then
+           test_home_root="/tmp"
+        fi
+        TEST_HOME="$test_home_root/casacore_test_home_$$"
+        if ! mkdir -p "$TEST_HOME" 2>/dev/null
+        then
+           TEST_HOME="$curdir/.casacore_test_home_$$"
+           mkdir -p "$TEST_HOME"
+        fi
+        HOME="$TEST_HOME"
+        export HOME
+        CLEANUP="$CLEANUP $TEST_HOME"
+     fi
   fi
 
 # If no CASARCFILES is set, try to auto-discover DATA_DIR from the active

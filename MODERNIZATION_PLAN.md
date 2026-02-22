@@ -122,6 +122,7 @@ Additional Wave Zero hardening completed:
   - baseline `.clang-tidy` with a minimal check set
 - Improved test harness robustness for clean/sandboxed runs:
   - `build-tools/casacore_assay` now auto-creates a writable test `HOME` when needed
+    (while preserving `tPath` HOME semantics in non-writable-HOME environments)
   - harness now auto-discovers `DATA_DIR` from the active build cache and injects
     temporary `CASARCFILES` with `measures.directory` when Measures tables exist
 
@@ -173,8 +174,10 @@ In progress:
 - Coverage tooling bootstrap for Wave 1 gating:
   - added explicit CMake option `ENABLE_COVERAGE` (legacy `cov/` dirname behavior retained)
   - hardened `build-tools/casacore_cov` for modern `lcov/genhtml` behavior and module-scoped
-    summary output
+    summary output (including `genhtml --filter missing` for generated-source paths)
   - documented and published initial module baseline in `WAVE1_COVERAGE_BASELINE.md`
+  - documented and published full-project baseline (`495/495` tests passing with explicit
+    exclusions for known numeric-baseline `tLSQaips|tLSQFit`)
 - Initial strict-warning cleanup progress:
   - fixed intentional switch fallthroughs with `CASACORE_FALLTHROUGH` in:
     - `casa/Quanta/Unit.cc`
@@ -196,10 +199,17 @@ Wave 1 validation snapshot:
 - Additional scimath mixed-directory migration validation:
   - `48/48` passing for migrated `Functionals`, `Fitting` (excluding known floating-baseline
     `tLSQaips`/`tLSQFit`), and `Mathematics` test subsets.
+- Full-project coverage-gate validation from build root:
+  - `495/495` passing in coverage mode with exclusions `tLSQaips|tLSQFit`
+  - aggregate coverage: `57.4%` lines (`143521/250144`), `24.0%` branches
+    (`148145/617563`)
 
 Wave 1 coverage baseline snapshot:
 
 - Baseline run published in `WAVE1_COVERAGE_BASELINE.md` from a fresh clang coverage build.
+- Full-project snapshot:
+  - `57.4%` lines (`143521/250144`), `24.0%` branches (`148145/617563`) from build-root
+    run with `tLSQaips|tLSQFit` excluded as known numeric-baseline failures.
 - Module snapshots:
   - `casa`: `2.8%` lines (`251/9065`), `0.5%` branches (`92/19624`) using
     `arraytest|tTypes|tError|tInput|tParam|tLogSink` (`6/6` passing).
@@ -212,9 +222,9 @@ Wave 1 coverage baseline snapshot:
 
 Next Wave 1 gating task:
 
-- Prioritize targeted regression tests for low-coverage/high-risk paths discovered by the
-  baseline (starting with `casa`, `tables`, and `measures`) before major C++
-  implementation refactors.
+- Full-project coverage baseline gate is now satisfied; prioritize targeted regression tests
+  for low-coverage/high-risk paths discovered by the baseline (starting with `casa`,
+  `tables`, and `measures`) before major C++ implementation refactors.
 
 ---
 

@@ -63,11 +63,16 @@ cmake --build cov -j$(sysctl -n hw.ncpu)
 cd cov/casa
 CTEST_REGEX="arraytest|tError" CTEST_ARGS="--output-on-failure" ../../build-tools/casacore_cov
 # Outputs: testcov.summary + cov/index.html
+
+# Run full-project coverage gate from build root (known numeric-baseline exclusions)
+cd ../
+CTEST_ARGS="--output-on-failure -E tLSQaips|tLSQFit" ../build-tools/casacore_cov
 ```
 
 Notes:
 - `casacore_cov` can be run from build root, module dir, or `*/test` dir.
 - If `CTEST_REGEX`/`CTEST_ARGS` are omitted, it runs all tests visible from the current directory.
+- `tLatticeStatistics` is long-running in coverage mode (several minutes).
 
 ## Module Dependency Chain
 
@@ -102,7 +107,9 @@ Additional modules: `mirlib` (MIRIAD format), `python3` (Python bindings), `buil
 - Test executables are prefixed with `t` (e.g., `tArray.cc`, `tTable.cc`)
 - Tests use `build-tools/casacore_assay` as the test harness (wrapped by `cmake/cmake_assay`)
 - The harness auto-handles constrained environments:
-  - If `HOME` is missing/non-writable, it creates a writable per-test home under the test working directory.
+  - If `HOME` is missing/non-writable, it creates a writable per-test temporary home
+    (preferring `TMPDIR`, falling back to the test working directory).
+  - `tPath` keeps the original `HOME` semantics even in constrained environments.
   - If `CASARCFILES` is not set, it reads `DATA_DIR` from the active build's `CMakeCache.txt` and injects a temporary `measures.directory` resource when `ephemerides/` or `geodetic/` exist there.
 - Some tests use `.run` shell scripts, `.out` files for expected output comparison, and `.in` files for input data
 - Test CMakeLists.txt pattern: executables listed in a `set(tests ...)` variable, iterated with `foreach`
