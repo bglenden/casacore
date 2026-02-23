@@ -28,7 +28,6 @@
 #include <casacore/casa/IO/MultiHDF5.h>
 #include <casacore/casa/IO/RegularFileIO.h>
 #include <casacore/casa/IO/FiledesIO.h>
-#include <casacore/casa/Containers/Block.h>
 #include <vector>
 #include <stdexcept>
 #include <iostream>
@@ -71,7 +70,7 @@ int main (int argc, char* argv[])
     } else {
       mfile.reset (new MultiFile (outName, ByteIO::New, blockSize));
     }
-    Block<char> buffer (blockSize);
+    vector<char> buffer (blockSize);
     for (vector<String>::const_iterator iter=fname.begin();
          iter!=fname.end(); ++iter) {
       if (iter->empty()) {
@@ -84,8 +83,8 @@ int main (int argc, char* argv[])
              << " ..." << endl;
         MFFileIO outfile (mfile, *iter, ByteIO::New);
         while (todo > 0) {
-          Int64 sz = file.read (std::min(todo, blockSize), buffer.storage());
-          outfile.write (sz, buffer.storage());
+          Int64 sz = file.read (std::min(todo, blockSize), buffer.data());
+          outfile.write (sz, buffer.data());
           todo -= sz;
         }
       }

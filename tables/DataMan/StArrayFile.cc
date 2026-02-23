@@ -31,13 +31,13 @@
 #include <casacore/casa/OS/CanonicalConversion.h>
 #include <casacore/casa/OS/LECanonicalConversion.h>
 #include <casacore/casa/Arrays/IPosition.h>
-#include <casacore/casa/Containers/Block.h>
 #include <casacore/casa/BasicSL/Complex.h>
 #include <casacore/casa/BasicSL/String.h>
 #include <casacore/casa/Utilities/ValType.h>
 #include <casacore/casa/OS/Path.h>
 #include <casacore/tables/DataMan/DataManError.h>
 #include <casacore/casa/Utilities/Assert.h>
+#include <vector>
 
 
 namespace casacore { //# NAMESPACE CASACORE - BEGIN
@@ -261,8 +261,8 @@ uInt StManArrayFile::putShape (const IPosition& shape, Int64& offset,
 {
     uInt   n  = putRes (shape, offset, sizeuInt_p);
     uInt64 nr = shape.product();
-    Block<uInt> data(nr, 0u);
-    put (offset+n, 0, nr, data.storage());
+    std::vector<uInt> data(nr, 0u);
+    put (offset+n, 0, nr, data.data());
     return n;
 }
 
