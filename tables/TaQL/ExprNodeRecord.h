@@ -75,7 +75,7 @@ class TableExprNodeRecordField : public TableExprNodeBinary
 {
 public:
     TableExprNodeRecordField (DataType dtype,
-                              const Block<Int>& fieldNumbers);
+                              const std::vector<Int>& fieldNumbers);
     ~TableExprNodeRecordField();
 
     virtual const IPosition& getShape (const TableExprId& id);
@@ -88,7 +88,7 @@ public:
     virtual String   getString   (const TableExprId& id);
 
 protected:
-    Block<Int> fieldNrs_p;
+    std::vector<Int> fieldNrs_p;
     uInt       lastEntry_p;
 
     // Get the record for the last field number, thus going through
@@ -123,7 +123,7 @@ class TableExprNodeRecordFieldArray : public TableExprNodeArray
 {
 public:
     TableExprNodeRecordFieldArray (DataType dtype,
-                                   const Block<Int>& fieldNumbers);
+                                   const std::vector<Int>& fieldNumbers);
     ~TableExprNodeRecordFieldArray();
 
     virtual Bool isDefined (const TableExprId& id);
@@ -136,7 +136,7 @@ public:
     virtual MArray<String>   getArrayString   (const TableExprId& id);
 
 protected:
-    Block<Int> fieldNrs_p;
+    std::vector<Int> fieldNrs_p;
     uInt       lastEntry_p;
 
     // Get the record for the last field number, thus going through

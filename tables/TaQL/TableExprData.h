@@ -31,13 +31,13 @@
 #include <casacore/casa/aips.h>
 #include <casacore/casa/Utilities/DataType.h>
 #include <casacore/casa/Arrays/ArrayFwd.h>
+#include <vector>
 
 namespace casacore { //# NAMESPACE CASACORE - BEGIN
 
 //# Forward Declarations
 class String;
 class IPosition;
-template<class T> class Block;
 
 
 // <summary>
@@ -89,7 +89,7 @@ template<class T> class Block;
 // the selection is based on fields in those records. In such a case
 // the record passed to <src>TableExprNodeRecordField</src> should contain
 // subrecords representing those records. The field index in the various
-// functions as passed as a <src>Block<Int></src> to denote the fields
+// functions as passed as a <src>std::vector<Int></src> to denote the fields
 // in the subrecords (and possibly subsubrecords, etc..
 // However, normally records won't be used and <src>fieldNrs[0]</src>
 // gives the field index.
@@ -114,7 +114,7 @@ template<class T> class Block;
 //   // Note that only the get functions for the possible types are needed.
 //   // Also note that all numeric types are handled by TaQL as Double.
 //   // The exception should never be thrown unless things are screwed up.
-//   virtual Double getDouble (const Block<Int>& fieldNrs) const
+//   virtual Double getDouble (const std::vector<Int>& fieldNrs) const
 //     { switch (fieldNrs[0]) {
 //       case 0:
 //         return itsFld1(itsEntry);
@@ -122,7 +122,7 @@ template<class T> class Block;
 //         throw AipsError();
 //       }
 //     }
-//   virtual String getString (const Block<Int>& fieldNrs) const
+//   virtual String getString (const std::vector<Int>& fieldNrs) const
 //     { switch (fieldNrs[0]) {
 //       case 1:
 //         return itsFld2(itsEntry);
@@ -130,7 +130,7 @@ template<class T> class Block;
 //         throw AipsError();
 //       }
 //     }
-//   virtual DataType dataType (const Block<Int>& fieldNrs) const
+//   virtual DataType dataType (const std::vector<Int>& fieldNrs) const
 //     { switch (fieldNrs[0]) {
 //       case 0:
 //         return TpInt;
@@ -208,14 +208,14 @@ public:
   // Get the shape of the given field.
   // Need only be implemented if there are arrays in the data.
   // The default implementation returns an empty IPosition.
-  virtual IPosition shape (const Block<Int>& fieldNrs) const;
+  virtual IPosition shape (const std::vector<Int>& fieldNrs) const;
 
   // Get the data type of the given field.
   // Note that TpArray types have to be returned for arrays.
   // If the field is unknown, TpOther should be returned.
   // It is used for the isdefined function to check if the field
   // is really defined.
-  virtual DataType dataType (const Block<Int>& fieldNrs) const = 0;
+  virtual DataType dataType (const std::vector<Int>& fieldNrs) const = 0;
 
   // Get a scalar in the given type.
   // This might involve converting for Double and DComplex.
@@ -223,11 +223,11 @@ public:
   // The default <src>getDouble</src> invokes <src>getInt</src>.
   // The default <src>getDComplex</src> invokes <src>getDouble</src>.
   // <group>
-  virtual Bool     getBool     (const Block<Int>& fieldNrs) const;
-  virtual Int64    getInt      (const Block<Int>& fieldNrs) const;
-  virtual Double   getDouble   (const Block<Int>& fieldNrs) const;
-  virtual DComplex getDComplex (const Block<Int>& fieldNrs) const;
-  virtual String   getString   (const Block<Int>& fieldNrs) const;
+  virtual Bool     getBool     (const std::vector<Int>& fieldNrs) const;
+  virtual Int64    getInt      (const std::vector<Int>& fieldNrs) const;
+  virtual Double   getDouble   (const std::vector<Int>& fieldNrs) const;
+  virtual DComplex getDComplex (const std::vector<Int>& fieldNrs) const;
+  virtual String   getString   (const std::vector<Int>& fieldNrs) const;
   // </group>
 
   // Get an array in the given type.
@@ -236,11 +236,11 @@ public:
   // The default <src>getArrayDComplex</src> invokes
   // <src>getArrayDouble</src>.
   // <group>
-  virtual Array<Bool>     getArrayBool     (const Block<Int>& fieldNrs) const;
-  virtual Array<Int64>    getArrayInt      (const Block<Int>& fieldNrs) const;
-  virtual Array<Double>   getArrayDouble   (const Block<Int>& fieldNrs) const;
-  virtual Array<DComplex> getArrayDComplex (const Block<Int>& fieldNrs) const;
-  virtual Array<String>   getArrayString   (const Block<Int>& fieldNrs) const;
+  virtual Array<Bool>     getArrayBool     (const std::vector<Int>& fieldNrs) const;
+  virtual Array<Int64>    getArrayInt      (const std::vector<Int>& fieldNrs) const;
+  virtual Array<Double>   getArrayDouble   (const std::vector<Int>& fieldNrs) const;
+  virtual Array<DComplex> getArrayDComplex (const std::vector<Int>& fieldNrs) const;
+  virtual Array<String>   getArrayString   (const std::vector<Int>& fieldNrs) const;
   // </group>
 };
 

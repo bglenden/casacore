@@ -83,7 +83,7 @@ Bool LogFilterExpr::matches (const LogMessage& message)
   return valb;
 }
 
-Double LogFilterExpr::getDouble (const Block<Int>& fieldNrs) const
+Double LogFilterExpr::getDouble (const std::vector<Int>& fieldNrs) const
 {
   switch (fieldNrs[0]) {
   case 0:
@@ -93,7 +93,7 @@ Double LogFilterExpr::getDouble (const Block<Int>& fieldNrs) const
   }
 }
 
-String LogFilterExpr::getString (const Block<Int>& fieldNrs) const
+String LogFilterExpr::getString (const std::vector<Int>& fieldNrs) const
 {
   switch (fieldNrs[0]) {
   case 1:
@@ -113,7 +113,7 @@ String LogFilterExpr::getString (const Block<Int>& fieldNrs) const
   }
 }
 
-DataType LogFilterExpr::dataType (const Block<Int>& fieldNrs) const
+DataType LogFilterExpr::dataType (const std::vector<Int>& fieldNrs) const
 {
   switch (fieldNrs[0]) {
   case 0:

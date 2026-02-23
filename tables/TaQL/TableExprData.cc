@@ -35,47 +35,47 @@ namespace casacore { //# NAMESPACE CASACORE - BEGIN
 TableExprData::~TableExprData()
 {}
 
-IPosition TableExprData::shape (const Block<Int>&) const
+IPosition TableExprData::shape (const std::vector<Int>&) const
 {
   return IPosition();
 }
 
-Bool     TableExprData::getBool     (const Block<Int>&) const
+Bool     TableExprData::getBool     (const std::vector<Int>&) const
 {
   throw (AipsError ("TableExprData::getBool not implemented"));
 }
 
-Int64    TableExprData::getInt      (const Block<Int>&) const
+Int64    TableExprData::getInt      (const std::vector<Int>&) const
 {
   throw (AipsError ("TableExprData::getInt not implemented"));
 }
 
-Double   TableExprData::getDouble   (const Block<Int>& fieldNrs) const
+Double   TableExprData::getDouble   (const std::vector<Int>& fieldNrs) const
 {
   return getInt (fieldNrs);
 }
 
-DComplex TableExprData::getDComplex (const Block<Int>& fieldNrs) const
+DComplex TableExprData::getDComplex (const std::vector<Int>& fieldNrs) const
 {
   return getDouble (fieldNrs);
 }
 
-String   TableExprData::getString   (const Block<Int>&) const
+String   TableExprData::getString   (const std::vector<Int>&) const
 {
   throw (AipsError ("TableExprData::getString not implemented"));
 }
 
-Array<Bool>     TableExprData::getArrayBool     (const Block<Int>&) const
+Array<Bool>     TableExprData::getArrayBool     (const std::vector<Int>&) const
 {
   throw (AipsError ("TableExprData::getArrayBool not implemented"));
 }
 
-Array<Int64>    TableExprData::getArrayInt      (const Block<Int>&) const
+Array<Int64>    TableExprData::getArrayInt      (const std::vector<Int>&) const
 {
   throw (AipsError ("TableExprData::getArrayInt not implemented"));
 }
 
-Array<Double>   TableExprData::getArrayDouble (const Block<Int>& fieldNrs) const
+Array<Double>   TableExprData::getArrayDouble (const std::vector<Int>& fieldNrs) const
 {
   Array<Int64> tmp = getArrayInt (fieldNrs);
   Array<Double> result(tmp.shape());
@@ -85,7 +85,7 @@ Array<Double>   TableExprData::getArrayDouble (const Block<Int>& fieldNrs) const
 }
 
 Array<DComplex> TableExprData::getArrayDComplex
-                                            (const Block<Int>& fieldNrs) const
+                                            (const std::vector<Int>& fieldNrs) const
 {
   Array<Double> tmp = getArrayDouble (fieldNrs);
   Array<DComplex> result(tmp.shape());
@@ -93,7 +93,7 @@ Array<DComplex> TableExprData::getArrayDComplex
   return result;
 }
 
-Array<String>   TableExprData::getArrayString   (const Block<Int>&) const
+Array<String>   TableExprData::getArrayString   (const std::vector<Int>&) const
 {
   throw (AipsError ("TableExprData::getArrayString not implemented"));
 }

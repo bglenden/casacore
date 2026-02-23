@@ -56,7 +56,7 @@ public:
     { itsEntry++; }
   // Note that only the get functions for the possible types are needed.
   // The exception should never be thrown unless things are screwed up.
-  virtual Int64 getInt (const Block<Int>& fieldNrs) const
+  virtual Int64 getInt (const std::vector<Int>& fieldNrs) const
     { switch (fieldNrs[0]) {
       case 0:
         return itsFld1(itsEntry);
@@ -64,7 +64,7 @@ public:
         throw AipsError();
       }
     }
-  virtual String getString (const Block<Int>& fieldNrs) const
+  virtual String getString (const std::vector<Int>& fieldNrs) const
     { switch (fieldNrs[0]) {
       case 1:
         return itsFld2(itsEntry);
@@ -72,7 +72,7 @@ public:
         throw AipsError();
       }
     }
-  virtual DataType dataType (const Block<Int>& fieldNrs) const
+  virtual DataType dataType (const std::vector<Int>& fieldNrs) const
     { switch (fieldNrs[0]) {
       case 0:
         return TpInt;

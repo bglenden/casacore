@@ -38,10 +38,10 @@ namespace casacore { //# NAMESPACE CASACORE - BEGIN
 
 TableExprNodeRecordField::TableExprNodeRecordField
                                             (DataType dtype,
-                                             const Block<Int>& fieldNumbers)
+                                             const std::vector<Int>& fieldNumbers)
 : TableExprNodeBinary (NTNumeric, VTScalar, OtField, Constant),
   fieldNrs_p  (fieldNumbers),
-  lastEntry_p (fieldNumbers.nelements() - 1)
+  lastEntry_p (fieldNumbers.size() - 1)
 {
   //# Fill in the real data type.
   switch (dtype) {
@@ -179,10 +179,10 @@ const RecordInterface& TableExprNodeRecordField::getRecord
 
 TableExprNodeRecordFieldArray::TableExprNodeRecordFieldArray
                                             (DataType dtype,
-                                             const Block<Int>& fieldNumbers)
+                                             const std::vector<Int>& fieldNumbers)
 : TableExprNodeArray (NTNumeric, OtField),
   fieldNrs_p  (fieldNumbers),
-  lastEntry_p (fieldNumbers.nelements() - 1)
+  lastEntry_p (fieldNumbers.size() - 1)
 {
   //# Fill in the real data type.
   switch (dtype) {

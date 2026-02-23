@@ -68,12 +68,12 @@ public:
 
   // Get the data.
   // <group>
-  virtual Double getDouble (const Block<Int>& fieldNrs) const;
-  virtual String getString (const Block<Int>& fieldNrs) const;
+  virtual Double getDouble (const std::vector<Int>& fieldNrs) const;
+  virtual String getString (const std::vector<Int>& fieldNrs) const;
   // </group>
 
   // Get the data type of the various values.
-  virtual DataType dataType (const Block<Int>& fieldNrs) const;
+  virtual DataType dataType (const std::vector<Int>& fieldNrs) const;
 
 private:
   TableExprNode*    itsExpr;
