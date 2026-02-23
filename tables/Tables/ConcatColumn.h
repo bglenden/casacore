@@ -33,6 +33,7 @@
 #include <casacore/tables/Tables/ColumnCache.h>
 #include <casacore/tables/Tables/TableRecord.h>
 #include <casacore/casa/Arrays/ArrayFwd.h>
+#include <vector>
 
 namespace casacore { //# NAMESPACE CASACORE - BEGIN
 
@@ -267,7 +268,7 @@ namespace casacore { //# NAMESPACE CASACORE - BEGIN
 
     //# Data members
     ConcatTable*        refTabPtr_p;
-    Block<BaseColumn*>  refColPtr_p;
+    std::vector<BaseColumn*> refColPtr_p;
     mutable ColumnCache colCache_p;
     TableRecord         keywordSet_p;
   };

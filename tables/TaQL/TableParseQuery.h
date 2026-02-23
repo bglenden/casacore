@@ -303,7 +303,7 @@ namespace casacore { //# NAMESPACE CASACORE - BEGIN
       { tableProject_p.setDMInfo (dminfo); }
 
     // Get the projected column names.
-    const Block<String>& getColumnNames() const
+    const std::vector<String>& getColumnNames() const
       { return tableProject_p.getColumnNames(); }
 
     // Get the resulting table.

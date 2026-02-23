@@ -201,7 +201,7 @@ namespace casacore { //# NAMESPACE CASACORE - BEGIN
 
   void ConcatColumn::setMaximumCacheSize (uInt nbytes)
   {
-    for (uInt i=0; i<refColPtr_p.nelements(); ++i) {
+    for (uInt i=0; i<refColPtr_p.size(); ++i) {
       refColPtr_p[i]->setMaximumCacheSize (nbytes);
     }
   }
@@ -269,7 +269,7 @@ namespace casacore { //# NAMESPACE CASACORE - BEGIN
     IPosition st(arr.ndim(), 0);
     IPosition sz(arr.shape());
     uInt nlast = arr.ndim() - 1;
-    for (uInt i=0; i<refColPtr_p.nelements(); ++i) {
+    for (uInt i=0; i<refColPtr_p.size(); ++i) {
       rownr_t nr = refColPtr_p[i]->nrow();
       sz[nlast] = nr;
       std::unique_ptr<ArrayBase> part (arr.getSection (Slicer(st, sz)));

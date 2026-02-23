@@ -102,7 +102,7 @@ ColumnDesc& ColumnDescSet::addColumn (const ColumnDesc& cd)
     ColumnDesc& coldes = *(cols_p.at(cd.name()));
     //# Add the new column to the sequence block.
     uInt nrcol = ncolumn();
-    if (nrcol > colSeq_p.nelements()) {
+    if (nrcol > colSeq_p.size()) {
 	colSeq_p.resize (nrcol + 63);
     }
     colSeq_p[nrcol-1] = &coldes;

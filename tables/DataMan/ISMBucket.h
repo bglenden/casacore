@@ -31,6 +31,7 @@
 #include <casacore/casa/Containers/Block.h>
 #include <casacore/casa/BasicSL/String.h>
 #include <casacore/casa/iosfwd.h>
+#include <vector>
 
 namespace casacore { //# NAMESPACE CASACORE - BEGIN
 
@@ -304,7 +305,7 @@ private:
     PtrBlock<Block<uInt>*> offIndex_p;
     // Nr of used elements in each index; i.e. the number of stored values
     // per column.
-    Block<uInt>       indexUsed_p;
+    std::vector<uInt> indexUsed_p;
     // The data space (in external (e.g. canonical) format).
     char*             data_p;
 };

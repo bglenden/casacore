@@ -550,7 +550,7 @@ namespace casacore { //# NAMESPACE CASACORE - BEGIN
     }
     // Check if #columns and values match.
     // Copy the names to the update objects.
-    const Block<String>& colNames = tableProject_p.getColumnNames();
+    const std::vector<String>& colNames = tableProject_p.getColumnNames();
     if (update_p.size() != colNames.size()) {
       throw TableInvExpr ("Error in INSERT command; nr of columns (=" +
                           String::toString(colNames.size()) +
@@ -682,7 +682,7 @@ namespace casacore { //# NAMESPACE CASACORE - BEGIN
       sourceNames = TableParseUtil::getStoredColumns (sel);
     }
     // Check if the number of columns match.
-    const Block<String>& colNames = tableProject_p.getColumnNames();
+    const std::vector<String>& colNames = tableProject_p.getColumnNames();
     if (sourceNames.size() != colNames.size()) {
       throw TableInvExpr ("Error in INSERT command; nr of columns (=" +
                           String::toString(colNames.size()) +

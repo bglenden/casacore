@@ -1310,8 +1310,7 @@ void TableExprNodeIndex::convertConstIndex()
     start_p.resize (n);
     end_p.resize (n);
     incr_p.resize (n);
-    varIndex_p.resize (3*n);
-    varIndex_p.set (False);
+    varIndex_p.assign (3*n, False);
     uInt j = 0;
     for (uInt i=0; i<n; i++) {
         // If no start value is given, it is 0.

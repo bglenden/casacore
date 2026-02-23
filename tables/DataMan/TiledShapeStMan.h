@@ -32,6 +32,7 @@
 #include <casacore/tables/DataMan/TiledStMan.h>
 #include <casacore/casa/Containers/Block.h>
 #include <casacore/casa/BasicSL/String.h>
+#include <vector>
 
 namespace casacore { //# NAMESPACE CASACORE - BEGIN
 
@@ -306,9 +307,9 @@ private:
     // The default tile shape.
     IPosition defaultTileShape_p;
     // The map of row number to cube and position in cube.
-    Block<uInt> rowMap_p;
-    Block<uInt> cubeMap_p;
-    Block<uInt> posMap_p;
+    std::vector<uInt> rowMap_p;
+    std::vector<uInt> cubeMap_p;
+    std::vector<uInt> posMap_p;
     // The nr of elements used in the map blocks.
     uInt nrUsedRowMap_p;
     // The last hypercube found.

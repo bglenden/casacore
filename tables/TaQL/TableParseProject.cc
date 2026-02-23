@@ -476,7 +476,7 @@ namespace casacore { //# NAMESPACE CASACORE - BEGIN
     }
     // Resize the subset vector. It is not really used anymore, but the
     // tracing shows its size as the nr of pre-projected columns.
-    projectExprSubset_p.resize (ncol, True);
+    projectExprSubset_p.resize (ncol);
   }
 
   void TableParseProject::initDescriptions (const TableDesc& desc,

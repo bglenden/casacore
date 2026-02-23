@@ -784,7 +784,7 @@ protected:
     IPosition   end_p;           //# precalculated end values (<0 = till end)
     IPosition   incr_p;          //# precalculated increment values
     Slicer      slicer_p;        //# combined start, end, and incr
-    Block<Bool> varIndex_p;      //# is the start for the axes variable?
+    std::vector<Bool> varIndex_p; //# is the start for the axes variable?
     Bool        isSingle_p;      //# Index a single value?
 
     // Precalculate the constant indices and store them.

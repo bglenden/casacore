@@ -124,7 +124,7 @@ namespace casacore { //# NAMESPACE CASACORE - BEGIN
     tableInfo() = tables_p[0].tableInfo();
     // Add a line for each table.
     tableInfo().readmeAddLine ("Virtual concatenation of the following tables:");
-    for (uInt i=0; i<tables_p.nelements(); ++i) {
+    for (uInt i=0; i<tables_p.size(); ++i) {
       if (subDirName_p.empty()) {
 	tableInfo().readmeAddLine ("  " + tables_p[i].tableName());
       } else {
@@ -137,11 +137,11 @@ namespace casacore { //# NAMESPACE CASACORE - BEGIN
   void ConcatTable::getPartNames (std::vector<String>& names, Bool recursive) const
   {
     if (recursive) {
-      for (uInt i=0; i<tables_p.nelements(); ++i) {
+      for (uInt i=0; i<tables_p.size(); ++i) {
         tables_p[i].baseTablePtr()->getPartNames (names, recursive);
       }
     } else {
-      for (uInt i=0; i<tables_p.nelements(); ++i) {
+      for (uInt i=0; i<tables_p.size(); ++i) {
         names.push_back (tables_p[i].tableName());
       }
     }
@@ -149,7 +149,7 @@ namespace casacore { //# NAMESPACE CASACORE - BEGIN
 
   void ConcatTable::reopenRW()
   {
-    for (uInt i=0; i<tables_p.nelements(); ++i) {
+    for (uInt i=0; i<tables_p.size(); ++i) {
       tables_p[i].reopenRW();
     }
     option_p = Table::Update;
@@ -176,13 +176,13 @@ namespace casacore { //# NAMESPACE CASACORE - BEGIN
   }
   void ConcatTable::mergeLock (const TableLock& lockOptions)
   {
-    for (uInt i=0; i<tables_p.nelements(); ++i) {
+    for (uInt i=0; i<tables_p.size(); ++i) {
       tables_p[i].baseTablePtr()->mergeLock (lockOptions);
     }
   }
   Bool ConcatTable::hasLock (FileLocker::LockType type) const
   {
-    for (uInt i=0; i<tables_p.nelements(); ++i) {
+    for (uInt i=0; i<tables_p.size(); ++i) {
       if (! tables_p[i].hasLock (type)) {
 	return False;
       }
@@ -191,7 +191,7 @@ namespace casacore { //# NAMESPACE CASACORE - BEGIN
   }
   Bool ConcatTable::lock (FileLocker::LockType type, uInt nattempts)
   {
-    for (uInt i=0; i<tables_p.nelements(); ++i) {
+    for (uInt i=0; i<tables_p.size(); ++i) {
       if (! tables_p[i].lock (type, nattempts)) {
 	return False;
       }
@@ -200,7 +200,7 @@ namespace casacore { //# NAMESPACE CASACORE - BEGIN
   }
   void ConcatTable::unlock()
   {
-    for (uInt i=0; i<tables_p.nelements(); ++i) {
+    for (uInt i=0; i<tables_p.size(); ++i) {
       tables_p[i].unlock();
     }
   }
@@ -208,7 +208,7 @@ namespace casacore { //# NAMESPACE CASACORE - BEGIN
   void ConcatTable::flush (Bool fsync, Bool recursive)
   {
     // Flush the underlying table.
-    for (uInt i=0; i<tables_p.nelements(); ++i) {
+    for (uInt i=0; i<tables_p.size(); ++i) {
       tables_p[i].flush (fsync, recursive);
     }
     if (!isMarkedForDelete()) {
@@ -220,7 +220,7 @@ namespace casacore { //# NAMESPACE CASACORE - BEGIN
 
   void ConcatTable::resync()
   {
-    for (uInt i=0; i<tables_p.nelements(); ++i) {
+    for (uInt i=0; i<tables_p.size(); ++i) {
       tables_p[i].resync();
     }
   }
@@ -251,8 +251,8 @@ namespace casacore { //# NAMESPACE CASACORE - BEGIN
       ios.putstart ("ConcatTable", 0);
       // Make the name of the base tables relative to this table.
       // First move a table if subDirName_p is set.
-      ios << uInt(tables_p.nelements());
-      for (uInt i=0; i<tables_p.nelements(); ++i) {
+      ios << uInt(tables_p.size());
+      for (uInt i=0; i<tables_p.size(); ++i) {
         if (! subDirName_p.empty()) {
           tables_p[i].rename
             (sdName + Path(tables_p[i].tableName()).baseName(),
@@ -262,7 +262,7 @@ namespace casacore { //# NAMESPACE CASACORE - BEGIN
 				     tableName());
       }
       // Write the names to be concatenated.
-      ios << subTableNames_p;
+      putBlock(ios, subTableNames_p);
       ios.putend();
       writeEnd (ios);
       changed_p = False;
@@ -287,7 +287,7 @@ namespace casacore { //# NAMESPACE CASACORE - BEGIN
       ios >> rootNames[i];
       rootNames[i] = Path::addDirectory (rootNames[i], tableName());
     }
-    ios >> subTableNames_p;
+    getBlock(ios, subTableNames_p);
     ios.getend();
     openTables (rootNames, option, lockOptions, tsmOption);
     initialize();
@@ -318,9 +318,9 @@ namespace casacore { //# NAMESPACE CASACORE - BEGIN
   void ConcatTable::initialize()
   {
     // Check if all tables have the same description.
-    std::vector<std::shared_ptr<TableDesc>> actualDesc(tables_p.nelements());;
+    std::vector<std::shared_ptr<TableDesc>> actualDesc(tables_p.size());;
     Bool equalDataTypes;
-    for (uInt i=0; i<tables_p.nelements(); ++i) {
+    for (uInt i=0; i<tables_p.size(); ++i) {
       actualDesc[i] = std::make_shared<TableDesc>(tables_p[i].actualTableDesc());
       if (actualDesc[i]->columnDescSet().isEqual
 	  (actualDesc[0]->columnDescSet(), equalDataTypes)) {
@@ -337,7 +337,7 @@ namespace casacore { //# NAMESPACE CASACORE - BEGIN
       if (colDesc.isArray()  &&
           (colDesc.options() & ColumnDesc::FixedShape) != 0) {
         Bool sameShape = true;
-        for (uInt j=1; j<tables_p.nelements(); ++j) {
+        for (uInt j=1; j<tables_p.size(); ++j) {
           const ColumnDesc& cd = actualDesc[j]->columnDesc(i);
           if ((cd.options() & ColumnDesc::FixedShape) == 0  ||
               ! colDesc.shape().isEqual (cd.shape())) {
@@ -365,10 +365,10 @@ namespace casacore { //# NAMESPACE CASACORE - BEGIN
   {
     // Check for each subtable if it exists in all tables.
     // If fine, create a ConcatTable for each subtable.
-    std::vector<Table> subtables(tables_p.nelements());
-    for (uInt i=0; i<subTableNames_p.nelements(); ++i) {
+    std::vector<Table> subtables(tables_p.size());
+    for (uInt i=0; i<subTableNames_p.size(); ++i) {
       const String& tname = subTableNames_p[i];
-      for (uInt j=0; j<tables_p.nelements(); ++j) {
+      for (uInt j=0; j<tables_p.size(); ++j) {
 	subtables[j] = tables_p[j].keywordSet().asTable (tname);
       }
       Table concSubtab(subtables);
@@ -382,7 +382,7 @@ namespace casacore { //# NAMESPACE CASACORE - BEGIN
     //# Open the file, read name and type of root and read object data.
     uInt nrtab;
     std::vector<String> rootNames;
-    Block<String> subNames;
+    std::vector<String> subNames;
     Int version = ios.getstart ("ConcatTable");
     AlwaysAssert (version==0, AipsError);
     ios >> nrtab;
@@ -390,7 +390,7 @@ namespace casacore { //# NAMESPACE CASACORE - BEGIN
     for (uInt i=0; i<nrtab; ++i) {
       ios >> rootNames[i];
     }
-    ios >> subNames;
+    getBlock(ios, subNames);
     ios.getend();
     TableUtil::getLayout (desc, rootNames[0]);
   }
@@ -407,7 +407,7 @@ namespace casacore { //# NAMESPACE CASACORE - BEGIN
 
   Block<BaseColumn*> ConcatTable::getRefColumns (const String& columnName)
   {
-    Block<BaseColumn*> cols(tables_p.nelements());
+    Block<BaseColumn*> cols(tables_p.size());
     for (uInt i=0; i<cols.nelements(); ++i) {
       cols[i] = tables_p[i].baseTablePtr()->getColumn (columnName);
     }
@@ -417,7 +417,7 @@ namespace casacore { //# NAMESPACE CASACORE - BEGIN
   //# Test if the table is writable.
   Bool ConcatTable::isWritable() const
   {
-    for (uInt i=0; i<tables_p.nelements(); ++i) {
+    for (uInt i=0; i<tables_p.size(); ++i) {
       if (! tables_p[i].isWritable()) {
 	return False;
       }
@@ -515,7 +515,7 @@ void ConcatTable::checkAddColumn (const String& name, Bool addToParent)
 void ConcatTable::addColumn (const ColumnDesc& columnDesc, Bool addToParent)
 {
   checkAddColumn (columnDesc.name(), addToParent);
-  for (uInt i=0; i<tables_p.nelements(); ++i) {
+  for (uInt i=0; i<tables_p.size(); ++i) {
     tables_p[i].addColumn (columnDesc, addToParent);
   }
   addConcatCol (columnDesc);
@@ -526,7 +526,7 @@ void ConcatTable::addColumn (const ColumnDesc& columnDesc,
                              Bool addToParent)
 {
   checkAddColumn (columnDesc.name(), addToParent);
-  for (uInt i=0; i<tables_p.nelements(); ++i) {
+  for (uInt i=0; i<tables_p.size(); ++i) {
     tables_p[i].addColumn (columnDesc, dataManager, byName, addToParent); 
   }
   addConcatCol (columnDesc);
@@ -537,7 +537,7 @@ void ConcatTable::addColumn (const ColumnDesc& columnDesc,
                              Bool addToParent)
 {
   checkAddColumn (columnDesc.name(), addToParent);
-  for (uInt i=0; i<tables_p.nelements(); ++i) {
+  for (uInt i=0; i<tables_p.size(); ++i) {
     tables_p[i].addColumn (columnDesc,dataManager, addToParent);
   }
   addConcatCol (columnDesc);
@@ -553,7 +553,7 @@ void ConcatTable::addColumn (const TableDesc& tableDesc,
     checkAddColumn (tableDesc[i].name(), addToParent);
   }
   // Add to the parents.
-  for (uInt i=0; i<tables_p.nelements(); ++i) {
+  for (uInt i=0; i<tables_p.size(); ++i) {
     tables_p[i].addColumn (tableDesc, dataManager, addToParent);
   }
   addConcatCol(tableDesc);

@@ -321,8 +321,8 @@ void TiledShapeStMan::updateRowMap (uInt cubeNr, uInt pos, rownr_t rownr)
 	}
 	// A new entry has to be inserted.
         // Extend the maps when needed.
-        if (nrUsedRowMap_p + nrext > rowMap_p.nelements()) {
-	    uInt nrnew = rowMap_p.nelements() + 64;
+        if (nrUsedRowMap_p + nrext > rowMap_p.size()) {
+	    uInt nrnew = rowMap_p.size() + 64;
 	    rowMap_p.resize (nrnew);
 	    cubeMap_p.resize (nrnew);
 	    posMap_p.resize (nrnew);
@@ -419,8 +419,8 @@ void TiledShapeStMan::updateRowMap (uInt cubeNr, uInt pos, rownr_t rownr)
     // A new entry has to be inserted (or 2 if in the middle).
     // So shift to the right (after extending the maps when needed).
     uInt nm = (atB || atE  ?  1 : 2);
-    if (nrUsedRowMap_p + nm > rowMap_p.nelements()) {
-        uInt nrnew = rowMap_p.nelements() + 64;
+    if (nrUsedRowMap_p + nm > rowMap_p.size()) {
+        uInt nrnew = rowMap_p.size() + 64;
 	rowMap_p.resize (nrnew);
 	cubeMap_p.resize (nrnew);
 	posMap_p.resize (nrnew);

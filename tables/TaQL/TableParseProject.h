@@ -35,6 +35,7 @@
 #include <casacore/casa/Arrays/ArrayFwd.h>
 #include <casacore/casa/BasicSL/String.h>
 #include <casacore/casa/Containers/Record.h>
+#include <vector>
 
 namespace casacore { //# NAMESPACE CASACORE - BEGIN
 
@@ -80,11 +81,11 @@ namespace casacore { //# NAMESPACE CASACORE - BEGIN
       { return *tableDesc_p; }
 
     // Get the projected column names.
-    const Block<String>& getColumnNames() const
+    const std::vector<String>& getColumnNames() const
       { return columnNames_p; }
 
     // Get the projected column expressions.
-    const Block<TableExprNode>& getColumnExpr() const
+    const std::vector<TableExprNode>& getColumnExpr() const
       { return columnExpr_p; }
 
     // Are expressions used in the column projection?
@@ -199,23 +200,23 @@ namespace casacore { //# NAMESPACE CASACORE - BEGIN
     //# TableDesc has no copy ctor, so use a shared_ptr.
     std::shared_ptr<TableDesc> tableDesc_p;
     Record dminfo_p;
-    //# Block of selected column names (new name in case of select).
-    Block<String> columnNames_p;
-    //# Block of selected mask column names (for masked arrays).
-    Block<String> columnNameMasks_p;
-    //# Block of selected column expressions.
-    Block<TableExprNode> columnExpr_p;
+    //# Selected column names (new name in case of select).
+    std::vector<String> columnNames_p;
+    //# Selected mask column names (for masked arrays).
+    std::vector<String> columnNameMasks_p;
+    //# Selected column expressions.
+    std::vector<TableExprNode> columnExpr_p;
     //# The old name for a selected column.
-    Block<String> columnOldNames_p;
+    std::vector<String> columnOldNames_p;
     //# The new data type for a column.
-    Block<String> columnDtypes_p;
+    std::vector<String> columnDtypes_p;
     //# The keywords used in a column.
-    Block<TableRecord> columnKeywords_p;
+    std::vector<TableRecord> columnKeywords_p;
     //# Number of real expressions used in selected columns.
     uInt nrSelExprUsed_p;
     //# The projected columns used in the HAVING and ORDERBY clauses.
-    Block<uInt>  projectExprSubset_p;
-    Block<Bool>  projectExprSelColumn_p;
+    std::vector<uInt>  projectExprSubset_p;
+    std::vector<Bool>  projectExprSelColumn_p;
     //# The first table used when creating a column object.
     //# All other tables used for them should have the same size.
     Table  firstColTable_p;

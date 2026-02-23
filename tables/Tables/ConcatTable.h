@@ -36,6 +36,7 @@
 #include <casacore/casa/BasicSL/String.h>
 #include <casacore/casa/Arrays/Vector.h>
 #include <map>
+#include <vector>
 
 namespace casacore { //# NAMESPACE CASACORE - BEGIN
 
@@ -352,9 +353,9 @@ namespace casacore { //# NAMESPACE CASACORE - BEGIN
     void addConcatCol (const TableDesc& tdesc);
 
     //# Data members
-    Block<String>     subTableNames_p;
+    std::vector<String> subTableNames_p;
     String            subDirName_p;
-    Block<Table>      tables_p;            //# Tables forming the concat
+    std::vector<Table> tables_p;           //# Tables forming the concat
     std::map<String,ConcatColumn*> colMap_p;  //# map name to column
     TableRecord       keywordSet_p;
     Bool              changed_p;           //# True = changed since last write

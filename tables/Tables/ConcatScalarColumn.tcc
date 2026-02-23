@@ -50,7 +50,7 @@ namespace casacore { //# NAMESPACE CASACORE - BEGIN
   {
     Vector<T>& vec = static_cast<Vector<T>&>(arr);
     rownr_t st = 0;
-    for (uInt i=0; i<refColPtr_p.nelements(); ++i) {
+    for (uInt i=0; i<refColPtr_p.size(); ++i) {
       rownr_t nr = refColPtr_p[i]->nrow();
       Vector<T> part = vec(Slice(st, nr));
       refColPtr_p[i]->getScalarColumn (part);
@@ -89,7 +89,7 @@ namespace casacore { //# NAMESPACE CASACORE - BEGIN
   {
     Vector<T> vec (static_cast<const Vector<T>&>(arr));
     rownr_t st = 0;
-    for (uInt i=0; i<refColPtr_p.nelements(); ++i) {
+    for (uInt i=0; i<refColPtr_p.size(); ++i) {
       rownr_t nr = refColPtr_p[i]->nrow();
       Vector<T> part = vec(Slice(st, nr));
       refColPtr_p[i]->putScalarColumn (part);

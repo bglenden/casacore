@@ -191,9 +191,9 @@ private:
     // The set of all columns.
     std::map<String,std::shared_ptr<ColumnDesc>> cols_p;
     // The order of addition of column descriptions.
-    //# This is in fact a Block<ColumnDesc*>, but a void* is used
+    //# This is in fact a vector<ColumnDesc*>, but a void* is used
     //# to reduce the number of template instantiations.
-    Block<void*> colSeq_p;
+    std::vector<void*> colSeq_p;
 };
 
 
