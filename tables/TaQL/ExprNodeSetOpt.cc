@@ -26,7 +26,6 @@
 //# Includes
 #include <casacore/tables/TaQL/ExprNodeSetOpt.h>
 #include <casacore/tables/TaQL/ExprNodeSet.h>
-#include <casacore/casa/Containers/Block.h>
 #include <casacore/casa/Utilities/GenSort.h>
 #include <casacore/casa/BasicSL/STLIO.h>
 #include <casacore/casa/Exceptions/Error.h>
@@ -156,8 +155,8 @@ namespace casacore { //# NAMESPACE CASACORE - BEGIN
     // Get all start values and sort them (indirectly) in ascending order.
     // Use lowest value if no start given.
     // Similar for all end values.
-    Block<T> stvals (set.size(), std::numeric_limits<T>::lowest());
-    Block<T> endvals(set.size(), std::numeric_limits<T>::max());
+    std::vector<T> stvals (set.size(), std::numeric_limits<T>::lowest());
+    std::vector<T> endvals(set.size(), std::numeric_limits<T>::max());
     // Make an id for the gets.
     // The values are constant, hence use an use arbitrary row number.
     TableExprId id(0);

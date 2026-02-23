@@ -600,7 +600,7 @@ namespace casacore { //# NAMESPACE CASACORE - BEGIN
         curSel->execute (node.style().doTiming(), False, False, 0,
                          node.style().doTracing(), itsTempTables, itsStack);
         hrval->setTable (curSel->getTable());
-        Block<String> block = curSel->getColumnNames();
+        std::vector<String> block = curSel->getColumnNames();
         hrval->setNames (Vector<String>(block.begin(), block.end()));
         hrval->setString ("select");
       } else {
@@ -632,7 +632,7 @@ namespace casacore { //# NAMESPACE CASACORE - BEGIN
     TaQLNodeHRValue* hrval = new TaQLNodeHRValue();
     TaQLNodeResult res(hrval);
     hrval->setTable (curSel->getTable());
-    Block<String> block = curSel->getColumnNames();
+    std::vector<String> block = curSel->getColumnNames();
     hrval->setNames (Vector<String>(block.begin(), block.end()));
     hrval->setString ("update");
     popStack();
@@ -668,7 +668,7 @@ namespace casacore { //# NAMESPACE CASACORE - BEGIN
     TaQLNodeHRValue* hrval = new TaQLNodeHRValue();
     TaQLNodeResult res(hrval);
     hrval->setTable (curSel->getTable());
-    Block<String> block = curSel->getColumnNames();
+    std::vector<String> block = curSel->getColumnNames();
     hrval->setNames (Vector<String>(block.begin(), block.end()));
     hrval->setString ("insert");
     popStack();
@@ -707,7 +707,7 @@ namespace casacore { //# NAMESPACE CASACORE - BEGIN
     if (outer) {
       curSel->execute (node.style().doTiming(), False, True, 0);
       hrval->setTable (curSel->getTable());
-      Block<String> block = curSel->getColumnNames();
+      std::vector<String> block = curSel->getColumnNames();
       hrval->setNames (Vector<String>(block.begin(), block.end()));
       hrval->setString ("count");
     } else {
@@ -760,7 +760,7 @@ namespace casacore { //# NAMESPACE CASACORE - BEGIN
     TaQLNodeHRValue* hrval = new TaQLNodeHRValue();
     TaQLNodeResult res(hrval);
     hrval->setTable (curSel->getTable());
-    Block<String> block = curSel->getColumnNames();
+    std::vector<String> block = curSel->getColumnNames();
     hrval->setNames (Vector<String>(block.begin(), block.end()));
     hrval->setString ("cretab");
     popStack();
@@ -1041,11 +1041,8 @@ namespace casacore { //# NAMESPACE CASACORE - BEGIN
         }
       }
     }
-    Block<Table> tabs(tables.size());
-    for (uInt i=0; i<tables.size(); ++i) {
-      tabs[i] = tables[i];
-    }
-    Block<String> subtables;
+    std::vector<Table> tabs(tables.begin(), tables.end());
+    std::vector<String> subtables;
     if (node.itsSubTables.isValid()) {
       const std::vector<TaQLNode>& names = node.itsSubTables.getMultiRep()->itsNodes;
       subtables.resize (names.size());

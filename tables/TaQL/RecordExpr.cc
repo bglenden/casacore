@@ -30,8 +30,8 @@
 #include <casacore/tables/TaQL/ExprNodeArray.h>
 #include <casacore/casa/Arrays/Vector.h>
 #include <casacore/casa/Arrays/ArrayUtil.h>
-#include <casacore/casa/Containers/Block.h>
 #include <casacore/casa/Exceptions/Error.h>
+#include <vector>
 
 
 namespace casacore { //# NAMESPACE CASACORE - BEGIN
@@ -42,7 +42,7 @@ TableExprNode makeRecordExpr (const RecordDesc& desc,
   if (fieldNumber < 0  ||  fieldNumber >= Int(desc.nfields())) {
     throw TableInvExpr ("makeRecordExpr: invalid field number given");
   }
-  Block<Int> fieldNrs (1, fieldNumber);
+  std::vector<Int> fieldNrs (1, fieldNumber);
   if (desc.isArray (fieldNumber)) {
     return new TableExprNodeRecordFieldArray (desc.type(fieldNumber),
                                               fieldNrs);
@@ -71,7 +71,7 @@ TableExprNode makeRecordExpr (const RecordInterface& record,
   if (names.nelements() == 0) {
     throw TableInvExpr ("makeRecordExpr: empty field name given");
 }
-  Block<Int> fieldNrs (names.nelements());
+  std::vector<Int> fieldNrs (names.nelements());
   String name;
   Int fld=0;
   const RecordInterface* recPtr = &record;

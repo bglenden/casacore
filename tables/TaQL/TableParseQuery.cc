@@ -590,8 +590,8 @@ namespace casacore { //# NAMESPACE CASACORE - BEGIN
     }
     //# First check if the update columns and values are correct.
     uInt nrkey = update_p.size();
-    Block<TableColumn> cols(nrkey);
-    Block<ArrayColumn<Bool> > maskCols(nrkey);
+    std::vector<TableColumn> cols(nrkey);
+    std::vector<ArrayColumn<Bool> > maskCols(nrkey);
     for (uInt i=0; i<nrkey; i++) {
       TableParseUpdate& key = *(update_p[i]);
       key.check (origTable, updTable);
@@ -677,8 +677,7 @@ namespace casacore { //# NAMESPACE CASACORE - BEGIN
       tableProject_p.setStoredColumns();
     }
     // Get the source columns.
-    Block<String> sourceNames;
-    sourceNames = insSel_p->getColumnNames();
+    std::vector<String> sourceNames = insSel_p->getColumnNames();
     if (sourceNames.size() == 0) {
       sourceNames = TableParseUtil::getStoredColumns (sel);
     }
@@ -755,8 +754,7 @@ namespace casacore { //# NAMESPACE CASACORE - BEGIN
     ScalarColumn<Int64> countCol(tab, "_COUNT_");
     // Iterate for all columns through the input table.
     Vector<String> colNames = intab.tableDesc().columnNames();
-    Block<String> bcolNames(colNames.size());
-    std::copy (colNames.begin(), colNames.end(), bcolNames.begin());
+    std::vector<String> bcolNames(colNames.begin(), colNames.end());
     TableIterator iter (intab, bcolNames);
     while (!iter.pastEnd()) {
       Table tabfrom = iter.table();

@@ -244,12 +244,12 @@ namespace casacore { //# NAMESPACE CASACORE - BEGIN
         throw TableInvExpr("Expressions can be given in SELECT or GIVING, "
                            "not both");
       }
-      Block<String> names(nrcol);
-      Block<String> nameMasks(nrcol);
-      Block<String> oldNames(nrcol);
-      Block<TableExprNode> exprs(nrcol);
-      Block<String> dtypes(nrcol);
-      Block<TableRecord> keywords(nrcol);
+      std::vector<String> names(nrcol);
+      std::vector<String> nameMasks(nrcol);
+      std::vector<String> oldNames(nrcol);
+      std::vector<TableExprNode> exprs(nrcol);
+      std::vector<String> dtypes(nrcol);
+      std::vector<TableRecord> keywords(nrcol);
       Int nr = 0;
       for (Int i=0; i<nrcol; ++i) {
         if (! (columnExpr_p[i].isNull()  &&  columnNames_p[i].empty())) {
@@ -279,11 +279,11 @@ namespace casacore { //# NAMESPACE CASACORE - BEGIN
           ++nr;
         }
       }
-      names.resize    (nr, True);
-      oldNames.resize (nr, True);
-      exprs.resize    (nr, True);
-      dtypes.resize   (nr, True);
-      keywords.resize (nr, True);
+      names.resize    (nr);
+      oldNames.resize (nr);
+      exprs.resize    (nr);
+      dtypes.resize   (nr);
+      keywords.resize (nr);
       columnNames_p     = names;
       columnNameMasks_p = nameMasks;
       columnOldNames_p  = oldNames;

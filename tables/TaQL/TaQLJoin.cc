@@ -140,8 +140,8 @@ namespace casacore { //# NAMESPACE CASACORE - BEGIN
     const TableExprNodeSetElemCont& elem =
       dynamic_cast<const TableExprNodeSetElemCont&>(*(set[0].get()));
     // Get all start-end interval values.
-    Block<T> stvals(rows.size());
-    Block<T> endvals(rows.size());
+    std::vector<T> stvals(rows.size());
+    std::vector<T> endvals(rows.size());
     for (size_t i=0; i<rows.size(); ++i) {
       // Use evaluate to ensure that mid-width is converted to start-end.
       TENSEBShPtr newElem = elem.evaluate (rows[i]);
