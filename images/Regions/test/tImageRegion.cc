@@ -25,6 +25,7 @@
 #include <casacore/images/Regions/ImageRegion.h>
 
 #include <casacore/casa/OS/Directory.h>
+#include <casacore/casa/OS/Path.h>
 #include <casacore/coordinates/Coordinates/CoordinateUtil.h>
 #include <casacore/images/Images/PagedImage.h>
 
@@ -44,7 +45,7 @@ int main ()
     names.push_back("tmp.im");
     names.push_back("'tmp.im'");
     names.push_back("'./tmp.im'");
-    names.push_back("'$PWD/tmp.im'");
+    names.push_back("'" + Path(".").absoluteName() + "/tmp.im'");
     names.push_back("./tmp.im");
     names.push_back("$PWD/tmp.im");
     // various escaping tests for fromLatticeExpession

@@ -1,0 +1,30 @@
+#!/bin/sh
+# -----------------------------------------------------------------------------
+# Usage: tDerivedMSCal.run
+# -----------------------------------------------------------------------------
+# This script executes the program tDerivedMSCal to test the
+# DerivedMSCal virtual-column engine.
+#
+# The test MS lives in the ms module's test directory; compute the
+# path relative to $testsrcdir (derivedmscal/DerivedMC/test).
+# -----------------------------------------------------------------------------
+
+MS="mssel_test_small.ms"
+mstestdir="$testsrcdir/../../../ms/MSSel/test"
+
+getTestMS() {
+    tar zxf "$mstestdir/$MS.tgz"
+}
+
+cleanup() {
+    \rm -rf $MS tDerivedMSCal_tmp.tab
+}
+
+# Extract the test MS from the ms module's test data.
+getTestMS
+
+# Run the test (without checkuvw — just the core derived-column checks).
+$casa_checktool ./tDerivedMSCal $MS
+
+# Remove the test MS and any other cleanup required.
+cleanup

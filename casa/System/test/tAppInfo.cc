@@ -33,6 +33,8 @@
 #include <casacore/casa/System/AipsrcVector.h>
 #include <casacore/casa/Utilities/Regex.h>
 
+#include <cstdlib>
+
 #include <casacore/casa/namespace.h>
 int main()
 {
@@ -49,7 +51,9 @@ int main()
 	tmp.resize(0);
 
 	Vector<String> dirs(3);
-	dirs(0) = "."; dirs(1) = "/tmp"; dirs(2) = "/doesnotexist";
+	const char* tmpenv = getenv("TMPDIR");
+	String tmpdir = (tmpenv && *tmpenv) ? String(tmpenv) : String("/tmp");
+	dirs(0) = "."; dirs(1) = tmpdir; dirs(2) = "/doesnotexist";
 	uInt index = AipsrcVector<String>::registerRC(
 				      "user.directories.work", dirs);
 	AipsrcVector<String>::set(index, dirs);

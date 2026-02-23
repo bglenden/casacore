@@ -1,0 +1,18 @@
+#!/bin/sh
+#-----------------------------------------------------------------------------
+# Script to execute the tAppInfo program via assay.
+# Sets up a writable temporary HOME so Aipsrc can write ~/.aipsrc,
+# which is needed in sandboxed or constrained environments.
+#=============================================================================
+
+tmpdir="${TMPDIR:-/tmp}"
+testhome="$tmpdir/tAppInfo_home_$$"
+mkdir -p "$testhome"
+HOME="$testhome"
+export HOME
+
+$casa_checktool ./tAppInfo
+status=$?
+
+rm -rf "$testhome"
+exit $status

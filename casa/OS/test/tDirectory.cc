@@ -37,6 +37,7 @@
 #include <casacore/casa/Utilities/GenSort.h>
 #include <casacore/casa/iostream.h>
 
+#include <cstdlib>
 
 #include <casacore/casa/namespace.h>
 // <summary>
@@ -275,8 +276,11 @@ void doIt (Bool doExcp)
     AlwaysAssertExit (!test2.exists());
 
     // Move a directory tree across a file system and back.
-    Directory testtmp ("/tmp/test5");
-    test5.move ("/tmp/test5");
+    const char* tmpbase = getenv("TMPDIR");
+    if (!tmpbase || !*tmpbase) tmpbase = "/tmp";
+    String crossFsDir = String(tmpbase) + "/test5";
+    Directory testtmp (crossFsDir);
+    test5.move (crossFsDir);
     AlwaysAssertExit (testtmp.isDirectory());
     AlwaysAssertExit (testtmp.nEntries() == 6);
     AlwaysAssertExit (!test5.exists());

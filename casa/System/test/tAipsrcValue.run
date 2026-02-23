@@ -1,0 +1,18 @@
+#!/bin/sh
+#-----------------------------------------------------------------------------
+# Script to execute the tAipsrcValue program via assay.
+# Sets up a writable temporary HOME so Aipsrc::save() can write ~/.aipsrc,
+# which is needed in sandboxed or constrained environments.
+#=============================================================================
+
+tmpdir="${TMPDIR:-/tmp}"
+testhome="$tmpdir/tAipsrcValue_home_$$"
+mkdir -p "$testhome"
+HOME="$testhome"
+export HOME
+
+$casa_checktool ./tAipsrcValue
+status=$?
+
+rm -rf "$testhome"
+exit $status

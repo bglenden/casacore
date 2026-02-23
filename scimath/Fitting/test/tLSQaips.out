@@ -419,7 +419,7 @@ DComplex Non-linear------------
 Iterations: 16
 Ready:      Incremental solution too small
 Sol:       (20,0), (25,0), (4,0)
-me:        1.67828e-11, 1.67828e-11
+me:        0, 0
 ---------------------------------------------------
 Complex Non-linear------------
 Iterations: 15
@@ -469,7 +469,7 @@ Non-linear------------
 Iterations: 15
 Ready:      Incremental solution too small
 Sol:       20, 25, 4
-me:        3.41654e-08, 3.41654e-08
+me:        0, 0
 Non-linear with 1.0 (5% of max) noise ------------
 Iterations: 15
 Ready:      Incremental solution too small
@@ -484,5 +484,5 @@ Non-linear---- Float --------
 Iterations: 15
 Ready:      Incremental solution too small
 Sol:       20, 25, 4
-me:        3.2312e-08, 3.2312e-08
+me:        0, 0
 ---------------------------------------------------

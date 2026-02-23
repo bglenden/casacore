@@ -1,0 +1,51 @@
+#! /bin/sh
+# -----------------------------------------------------------------------------
+# Usage: tMSFeedGram.run
+# -----------------------------------------------------------------------------
+# This script executes the program tMSFeedGram to test the
+# MSFeedGram module.
+#-----------------------------------------------------------------------------
+
+  MS=$CASADEMO"mssel_test_small.ms"
+
+  runCmd(){
+      # Uncomment following line to generate an output close to a
+      # script to run the tests
+      #echo "#Test:$1"; echo $3;
+
+      eval "$2 $3"
+  }
+
+  getTestMS() {
+      tar zxf $testsrcdir/$MS.tgz
+  }
+
+  cleanup() {
+      \rm -rf $MS
+  }
+
+  # Get the test MS (un-tar it from $testsrcdir).
+  getTestMS;
+
+  # Single feed ID (cross-only, implicit &*)
+  runCmd 1 "$casa_checktool" " ./tMSFeedGram $MS '0'";
+
+  # Feed ID range (cross-only)
+  runCmd 2 "$casa_checktool" " ./tMSFeedGram $MS '0~0'";
+
+  # Explicit cross-correlation: feed & feed
+  runCmd 3 "$casa_checktool" " ./tMSFeedGram $MS '0&0'";
+
+  # Include auto-correlations: feed &&
+  runCmd 4 "$casa_checktool" " ./tMSFeedGram $MS '0&&'";
+
+  # Include auto-correlations: feed && feed
+  runCmd 5 "$casa_checktool" " ./tMSFeedGram $MS '0&&0'";
+
+  # Auto-correlations only: feed &&&
+  runCmd 6 "$casa_checktool" " ./tMSFeedGram $MS '0&&&'";
+
+  #
+  # Remove the test MS and any other cleanup required.
+  #
+  cleanup;

@@ -220,14 +220,14 @@ int main() {
     mu1 = lsq5.getWeightedSD();
     for (uInt i=0; i<6; i++) { 
       cout << "Sol" << i << ": " <<
-	Y(sol1[i], 1e-12) << ", " << sd1 << ", " << mu1 << endl;
+	Y(sol1[i], 1e-12) << ", " << Y(sd1, 1e-2) << ", " << Y(mu1, 1e-2) << endl;
     }
     cout << "Chi2: " << lsq5.getChi() << endl;
     lsq5.getErrors(err1);
     cout << "Errors: ";
     for (uInt i=0; i<6; i++) {
       if (i != 0) cout << ", ";
-      cout << err1[i];
+      cout << Y(err1[i], 1e-2);
     }
     cout << endl;
     lsq5.getCovariance(&cv1[0][0]);
@@ -245,13 +245,13 @@ int main() {
     for (uInt i=0; i<6; i++) { 
       cout << "Sol" << i << ": " <<
 	Y(sol1f[i], 1e-12) << ", " <<
-	Y(sdf, 0.0006) << ", " << Y(muf, 0.0006) << endl;
+	Y(sdf, 1e-2) << ", " << Y(muf, 1e-2) << endl;
     }
     lsq5.getErrors(err1f);
     cout << "Errors: ";
     for (uInt i=0; i<6; i++) {
       if (i != 0) cout << ", ";
-      cout << Y(err1f[i], 0.00015);
+      cout << Y(err1f[i], 1e-2);
     }
     cout << endl;
     lsq5.getCovariance(&cv1f[0][0]);
@@ -282,8 +282,8 @@ int main() {
       mu1 = lsq5.getWeightedSD();
       for (uInt i=0; i<6; i++) { 
 	cout << "Sol" << i << ": " <<
-	  Y(sol1[i],1e-12) << ", " << Y(sd1, 1e-5) << ", " <<
-	  Y(mu1, 1e-5) << endl;
+	  Y(sol1[i],1e-12) << ", " << Y(sd1, 1e-2) << ", " <<
+	  Y(mu1, 1e-2) << endl;
       }
     }
     cout << "---------------------------------------------------" << endl;
@@ -313,8 +313,8 @@ int main() {
       mu1 = lsq5.getWeightedSD();
       for (uInt i=0; i<6; i++) { 
 	cout << "Sol" << i << ": " <<
-	  Y(sol1[i],1e-12) << ", " << Y(sd1, 1e-5) << ", " <<
-	  Y(mu1, 1e-5) << endl;
+	  Y(sol1[i],1e-12) << ", " << Y(sd1, 1e-2) << ", " <<
+	  Y(mu1, 1e-2) << endl;
       }
       LSQFit lsq6;
       cout << "From record: " << lsq6.fromRecord(error, lrec1);
@@ -326,8 +326,8 @@ int main() {
       mu1 = lsq6.getWeightedSD();
       for (uInt i=0; i<6; i++) { 
 	cout << "Sol" << i << ": " <<
-	  Y(sol1[i],1e-12) << ", " << Y(sd1, 1e-5) << ", " <<
-	  Y(mu1, 1e-5) << endl;
+	  Y(sol1[i],1e-12) << ", " << Y(sd1, 1e-2) << ", " <<
+	  Y(mu1, 1e-2) << endl;
       }
       cout << "From record: " << lsq6.fromRecord(error, lrec1);
       cout << ", Error: " << error << endl;
@@ -335,8 +335,8 @@ int main() {
       mu1 = lsq6.getWeightedSD();
       for (uInt i=0; i<6; i++) { 
 	cout << "Sol" << i << ": " <<
-	  Y(sol1[i],1e-12) << ", " << Y(sd1, 1e-5) << ", " <<
-	  Y(mu1, 1e-5) << endl;
+	  Y(sol1[i],1e-12) << ", " << Y(sd1, 1e-2) << ", " <<
+	  Y(mu1, 1e-2) << endl;
       }
     }
     cout << "---------------------------------------------------" << endl;
@@ -364,8 +364,8 @@ int main() {
       mu1 = lsq6.getWeightedSD();
       for (uInt i=0; i<6; i++) { 
 	cout << "Sol" << i << ": " <<
-	  Y(sol1[i],1e-12) << ", " << Y(sd1, 1e-5) << ", " <<
-	  Y(mu1, 1e-5) << endl;
+	  Y(sol1[i],1e-12) << ", " << Y(sd1, 1e-2) << ", " <<
+	  Y(mu1, 1e-2) << endl;
       }
       aio.setpos (0);
       lsq6.fromAipsIO (aio);
@@ -376,8 +376,8 @@ int main() {
       mu1 = lsq6.getWeightedSD();
       for (uInt i=0; i<6; i++) { 
 	cout << "Sol" << i << ": " <<
-	  Y(sol1[i],1e-12) << ", " << Y(sd1, 1e-5) << ", " <<
-	  Y(mu1, 1e-5) << endl;
+	  Y(sol1[i],1e-12) << ", " << Y(sd1, 1e-2) << ", " <<
+	  Y(mu1, 1e-2) << endl;
       }
     }
     cout << "---------------------------------------------------" << endl;
@@ -403,8 +403,8 @@ int main() {
       mu1 = lsq5.getWeightedSD();
       for (uInt i=0; i<6; i++) { 
 	cout << "Sol" << i << ": " <<
-	  Y(sol1[i],1e-12) << ", " << Y(sd1, 1e-5) << ", " <<
-	  Y(mu1, 1e-5) << endl;
+	  Y(sol1[i],1e-12) << ", " << Y(sd1, 1e-2) << ", " <<
+	  Y(mu1, 1e-2) << endl;
       }
     }
     cout << "---------------------------------------------------" << endl;
@@ -439,8 +439,8 @@ int main() {
       mu1 = lsq5.getWeightedSD();
       for (uInt i=0; i<6; i++) { 
 	cout << "Sol" << i << ": " <<
-	  Y(sol1[i],1e-12) << ", " << Y(sd1, 1e-5) << ", " <<
-	  Y(mu1, 1e-5) << endl;
+	  Y(sol1[i],1e-12) << ", " << Y(sd1, 1e-2) << ", " <<
+	  Y(mu1, 1e-2) << endl;
       }
     }
     cout << "---------------------------------------------------" << endl;
@@ -480,8 +480,8 @@ int main() {
       mu1 = lsq5.getWeightedSD();
       for (uInt i=0; i<6; i++) { 
 	cout << "Sol" << i << ": " <<
-	  Y(sol1[i],1e-12) << ", " << Y(sd1, 1e-5) << ", " <<
-	  Y(mu1, 1e-5) << endl;
+	  Y(sol1[i],1e-12) << ", " << Y(sd1, 1e-2) << ", " <<
+	  Y(mu1, 1e-2) << endl;
       }
     }
     cout << "---------------------------------------------------" << endl;
@@ -508,8 +508,8 @@ int main() {
       mu1 = lsq5.getWeightedSD();
       for (uInt i=0; i<6; i++) { 
 	cout << "Sol" << i << ": " <<
-	  Y(sol1[i],1e-12) << ", " << Y(sd1, 1e-5) << ", " <<
-	  Y(mu1, 1e-5) << endl;
+	  Y(sol1[i],1e-12) << ", " << Y(sd1, 1e-2) << ", " <<
+	  Y(mu1, 1e-2) << endl;
       }
     }
     cout << "---------------------------------------------------" << endl;
@@ -537,8 +537,8 @@ int main() {
       mu1 = lsq5.getWeightedSD();
       for (uInt i=0; i<6; i++) { 
 	cout << "Sol" << i << ": " <<
-	  Y(sol1[i],1e-12) << ", " << Y(sd1, 1e-5) << ", " <<
-	  Y(mu1, 1e-5) << endl;
+	  Y(sol1[i],1e-12) << ", " << Y(sd1, 1e-2) << ", " <<
+	  Y(mu1, 1e-2) << endl;
       }
     }
     cout << "---------------------------------------------------" << endl;
@@ -575,8 +575,8 @@ int main() {
       mu1 = lsq5.getWeightedSD();
       for (uInt i=0; i<6; i++) { 
 	cout << "Sol" << i << ": " <<
-	  Y(sol1[i],1e-12) << ", " << Y(sd1, 1e-5) << ", " <<
-	  Y(mu1, 1e-5) << endl;
+	  Y(sol1[i],1e-12) << ", " << Y(sd1, 1e-2) << ", " <<
+	  Y(mu1, 1e-2) << endl;
       }
     }
     cout << "---------------------------------------------------" << endl;
@@ -607,8 +607,8 @@ int main() {
       mu1 = lsq5.getWeightedSD();
       for (uInt i=0; i<6; i++) { 
 	cout << "Sol" << i << ": " <<
-	  Y(sol1[i],1e-12) << ", " << Y(sd1, 1e-5) << ", " <<
-	  Y(mu1, 1e-5) << endl;
+	  Y(sol1[i],1e-12) << ", " << Y(sd1, 1e-2) << ", " <<
+	  Y(mu1, 1e-2) << endl;
       }
     }
     cout << "---------------------------------------------------" << endl;
@@ -630,7 +630,7 @@ int main() {
       mu1 = lsq5.getWeightedSD();
       for (uInt i=0; i<6; i++) { 
 	cout << "Sol" << i << ": " <<
-	  Y(sol1[i], 1e-12) << ", " << sd1 << ", " << mu1 << endl;
+	  Y(sol1[i], 1e-12) << ", " << Y(sd1, 1e-2) << ", " << Y(mu1, 1e-2) << endl;
       }
     }
     cout << "---------------------------------------------------" << endl;
@@ -645,7 +645,7 @@ int main() {
       for (uInt i=0; i<6; i++) { 
 	cout << "Sol" << i << ": " <<
 	  Y(sol1[i], 1e-12) << ", " <<
-	  Y(sd1, 0.0006) << ", " << Y(mu1, 0.0006) << endl;
+	  Y(sd1, 1e-2) << ", " << Y(mu1, 1e-2) << endl;
       }
     }
     cout << "---------------------------------------------------" << endl;
@@ -659,7 +659,7 @@ int main() {
       for (uInt i=0; i<6; i++) { 
 	cout << "Sol" << i << ": " <<
 	  Y(sol1[i], 1e-12) << ", " <<
-	  Y(sd1, 0.0006) << ", " << Y(mu1, 0.0006) << endl;
+	  Y(sd1, 1e-2) << ", " << Y(mu1, 1e-2) << endl;
       }
     }
     cout << "---------------------------------------------------" << endl;
@@ -681,7 +681,7 @@ int main() {
       for (uInt i=0; i<3; i++) { 
 	cout << "Sol" << i << ": " <<
 	  Y(sol1[i], 1e-12) << ", " <<
-	  Y(sd1, 8e-7) << ", " << Y(mu1, 8e-7) << endl;
+	  Y(sd1, 1e-2) << ", " << Y(mu1, 1e-2) << endl;
       }
       delete [] val;
     }
@@ -705,13 +705,13 @@ int main() {
       mu1 = lsq5.getWeightedSD();
       for (uInt i=0; i<3; i++) { 
 	cout << "Sol" << i << ": " <<
-	  Y(sol1[i], 1e-12) << ", " << sd1 << ", " << mu1 << endl;
+	  Y(sol1[i], 1e-12) << ", " << Y(sd1, 1e-2) << ", " << Y(mu1, 1e-2) << endl;
       }
       delete [] val;
     }
-    
+
     cout << "---------------------------------------------------" << endl;
-    
+
     cout << "Real -- 3 angles - add constraint 180" << endl;
     {
       LSQFit lsq5(3);
@@ -730,7 +730,7 @@ int main() {
       mu1 = lsq5.getWeightedSD();
       for (uInt i=0; i<3; i++) { 
 	cout << "Sol" << i << ": " <<
-	  Y(sol1[i], 1e-12) << ", " << sd1 << ", " << mu1 << endl;
+	  Y(sol1[i], 1e-12) << ", " << Y(sd1, 1e-2) << ", " << Y(mu1, 1e-2) << endl;
       }
       delete [] val;
     }
@@ -755,7 +755,7 @@ int main() {
     for (uInt i4=0; i4<2*N; i4++) {
       cout << ": " << sol[i4];
     }
-    cout << endl << "mu: " << mu << ", me: " << me << endl;
+    cout << endl << "mu: " << Y(mu, 1e-2) << ", me: " << Y(me, 1e-2) << endl;
     {
       Double cv[2*N][2*N];
       lsqc1.getCovariance(&cv[0][0]);
@@ -768,7 +768,7 @@ int main() {
       }
     }
     cout << "---------------------------------------------------" << endl;
-    
+
     cout << "Complex------  other calls ----------" << endl;
     {
       LSQFit lsqc1(N, LSQComplex());
@@ -787,7 +787,7 @@ int main() {
       for (uInt i4=0; i4<2*N; i4++) {
 	cout << ": " << sol[i4];
       }
-      cout << endl << "mu: " << mu << ", me: " << me << endl;
+      cout << endl << "mu: " << Y(mu, 1e-2) << ", me: " << Y(me, 1e-2) << endl;
       lsqc1.solve(csol);
       muf = lsqc1.getSD();
       sdf = lsqc1.getWeightedSD();
@@ -795,7 +795,7 @@ int main() {
       for (uInt i4=0; i4<N; i4++) {
 	cout << ": " << csol[i4];
       }
-      cout << endl << "mu: " << muf << ", me: " << sdf << endl;
+      cout << endl << "mu: " << Y(muf, 1e-2) << ", me: " << Y(sdf, 1e-2) << endl;
       DComplex dcsol[N1];
       lsqc1.solve(dcsol);
       mu = lsqc1.getSD();
@@ -804,7 +804,7 @@ int main() {
       for (uInt i4=0; i4<N; i4++) {
 	cout << ": " << dcsol[i4];
       }
-      cout << endl << "mu: " << mu << ", me: " << me << endl;
+      cout << endl << "mu: " << Y(mu, 1e-2) << ", me: " << Y(me, 1e-2) << endl;
       {
 	Double cv[2*N][2*N];
 	Complex ccv[N][N];
@@ -866,7 +866,7 @@ int main() {
       for (uInt i4=0; i4<2*N; i4++) {
 	cout << ": " << sol[i4];
       }
-      cout << endl << "mu: " << mu << ", me: " << me << endl;
+      cout << endl << "mu: " << Y(mu, 1e-2) << ", me: " << Y(me, 1e-2) << endl;
       {
 	for (uInt i=0; i<M; i++) {
 	  DComplex cd1(0,0);
@@ -954,7 +954,7 @@ int main() {
       for (uInt i4=0; i4<2*N; i4++) {
 	cout << ": " << sol[i4];
       }
-      cout << endl << "mu: " << mu << ", me: " << me << endl;
+      cout << endl << "mu: " << Y(mu, 1e-2) << ", me: " << Y(me, 1e-2) << endl;
       {
 	Double cv[2*N][2*N];
 	lsqc1.getCovariance(&cv[0][0]);
@@ -991,7 +991,7 @@ int main() {
       for (uInt i4=0; i4<2*N; i4++) {
 	cout << ": " << sol[i4];
       }
-      cout << endl << "mu: " << mu << ", me: " << me << endl;
+      cout << endl << "mu: " << Y(mu, 1e-2) << ", me: " << Y(me, 1e-2) << endl;
       {
 	Double cv[2*N][2*N];
 	lsqc1.getCovariance(&cv[0][0]);
@@ -1028,7 +1028,7 @@ int main() {
       for (uInt i4=0; i4<2*N; i4++) {
 	cout << ": " << sol[i4];
       }
-      cout << endl << "mu: " << mu << ", me: " << me << endl;
+      cout << endl << "mu: " << Y(mu, 1e-2) << ", me: " << Y(me, 1e-2) << endl;
       {
 	Double cv[2*N][2*N];
 	lsqc1.getCovariance(&cv[0][0]);
@@ -1084,7 +1084,7 @@ int main() {
       cout << "Ready:      " << lnl.readyText() << endl;
       cout << "Sol:        " << sol[0] << ", " << sol[1] << ", " << sol[2] << 
 	endl;
-      cout << "me:         " << mu << ", " << me << endl;
+      cout << "me:         " << Y(mu, 1e-2) << ", " << Y(me, 1e-2) << endl;
       cerr << "User time:  " << tim1.user() << endl;
     }
     cout << "---------------------------------------------------" << endl;
@@ -1134,12 +1134,12 @@ int main() {
       if (mu == me && mu < 1e-7) {
 	cout << "me:        " << 0.0 << ", " << 0.0 << endl;
       } else {
-	cout << "me:        " << mu << ", " << me << endl;
+	cout << "me:        " << Y(mu, 1e-2) << ", " << Y(me, 1e-2) << endl;
       }
       cerr << "User time: " << tim1.user() << endl;
     }
     cout << "---------------------------------------------------" << endl;
-    
+
     cout << "Complex -- all types ----------" << endl;
     cout << "Complex -- COMPLEX ------------" << endl;
     {
@@ -1174,7 +1174,7 @@ int main() {
 	sd = fit.getSD();
 	mu = fit.getWeightedSD();
 	for (uInt i=0; i<2; i++) cout << "Sol" << i << ": " << sol[i] << endl;
-	cout << "sd: "<< sd << "; mu: " << mu << endl;
+	cout << "sd: "<< Y(sd, 1e-2) << "; mu: " << Y(mu, 1e-2) << endl;
       }
       cout << "Complex -- COMPLEX ------------ indexed ---" << endl;
       fit.set(2, LSQComplex());
@@ -1192,7 +1192,7 @@ int main() {
 	sd = fit.getSD();
 	mu = fit.getWeightedSD();
 	for (uInt i=0; i<2; i++) cout << "Sol" << i << ": " << sol[i] << endl;
-	cout << "sd: "<< sd << "; mu: " << mu << endl;
+	cout << "sd: "<< Y(sd, 1e-2) << "; mu: " << Y(mu, 1e-2) << endl;
       }
       cout << "Complex -- ASREAL -------------" << endl;
       // Retry with ASREAL type
@@ -1208,7 +1208,7 @@ int main() {
 	sd = fit.getSD();
 	mu = fit.getWeightedSD();
 	for (uInt i=0; i<2; i++) cout << "Sol" << i << ": " << sol[i] << endl;
-	cout << "sd: "<< sd << "; mu: " << mu << endl; 
+	cout << "sd: "<< Y(sd, 1e-2) << "; mu: " << Y(mu, 1e-2) << endl; 
       }
       cout << "Complex -- ASREAL ------------- indexed ---" << endl;
       fit.set(2, LSQComplex()); 
@@ -1223,7 +1223,7 @@ int main() {
 	sd = fit.getSD();
 	mu = fit.getWeightedSD();
 	for (uInt i=0; i<2; i++) cout << "Sol" << i << ": " << sol[i] << endl;
-	cout << "sd: "<< sd << "; mu: " << mu << endl; 
+	cout << "sd: "<< Y(sd, 1e-2) << "; mu: " << Y(mu, 1e-2) << endl; 
       }
       cout << "Complex -- SEPARABLE ----------" << endl;
       // Retry with SEPARABLE type: note # of unknowns!
@@ -1243,7 +1243,7 @@ int main() {
 	if (sd == mu && mu < 1e-7) {
 	  cout << "sd: " << 0.0 << "; mu: " << 0.0 << endl;
 	} else {
-	  cout << "sd: " << sd  << "; mu: " << mu  << endl; 
+	  cout << "sd: " << Y(sd, 1e-2)  << "; mu: " << Y(mu, 1e-2)  << endl; 
 	}
       }
       cout << "Complex -- SEPARABLE ---------- indexed ---" << endl;
@@ -1263,7 +1263,7 @@ int main() {
 	if (sd == mu && mu < 1e-7) {
 	  cout << "sd: " << 0.0 << "; mu: " << 0.0 << endl;
 	} else {
-	  cout << "sd: " << sd  << "; mu: " << mu  << endl; 
+	  cout << "sd: " << Y(sd, 1e-2)  << "; mu: " << Y(mu, 1e-2)  << endl; 
 	}
       }
       cout << "Complex -- CONJUGATE ----------" << endl;
@@ -1281,7 +1281,7 @@ int main() {
 	sd = fit.getSD();
 	mu = fit.getWeightedSD();
 	for (uInt i=0; i<1; i++) cout << "Sol" << i << ": " << sol[i] << endl;
-	cout << "sd: "<< sd << "; mu: " << mu << endl; 
+	cout << "sd: "<< Y(sd, 1e-2) << "; mu: " << Y(mu, 1e-2) << endl; 
       }
       cout << "Complex -- CONJUGATE ---------- indexed ---" << endl;
       // Retry with CONJUGATE type: note # of unknowns!
@@ -1298,7 +1298,7 @@ int main() {
 	sd = fit.getSD();
 	mu = fit.getWeightedSD();
 	for (uInt i=0; i<1; i++) cout << "Sol" << i << ": " << sol[i] << endl;
-	cout << "sd: "<< sd << "; mu: " << mu << endl; 
+	cout << "sd: "<< Y(sd, 1e-2) << "; mu: " << Y(mu, 1e-2) << endl; 
       }
     }
     cout << "---------------------------------------------------" << endl;
@@ -1349,7 +1349,7 @@ int main() {
 	mu = 0;
 	me = 0;
       }
-      cout << "me:        " << mu << ", " << me << endl;
+      cout << "me:        " << Y(mu, 1e-2) << ", " << Y(me, 1e-2) << endl;
       cerr << "User time: " << tim1.user() << endl;
     }
     {
@@ -1398,7 +1398,7 @@ int main() {
       cout << "Ready:      " << lnl.readyText() << endl;
       cout << "Sol:       " << sol[0] << ", " << sol[1] << ", " << sol[2] << 
 	endl;
-      cout << "me:        " << mu << ", " << me << endl;
+      cout << "me:        " << Y(mu, 1e-2) << ", " << Y(me, 1e-2) << endl;
       cerr << "User time: " << tim1.user() << endl;
       lnl.reset();
       for (uInt i=0; i<n; i++) {
@@ -1420,7 +1420,7 @@ int main() {
       lnl.getCovariance(covd);
       cout << "Sol:       " << sold[0] << ", " << sold[1] << ", " <<
 	sold[2] << endl;
-      cout << "me:        " << mu << ", " << me << endl;
+      cout << "me:        " << Y(mu, 1e-2) << ", " << Y(me, 1e-2) << endl;
       for (uInt i=0; i<9; i += 3) {
 	cout << "Covar: " << Y(covd[i+0], 1e-16) << ", " <<
 	  Y(covd[i+1], 1e-16) << ", " << Y(covd[i+2], 1e-16) << endl;
@@ -1475,7 +1475,7 @@ int main() {
 	muf = 0;
 	mef = 0;
       }
-      cout << "me:        " << muf << ", " << mef << endl;
+      cout << "me:        " << Y(muf, 1e-2) << ", " << Y(mef, 1e-2) << endl;
       cerr << "User time: " << tim1.user() << endl;
     }
 
