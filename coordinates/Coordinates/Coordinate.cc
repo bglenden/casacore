@@ -980,8 +980,8 @@ Bool Coordinate::toWorldWCS (Vector<Double>& world, const Vector<Double>& pixel,
       iret = wcsp2s (&wcs, 1, nAxes, pixelStore, imgCrd,
 		         &phi, &theta, worldStore, &stat);
     } else {
-      Block<double> imgCrd(nAxes);
-      iret = wcsp2s (&wcs, 1, nAxes, pixelStore, imgCrd.storage(),
+      std::vector<double> imgCrd(nAxes);
+      iret = wcsp2s (&wcs, 1, nAxes, pixelStore, imgCrd.data(),
 		         &phi, &theta, worldStore, &stat);
     }
     pixel.freeStorage(pixelStore, delPixel);
@@ -1026,9 +1026,9 @@ Bool Coordinate::toPixelWCS(Vector<Double> &pixel, const Vector<Double> &world,
      iret = wcss2p (&wcs, 1, nAxes, worldStore, &phi, &theta,
 		        imgCrd, pixelStore, &stat);
    } else {
-     Block<double> imgCrd(nAxes);
+     std::vector<double> imgCrd(nAxes);
      iret = wcss2p (&wcs, 1, nAxes, worldStore, &phi, &theta,
-		        imgCrd.storage(), pixelStore, &stat);
+		        imgCrd.data(), pixelStore, &stat);
    }
    pixel.putStorage(pixelStore, delPixel);
    world.freeStorage(worldStore, delWorld);

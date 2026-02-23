@@ -455,10 +455,10 @@ Vector<Bool> Input::makeMaskFromRanges(const String& ranges, uInt length,
   // Step through the string, comma separated expression by comma separated
   // expression.
   Int numberOfCommas = ranges.freq(",");
-  Block<String> expressions(numberOfCommas + 1);
-  split (ranges, expressions.storage(), numberOfCommas + 1, ",");
-  
-  for (uInt i=0; i < expressions.nelements(); i++) {
+  std::vector<String> expressions(numberOfCommas + 1);
+  split (ranges, expressions.data(), numberOfCommas + 1, ",");
+
+  for (uInt i=0; i < expressions.size(); i++) {
     // Validate
     if (expressions[i].contains(single) == False &&
 	expressions[i].contains(range) == False) {

@@ -151,12 +151,12 @@ void MSIter::construct(
     tabIterAtStart_p.resize(nMS_p);
 
     // Creating the sorting members to be pass to the TableIterator constructor
-    Block<String> sortColumnNames;
-    Block<std::shared_ptr<BaseCompare>> sortCompareFunctions;
+    std::vector<String> sortColumnNames;
+    std::vector<std::shared_ptr<BaseCompare>> sortCompareFunctions;
 
     sortColumnNames.resize(sortColumns.size());
     sortCompareFunctions.resize(sortColumns.size());
-    Block<Int> sortOrders(sortColumns.size(),TableIterator::Ascending);
+    std::vector<Int> sortOrders(sortColumns.size(),TableIterator::Ascending);
     size_t iCol=0;
     for(auto element : sortColumns)
     {
@@ -269,7 +269,7 @@ void MSIter::construct(const Block<Int>& sortColumns,
   // If these columns are not explicitly sorted on, they will be added
   // BEFORE any others, unless addDefaultSortColumns=False
 
-  Block<Int> cols;
+  std::vector<Int> cols;
   // try to reuse the existing sorted table if we didn't specify
   // any sortColumns
   if (sortColumns.nelements()==0 &&
@@ -285,7 +285,7 @@ void MSIter::construct(const Block<Int>& sortColumns,
 
   timeInSort_p=False, arrayInSort_p=False, ddInSort_p=False, fieldInSort_p=False;
   size_t nCol=0;
-  for (size_t i=0; i<cols.nelements(); i++) {
+  for (size_t i=0; i<cols.size(); i++) {
     if (cols[i]>0 &&
 	cols[i]<MS::NUMBER_PREDEFINED_COLUMNS) {
       if (cols[i]==MS::ARRAY_ID && !arrayInSort_p) { arrayInSort_p=True; nCol++; }
@@ -296,11 +296,11 @@ void MSIter::construct(const Block<Int>& sortColumns,
       throw(AipsError("MSIter() - invalid sort column"));
     }
   }
-  Block<String> columns;
+  std::vector<String> columns;
 
   size_t iCol=0;
   if (addDefaultSortColumns) {
-    columns.resize(cols.nelements()+4-nCol);
+    columns.resize(cols.size()+4-nCol);
     if (!arrayInSort_p) {
       // add array if it's not there
       columns[iCol++]=MS::columnName(MS::ARRAY_ID);
@@ -322,9 +322,9 @@ void MSIter::construct(const Block<Int>& sortColumns,
       timeInSort_p = True;
     }
   } else {
-    columns.resize(cols.nelements());
+    columns.resize(cols.size());
   }
-  for (size_t i=0; i<cols.nelements(); i++) {
+  for (size_t i=0; i<cols.size(); i++) {
     columns[iCol++]=MS::columnName(MS::PredefinedColumns(cols[i]));
   }
 
@@ -333,20 +333,20 @@ void MSIter::construct(const Block<Int>& sortColumns,
   } else {
     // assume that we want to sort on time if interval is set
     if (!timeInSort_p) {
-      columns.resize(columns.nelements()+1);
+      columns.resize(columns.size()+1);
       columns[iCol++]=MS::columnName(MS::TIME);
     }
   }
 
   // now find the time column and set the compare function
-  Block<std::shared_ptr<BaseCompare> > objComp(columns.nelements());
-  for (size_t i=0; i<columns.nelements(); i++) {
+  std::vector<std::shared_ptr<BaseCompare> > objComp(columns.size());
+  for (size_t i=0; i<columns.size(); i++) {
     if (columns[i]==MS::columnName(MS::TIME)) {
       timeComp_p = std::make_shared<MSInterval>(interval_p);
       objComp[i] = timeComp_p;
     }
   }
-  Block<Int> orders(columns.nelements(),TableIterator::Ascending);
+  std::vector<Int> orders(columns.size(),TableIterator::Ascending);
 
   // Store the sorted table for future access if possible,
   // reuse it if already there
@@ -358,7 +358,7 @@ void MSIter::construct(const Block<Int>& sortColumns,
     if (!bms_p[i].keywordSet().isDefined("SORT_COLUMNS") ||
 	!bms_p[i].keywordSet().isDefined("SORTED_TABLE") ||
 	bms_p[i].keywordSet().asArrayString("SORT_COLUMNS").nelements()!=
-	columns.nelements() ||
+	columns.size() ||
 	!allEQ(bms_p[i].keywordSet().asArrayString("SORT_COLUMNS"),
 	       Vector<String>(columns.begin(), columns.end()))) {
       // if not, sort and store it (if possible)
@@ -804,7 +804,7 @@ void MSIter::setFeedInfo() const
     else {
       // check if any antennas appear more than once
       // check for each spectral window and feed in turn..
-      Block<String> cols(2);
+      std::vector<String> cols(2);
       cols[0]=MSFeed::columnName(MSFeed::SPECTRAL_WINDOW_ID);
       cols[1]=MSFeed::columnName(MSFeed::FEED_ID);
       Bool unique = True;

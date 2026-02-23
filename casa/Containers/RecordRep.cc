@@ -1309,10 +1309,10 @@ void RecordRep::getKeyDesc (AipsIO& os, RecordDesc& desc)
     // Get the excluded data types and names.
     // Note that exNames was written as a Block<Regex>, but can be
     // read as a Block<String>. This is a template instantiation less.
-    Block<int>    exDtype;
-    Block<String> exNames;
-    os >> exDtype;
-    os >> exNames;
+    std::vector<int>    exDtype;
+    std::vector<String> exNames;
+    getBlock(os, exDtype);
+    getBlock(os, exNames);
 }
 
 void RecordRep::getScalarKeys (AipsIO& os)

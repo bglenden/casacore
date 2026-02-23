@@ -308,9 +308,9 @@ void LCPolygon::fillMask (Bool* mask, Int ny, Int nx,
 			  const Float* ptrY, const Float* ptrX, uInt nrline)
 {
   uInt i;
-  Block<Float> a(nrline);
-  Block<Float> b(nrline);
-  Block<Int> dir(nrline, -1);     // -1=same dir, 0=vertical, 1=change dir
+  std::vector<Float> a(nrline);
+  std::vector<Float> b(nrline);
+  std::vector<Int> dir(nrline, -1);     // -1=same dir, 0=vertical, 1=change dir
   // Fill the mask for all vertical lines.
   // Also determine the index of the last non-vertical line, which
   // is used in the slope-calculation loop.
@@ -356,7 +356,7 @@ void LCPolygon::fillMask (Bool* mask, Int ny, Int nx,
   // Loop through all y-es and mask the x-points inside or on the polygon.
   // This is done by determining the crossing point of all the y-lines
   // with all line segments (the in/out algorithm).
-  Block<Float> cross(nrline);
+  std::vector<Float> cross(nrline);
   Bool* maskPtr = mask;
   for (Int y=0; y<ny; y++) {
     uInt nrcross = 0;

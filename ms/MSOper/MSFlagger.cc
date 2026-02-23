@@ -429,9 +429,9 @@ void MSFlagger::diffMedian(Array<Float>& out, const Array<Float>& in,
   const Float* pin=in.getStorage(deleteIn);
   const Bool* pflag=flag.getStorage(deleteFlag);
   Float* pout=out.getStorage(deleteOut);
-  Block<Float> values(nAxis);
+  std::vector<Float> values(nAxis);
   for (Int j=0, offj=0; j<nGreater; j++, offj+=nLess) {
-    for (Int k=0, offk=offj*nAxis, offout=offj; k<nLess; 
+    for (Int k=0, offk=offj*nAxis, offout=offj; k<nLess;
 	 k++, offk++, offout++) {
       Int count=0;
       for (Int l=0, offin=offk; l<nAxis; l++, offin+=nLess) {

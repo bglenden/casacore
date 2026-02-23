@@ -305,7 +305,7 @@ void MSSummary::listMain (LogIO& os, Record& outRec, Bool verbose,
     //Int widthInttim = 7;
 
     // Set up iteration over OBSID and ARRID:
-    Block<String> icols(2);
+    std::vector<String> icols(2);
     icols[0] = "OBSERVATION_ID";
     icols[1] = "ARRAY_ID";
     //TableIterator obsarriter(mstab,icols);
@@ -513,7 +513,7 @@ void MSSummary::getScanSummary (Record& outRec) const
     Vector<Int> specwindids(dd.spectralWindowId().getColumn());
 
     // Set up iteration over OBSID and ARRID:
-    Block<String> icols(2);
+    std::vector<String> icols(2);
     icols[0] = "OBSERVATION_ID";
     icols[1] = "ARRAY_ID";
     TableIterator obsarriter(mstab,icols);
@@ -538,7 +538,7 @@ void MSSummary::getScanSummary (Record& outRec) const
         //     os << "Scan  FldId FieldName    nVis   Int(s)   SpwIds" << endl;
 
         // Setup iteration over timestamps within this iteration:
-        Block<String> jcols(2);
+        std::vector<String> jcols(2);
         jcols[0] = "SCAN_NUMBER";
         jcols[1] = "TIME";
         TableIterator stiter(obsarrtab,jcols);

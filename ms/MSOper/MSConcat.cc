@@ -215,7 +215,7 @@ IPosition MSConcat::isFixedShape(const TableDesc& td) {
   }
 
   // merge STATE
-  Block<uInt> newStateIndices; // INTO TABLE
+  std::vector<uInt> newStateIndices; // INTO TABLE
   Bool doState = False;
   // STATE is a required subtable but can be empty in which case the state id in the main table is -1
   Bool itsStateNull = (itsMS.state().isNull() || (itsMS.state().nrow() == 0));
@@ -267,7 +267,7 @@ IPosition MSConcat::isFixedShape(const TableDesc& td) {
   // DATA_DESCRIPTION
   rownr_t oldRows = itsMS.dataDescription().nrow();
   rownr_t oldSPWRows = itsMS.spectralWindow().nrow();
-  const Block<uInt> newDDIndices = copySpwAndPol(otherMS.spectralWindow(),
+  const std::vector<uInt> newDDIndices = copySpwAndPol(otherMS.spectralWindow(),
 						 otherMS.polarization(),
 						 otherMS.dataDescription());
   {
@@ -297,7 +297,7 @@ IPosition MSConcat::isFixedShape(const TableDesc& td) {
   // merge ANTENNA and FEED
   oldRows = itsMS.antenna().nrow();
   rownr_t oldFeedRows = itsMS.feed().nrow();
-  const Block<uInt> newAntIndices = copyAntennaAndFeed(otherMS.antenna(),
+  const std::vector<uInt> newAntIndices = copyAntennaAndFeed(otherMS.antenna(),
 						       otherMS.feed());
   Bool antIndexTrivial = True;
   for(uInt ii=0; ii<newAntIndices.size(); ii++){
@@ -321,7 +321,7 @@ IPosition MSConcat::isFixedShape(const TableDesc& td) {
 
   // FIELD
   oldRows = itsMS.field().nrow();
-  const Block<uInt> newFldIndices = copyField(otherMS);
+  const std::vector<uInt> newFldIndices = copyField(otherMS);
   {
     const rownr_t addedRows = itsMS.field().nrow() - oldRows;
     const rownr_t matchedRows = otherMS.field().nrow() - addedRows;
@@ -1091,7 +1091,7 @@ IPosition MSConcat::isFixedShape(const TableDesc& td) {
   log << LogIO::DEBUG1 << "ms shapes verified " << endl << LogIO::POST;
 
   // merge STATE
-  Block<uInt> newStateIndices;
+  std::vector<uInt> newStateIndices;
   Bool doState = False;
   // STATE is a required subtable but can be empty in which case the state id in the main table is -1
   Bool itsStateNull = (itsMS.state().isNull() || (itsMS.state().nrow() == 0));
@@ -1144,7 +1144,7 @@ IPosition MSConcat::isFixedShape(const TableDesc& td) {
   // DATA_DESCRIPTION
   rownr_t oldRows = itsMS.dataDescription().nrow();
   rownr_t oldSPWRows = itsMS.spectralWindow().nrow();
-  const Block<uInt> newDDIndices = copySpwAndPol(otherMS.spectralWindow(),
+  const std::vector<uInt> newDDIndices = copySpwAndPol(otherMS.spectralWindow(),
 						 otherMS.polarization(),
 						 otherMS.dataDescription());
 
@@ -1177,7 +1177,7 @@ IPosition MSConcat::isFixedShape(const TableDesc& td) {
   // merge ANTENNA and FEED
   oldRows = itsMS.antenna().nrow();
   rownr_t oldFeedRows = itsMS.feed().nrow();
-  const Block<uInt> newAntIndices = copyAntennaAndFeed(otherMS.antenna(),
+  const std::vector<uInt> newAntIndices = copyAntennaAndFeed(otherMS.antenna(),
 						       otherMS.feed());
   {
     rownr_t addedRows = itsMS.antenna().nrow() - oldRows;
@@ -1197,7 +1197,7 @@ IPosition MSConcat::isFixedShape(const TableDesc& td) {
 
   // FIELD
   oldRows = itsMS.field().nrow();
-  const Block<uInt> newFldIndices = copyField(otherMS);
+  const std::vector<uInt> newFldIndices = copyField(otherMS);
   {
     const rownr_t addedRows = itsMS.field().nrow() - oldRows;
     const rownr_t matchedRows = otherMS.field().nrow() - addedRows;
@@ -2703,7 +2703,7 @@ Block<uInt> MSConcat::copyAntennaAndFeed(const MSAntenna& otherAnt,
   LogIO os(LogOrigin("MSConcat", "copyAntennaAndFeed"));
 
   const uInt nAntIds = otherAnt.nrow();
-  Block<uInt> antMap(nAntIds);
+  std::vector<uInt> antMap(nAntIds);
 
   const MSAntennaColumns otherAntCols(otherAnt);
   MSAntennaColumns& antCols = antenna();
@@ -2914,7 +2914,7 @@ Block<uInt> MSConcat::copyAntennaAndFeed(const MSAntenna& otherAnt,
 
 Block<uInt> MSConcat::copyState(const MSState& otherState) {
   const uInt nStateIds = otherState.nrow();
-  Block<uInt> stateMap(nStateIds);
+  std::vector<uInt> stateMap(nStateIds);
 
   const MSStateColumns otherStateCols(otherState);
   MSStateColumns& stateCols = state();
@@ -2945,7 +2945,7 @@ Block<uInt> MSConcat::copyState(const MSState& otherState) {
 Block<uInt>  MSConcat::copyField(const MeasurementSet& otherms) {
   const MSField otherFld = otherms.field();
   const rownr_t nFlds = otherFld.nrow();
-  Block<uInt> fldMap(nFlds);
+  std::vector<uInt> fldMap(nFlds);
   const Quantum<Double> tolerance=itsDirTol;
   const MSFieldColumns otherFieldCols(otherFld);
   MSFieldColumns& fieldCols = field();
@@ -3603,7 +3603,7 @@ Block<uInt> MSConcat::copySpwAndPol(const MSSpectralWindow& otherSpw,
   LogIO os(LogOrigin("MSConcat", "copySpwAndPol"));
 
   const uInt nDDs = otherDD.nrow();
-  Block<uInt> ddMap(nDDs);
+  std::vector<uInt> ddMap(nDDs);
 
   const MSSpWindowColumns otherSpwCols(otherSpw);
   MSSpectralWindow& spw = itsMS.spectralWindow();

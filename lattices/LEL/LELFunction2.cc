@@ -82,7 +82,7 @@ LELFunctionFloat::LELFunctionFloat(const LELFunctionEnums::Function function,
     case LELFunctionEnums::SIGN :
     {
        // Expect 1 Float argument
-       Block<Int> argType(1);
+       std::vector<Int> argType(1);
        argType[0] = TpFloat;
        setAttr (LatticeExprNode::checkArg (exp, argType, False));
        break;
@@ -94,7 +94,7 @@ LELFunctionFloat::LELFunctionFloat(const LELFunctionEnums::Function function,
     case LELFunctionEnums::MAX :
     {
        // Expect 2 Float arguments
-       Block<Int> argType(2);
+       std::vector<Int> argType(2);
        argType[0] = TpFloat;
        argType[1] = TpFloat;
        setAttr (LatticeExprNode::checkArg (exp, argType, False));
@@ -542,7 +542,7 @@ LELFunctionDouble::LELFunctionDouble(const LELFunctionEnums::Function function,
     case LELFunctionEnums::NTRUE :
     case LELFunctionEnums::NFALSE :
     {
-	Block<Int> argType(1);
+	std::vector<Int> argType(1);
 	argType[0] = TpBool;
 	LatticeExprNode::checkArg (exp, argType, True); // expect 1 Bool array
 	setAttr (LELAttribute());                       // result is scalar
@@ -555,7 +555,7 @@ LELFunctionDouble::LELFunctionDouble(const LELFunctionEnums::Function function,
     case LELFunctionEnums::MAX :
     {
 // Expect 2 Double arguments
-	Block<Int> argType(2);
+	std::vector<Int> argType(2);
 	argType[0] = TpDouble;
 	argType[1] = TpDouble;
 	setAttr (LatticeExprNode::checkArg (exp, argType, False));
@@ -1119,7 +1119,7 @@ LELFunctionComplex::LELFunctionComplex
     {
 // Expect 2 Float arguments
 
-	Block<Int> argType(2);
+	std::vector<Int> argType(2);
 	argType[0] = TpFloat;
 	argType[1] = TpFloat;
 	setAttr (LatticeExprNode::checkArg (exp, argType, False));
@@ -1129,7 +1129,7 @@ LELFunctionComplex::LELFunctionComplex
     {
 // Expect 2 Complex arguments
 
-	Block<Int> argType(2);
+	std::vector<Int> argType(2);
 	argType[0] = TpComplex;
 	argType[1] = TpComplex;
 	setAttr (LatticeExprNode::checkArg (exp, argType, False));
@@ -1393,7 +1393,7 @@ LELFunctionDComplex::LELFunctionDComplex
     {
 // Expect 2 Double arguments
 
-	Block<Int> argType(2);
+	std::vector<Int> argType(2);
 	argType[0] = TpDouble;
 	argType[1] = TpDouble;
 	setAttr (LatticeExprNode::checkArg (exp, argType, False));
@@ -1402,7 +1402,7 @@ LELFunctionDComplex::LELFunctionDComplex
     case LELFunctionEnums::POW :
     {
 	// Expect 2 DComplex arguments
-	Block<Int> argType(2);
+	std::vector<Int> argType(2);
 	argType[0] = TpDComplex;
 	argType[1] = TpDComplex;
 	setAttr (LatticeExprNode::checkArg (exp, argType, False));
@@ -1666,7 +1666,7 @@ LELFunctionBool::LELFunctionBool(const LELFunctionEnums::Function function,
     case LELFunctionEnums::ALL :
     case LELFunctionEnums::ANY :
     {
-	Block<Int> argType(1);
+	std::vector<Int> argType(1);
 	argType[0] = TpBool;
 	LatticeExprNode::checkArg (exp, argType, True); // expect 1 Bool array
 	setAttr (LELAttribute());                       // result is scalar

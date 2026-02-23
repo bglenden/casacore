@@ -818,10 +818,10 @@ namespace casacore { //# NAMESPACE CASACORE - BEGIN
 	return True;
     }
 
-    static Bool do_sub_wcs(const ::wcsprm& wcs, int &nsub, Block<int> &axes, ::wcsprm &wcsDest, LogIO &os)
+    static Bool do_sub_wcs(const ::wcsprm& wcs, int &nsub, std::vector<int> &axes, ::wcsprm &wcsDest, LogIO &os)
     {
     	try {
-    		Coordinate::sub_wcs(wcs, nsub, axes.storage(), wcsDest);
+    		Coordinate::sub_wcs(wcs, nsub, axes.data(), wcsDest);
     		return True;
     	} catch (const AipsError &e) {
     		os << LogIO::WARN << e.what() << LogIO::POST;
@@ -838,7 +838,7 @@ namespace casacore { //# NAMESPACE CASACORE - BEGIN
 // Extract wcs structure pertaining to Direction Coordinate
 
 	int nsub = 2;
-	Block<int> axes(nsub);
+	std::vector<int> axes(nsub);
 	axes[0] = WCSSUB_LONGITUDE;
 	axes[1] = WCSSUB_LATITUDE;
 //
@@ -899,7 +899,7 @@ namespace casacore { //# NAMESPACE CASACORE - BEGIN
 // Extract wcs structure pertaining to Linear Coordinate
 
 	int nsub = 1;
-	Block<int> axes(wcs.naxis);
+	std::vector<int> axes(wcs.naxis);
 	axes[0] = -(WCSSUB_LONGITUDE | WCSSUB_LATITUDE | WCSSUB_SPECTRAL | WCSSUB_STOKES);
 //
 	::wcsprm wcsDest;
@@ -968,7 +968,7 @@ namespace casacore { //# NAMESPACE CASACORE - BEGIN
 // Extract wcs structure pertaining to Stokes Coordinate
 
 	int nsub = 1;
-	Block<int> axes(nsub);
+	std::vector<int> axes(nsub);
 	axes[0] = WCSSUB_STOKES;
 //
 	::wcsprm wcsDest;
@@ -1022,7 +1022,7 @@ namespace casacore { //# NAMESPACE CASACORE - BEGIN
 
         // Extract wcs structure pertaining to Spectral Coordinate
 	int nsub = 1;
-	Block<int> axes(nsub);
+	std::vector<int> axes(nsub);
 	axes[0] = WCSSUB_SPECTRAL;
 
 	::wcsprm wcsDest;

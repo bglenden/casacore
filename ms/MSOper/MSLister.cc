@@ -622,7 +622,7 @@ void MSLister::listData(const int pageRows,
 /////////////////////////////////////////////////////
 //////read whole ms into mem is not practical, slow and waste memory
 //////so we split it into 5 mimutes chunk
-    Block<int> sort(2);
+    std::vector<int> sort(2);
     sort[0] = MS::ANTENNA1;
     sort[1] = MS::ANTENNA2;
     Double timeInterval = 300; // 5 minutes

@@ -120,7 +120,7 @@ Block<uInt> Primes::factor( uInt number )
     //block until number equals the product of all the factors stored 
     //in the block.
 
-    Block<uInt> multiples;
+    std::vector<uInt> multiples;
 
     if (number < 2) {
 	multiples.resize(1);

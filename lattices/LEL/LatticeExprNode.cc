@@ -1110,7 +1110,7 @@ LatticeExprNode sign(const LatticeExprNode& expr)
 #endif
    AlwaysAssert (expr.dataType()==TpFloat || expr.dataType()==TpDouble,
 		 AipsError);
-   Block<LatticeExprNode> arg(1);
+   std::vector<LatticeExprNode> arg(1);
    arg[0] = expr.makeFloat();
    return LatticeExprNode
      (std::make_shared<LELFunctionFloat>(LELFunctionEnums::SIGN, arg));
@@ -1201,7 +1201,7 @@ LatticeExprNode formComplex(const LatticeExprNode& left,
    AlwaysAssert ((left.dataType()==TpFloat || left.dataType()==TpDouble)
               && (right.dataType()==TpFloat || right.dataType()==TpDouble),
 		 AipsError);
-   Block<LatticeExprNode> arg(2);
+   std::vector<LatticeExprNode> arg(2);
    if (left.dataType()==TpFloat && right.dataType()==TpFloat) {
       arg[0] = left.makeFloat();
       arg[1] = right.makeFloat();
@@ -1290,7 +1290,7 @@ LatticeExprNode fractile (const LatticeExprNode& expr,
 // The result has the same data type as the input.
 // 
    DataType dtype = expr.dataType();
-   Block<LatticeExprNode> arg(2);
+   std::vector<LatticeExprNode> arg(2);
    arg[0] = expr;
    arg[1] = fraction.makeFloat();
    switch (dtype) {
@@ -1319,7 +1319,7 @@ LatticeExprNode fractileRange (const LatticeExprNode& expr,
 // The result has the same data type as the input.
 // 
    DataType dtype = expr.dataType();
-   Block<LatticeExprNode> arg(2);
+   std::vector<LatticeExprNode> arg(2);
    arg[0] = expr;
    arg[1] = fraction.makeFloat();
    switch (dtype) {
@@ -1349,7 +1349,7 @@ LatticeExprNode fractileRange (const LatticeExprNode& expr,
 // The result has the same data type as the input.
 // 
    DataType dtype = expr.dataType();
-   Block<LatticeExprNode> arg(3);
+   std::vector<LatticeExprNode> arg(3);
    arg[0] = expr;
    arg[1] = fraction1.makeFloat();
    arg[2] = fraction2.makeFloat();
@@ -1475,7 +1475,7 @@ LatticeExprNode spectralindex (const LatticeExprNode& left,
 #endif
    DataType dtype = LatticeExprNode::resultDataType (left.dataType(),
 						     right.dataType());
-   Block<LatticeExprNode> arg(2);
+   std::vector<LatticeExprNode> arg(2);
    switch (dtype) {
    case TpFloat:
       arg[0] = left.makeFloat();
@@ -1687,7 +1687,7 @@ LatticeExprNode indexin (const LatticeExprNode& axis,
 #if defined(AIPS_TRACE)
    cout << "LatticeExprNode:: 2d function indexin" << endl;
 #endif
-   Block<LatticeExprNode> arg(2);
+   std::vector<LatticeExprNode> arg(2);
    arg[0] = axis;
    arg[1] = indexFlags;
    return LatticeExprNode
@@ -1700,7 +1700,7 @@ LatticeExprNode all (const LatticeExprNode& expr)
 #if defined(AIPS_TRACE)
    cout << "LatticeExprNode:: 1d function all" << endl;
 #endif
-   Block<LatticeExprNode> arg(1, toBool(expr));
+   std::vector<LatticeExprNode> arg(1, toBool(expr));
    return LatticeExprNode
      (std::make_shared<LELFunctionBool>(LELFunctionEnums::ALL, arg));
 }
@@ -1710,7 +1710,7 @@ LatticeExprNode any (const LatticeExprNode& expr)
 #if defined(AIPS_TRACE)
    cout << "LatticeExprNode:: 1d function any" << endl;
 #endif
-   Block<LatticeExprNode> arg(1, toBool(expr));
+   std::vector<LatticeExprNode> arg(1, toBool(expr));
    return LatticeExprNode
      (std::make_shared<LELFunctionBool>(LELFunctionEnums::ANY, arg));
 }
@@ -1720,7 +1720,7 @@ LatticeExprNode ntrue (const LatticeExprNode& expr)
 #if defined(AIPS_TRACE)
    cout << "LatticeExprNode:: 1d function ntrue" << endl;
 #endif
-   Block<LatticeExprNode> arg(1, toBool(expr));
+   std::vector<LatticeExprNode> arg(1, toBool(expr));
    return LatticeExprNode
      (std::make_shared<LELFunctionDouble>(LELFunctionEnums::NTRUE, arg));
 }
@@ -1730,7 +1730,7 @@ LatticeExprNode nfalse (const LatticeExprNode& expr)
 #if defined(AIPS_TRACE)
    cout << "LatticeExprNode:: 1d function nfalse" << endl;
 #endif
-   Block<LatticeExprNode> arg(1, toBool(expr));
+   std::vector<LatticeExprNode> arg(1, toBool(expr));
    return LatticeExprNode
      (std::make_shared<LELFunctionDouble>(LELFunctionEnums::NFALSE, arg));
 }
@@ -1740,7 +1740,7 @@ LatticeExprNode nelements(const LatticeExprNode& expr)
 #if defined(AIPS_TRACE)
    cout << "LatticeExprNode:: 1d function nelements" << endl;
 #endif
-   Block<LatticeExprNode> arg(1, expr);
+   std::vector<LatticeExprNode> arg(1, expr);
    if (expr.isRegion()) {
       arg[0] = toBool (expr);
    }
@@ -1753,7 +1753,7 @@ LatticeExprNode ndim (const LatticeExprNode& expr)
 #if defined(AIPS_TRACE)
    cout << "LatticeExprNode:: 1d function ndim" << endl;
 #endif
-   Block<LatticeExprNode> arg(1, expr);
+   std::vector<LatticeExprNode> arg(1, expr);
    return LatticeExprNode
      (std::make_shared<LELFunctionFloat>(LELFunctionEnums::NDIM, arg));
 }
@@ -1764,7 +1764,7 @@ LatticeExprNode length (const LatticeExprNode& expr,
 #if defined(AIPS_TRACE)
    cout << "LatticeExprNode:: 2d function length" << endl;
 #endif
-   Block<LatticeExprNode> arg(2);
+   std::vector<LatticeExprNode> arg(2);
    arg[0] = expr;
    arg[1] = axis;
    return LatticeExprNode
@@ -1776,7 +1776,7 @@ LatticeExprNode isNaN (const LatticeExprNode& expr)
 #if defined(AIPS_TRACE)
    cout << "LatticeExprNode:: 1d function isNaN" << endl;
 #endif
-   Block<LatticeExprNode> arg(1, expr);
+   std::vector<LatticeExprNode> arg(1, expr);
    return LatticeExprNode
      (std::make_shared<LELFunctionBool>(LELFunctionEnums::ISNAN, arg));
 }
@@ -1786,7 +1786,7 @@ LatticeExprNode mask (const LatticeExprNode& expr)
 #if defined(AIPS_TRACE)
    cout << "LatticeExprNode:: 1d function mask" << endl;
 #endif
-   Block<LatticeExprNode> arg(1, expr);
+   std::vector<LatticeExprNode> arg(1, expr);
    if (expr.isRegion()) {
       arg[0] = toBool (expr);
    }
@@ -1800,7 +1800,7 @@ LatticeExprNode value (const LatticeExprNode& expr)
    cout << "LatticeExprNode:: 1d function value" << endl;
 #endif
    if (expr.dataType() == TpBool) {
-      Block<LatticeExprNode> arg(1, toBool(expr));
+      std::vector<LatticeExprNode> arg(1, toBool(expr));
       return LatticeExprNode
         (std::make_shared<LELFunctionBool>(LELFunctionEnums::VALUE, arg));
    }
@@ -1817,7 +1817,7 @@ LatticeExprNode iif (const LatticeExprNode& condition,
    AlwaysAssert (condition.dataType() == TpBool, AipsError);
    DataType dtype = LatticeExprNode::resultDataType (arg1.dataType(),
 						     arg2.dataType());
-   Block<LatticeExprNode> arg(3);
+   std::vector<LatticeExprNode> arg(3);
    arg[0] = condition.makeBool();
    switch (dtype) {
    case TpFloat:
@@ -1859,7 +1859,7 @@ LatticeExprNode replace (const LatticeExprNode& arg1,
 #endif
    DataType dtype = LatticeExprNode::resultDataType (arg1.dataType(),
 						     arg2.dataType());
-   Block<LatticeExprNode> arg(2);
+   std::vector<LatticeExprNode> arg(2);
    switch (dtype) {
    case TpFloat:
        arg[0] = arg1.makeFloat();
@@ -1981,7 +1981,7 @@ LatticeExprNode LatticeExprNode::newComplexFunc1D (LELFunctionEnums::Function fu
 {
 // Create a new node for a complex numerical function with 1
 // argument. The result has the same data type as the input.
-   Block<LatticeExprNode> arg(1);
+   std::vector<LatticeExprNode> arg(1);
    arg[0] = expr;
    switch (expr.dataType()) {
    case TpComplex:
@@ -2005,7 +2005,7 @@ LatticeExprNode LatticeExprNode::newNumReal1D (LELFunctionEnums::Function func,
 //
 {
    DataType dtype = expr.dataType();
-   Block<LatticeExprNode> arg(1);
+   std::vector<LatticeExprNode> arg(1);
    arg[0] = expr;
    switch (dtype) {
    case TpFloat:
@@ -2036,7 +2036,7 @@ LatticeExprNode LatticeExprNode::newNumFunc2D (LELFunctionEnums::Function func,
 // 
 {
    DataType dtype = resultDataType (left.dataType(), right.dataType());
-   Block<LatticeExprNode> arg(2);
+   std::vector<LatticeExprNode> arg(2);
    switch (dtype) {
    case TpFloat:
        arg[0] = left.makeFloat();
