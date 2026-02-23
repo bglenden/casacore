@@ -40,7 +40,7 @@ namespace casacore { //# NAMESPACE CASACORE - BEGIN
    NodeDataType dtype, ValueType vtype,
    const TableExprNodeSet& source,
    const vector<TENShPtr>& nodes,
-   const Block<Int>& dtypeOper,
+   const std::vector<Int>& dtypeOper,
    const TaQLStyle& style)
    : TableExprFuncNodeArray (ftype, dtype, vtype, source,
                              nodes, dtypeOper, style)

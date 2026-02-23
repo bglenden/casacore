@@ -434,16 +434,14 @@ namespace casacore { //# NAMESPACE CASACORE - BEGIN
       return out;
     }
 
-    Block<String> getStoredColumns (const Table& tab)
+    std::vector<String> getStoredColumns (const Table& tab)
     {
-      Block<String> names;
+      std::vector<String> names;
       const TableDesc& tdesc = tab.tableDesc();
       for (uInt i=0; i<tdesc.ncolumn(); i++) {
         const String& colnm = tdesc[i].name();
         if (tab.isColumnStored(colnm)) {
-          uInt inx = names.size();
-          names.resize (inx + 1);
-          names[inx] = colnm;
+          names.push_back (colnm);
         }
       }
       return names;

@@ -348,7 +348,7 @@ public:
     TableExprFuncNode (FunctionType, NodeDataType, ValueType,
                        const TableExprNodeSet& source,
                        const vector<TENShPtr>& nodes,
-                       const Block<Int>& dtypeOper,
+                       const std::vector<Int>& dtypeOper,
                        const TableExprInfo& = TableExprInfo());
 
     // Destructor
@@ -369,9 +369,9 @@ public:
     // It sets the exptected data and value types of the operands.
     // Set the value type of the function result and returns
     // the data type of the function result.
-    static NodeDataType checkOperands (Block<Int>& dtypeOper,
+    static NodeDataType checkOperands (std::vector<Int>& dtypeOper,
                                        ValueType& resVT,
-                                       Block<Int>& vtypeOper,
+                                       std::vector<Int>& vtypeOper,
                                        FunctionType,
                                        std::vector<TENShPtr>&);
 
@@ -383,7 +383,7 @@ public:
     // Link the children to the node and convert the children
     // to constants if possible.
     void fillChildNodes (const vector<TENShPtr>& nodes,
-                         const Block<Int>& dtypeOper);
+                         const std::vector<Int>& dtypeOper);
 
     // Get possible unit scale factor (needed for sqrt).
     Double getScale() const

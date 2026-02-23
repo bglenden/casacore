@@ -50,7 +50,7 @@ TableExprFuncNode::TableExprFuncNode (FunctionType ftype, NodeDataType dtype,
                                       ValueType vtype,
                                       const TableExprNodeSet& source,
                                       const vector<TENShPtr>& nodes,
-                                      const Block<Int>& dtypeOper,
+                                      const std::vector<Int>& dtypeOper,
                                       const TableExprInfo& tabInfo)
 : TableExprNodeMulti (dtype, vtype, OtFunc, source),
   funcType_p         (ftype),
@@ -295,7 +295,7 @@ const Unit& TableExprFuncNode::makeEqualUnits (vector<TENShPtr>& nodes,
 
 // Fill the children pointers of a node.
 void TableExprFuncNode::fillChildNodes (const vector<TENShPtr>& nodes,
-                                        const Block<Int>& dtypeOper)
+                                        const std::vector<Int>& dtypeOper)
 {
   // Copy block of children.
   // Determine if common argument type is Int, Double or Complex.
@@ -1345,8 +1345,8 @@ String TableExprFuncNode::stringDMS (double val, Int prec)
 
 
 TableExprNodeRep::NodeDataType TableExprFuncNode::checkOperands
-                                 (Block<Int>& dtypeOper,
-                                  ValueType& resVT, Block<Int>&,
+                                 (std::vector<Int>& dtypeOper,
+                                  ValueType& resVT, std::vector<Int>&,
                                   FunctionType fType,
                                   vector<TENShPtr>& nodes)
 {
@@ -1608,7 +1608,7 @@ TableExprNodeRep::NodeDataType TableExprFuncNode::checkOperands
         resVT = VTArray;
         checkNumOfArg (axarg+1, axarg+optarg+1, nodes);
         dtypeOper.resize(axarg+1);
-        dtypeOper = NTReal;
+        std::fill(dtypeOper.begin(), dtypeOper.end(), NTReal);
         // Check if first argument is array.
         if (fType != arrayFUNC) {
             if (nodes[0]->valueType() != VTArray) {
@@ -1620,7 +1620,7 @@ TableExprNodeRep::NodeDataType TableExprFuncNode::checkOperands
         // Check if first argument has correct type.
         vector<TENShPtr> nodeTmp(1);
         nodeTmp[0] = nodes[0];
-        Block<Int> dtypeTmp;    // Gets filled in by checkDT
+        std::vector<Int> dtypeTmp;    // Gets filled in by checkDT
         dtout = checkDT (dtypeTmp, dtin, dtout, nodeTmp);
         dtypeOper[0] = dtypeTmp[0];
         // If more arguments are needed, they have to be Real scalars.
@@ -1693,7 +1693,7 @@ TableExprNodeRep::NodeDataType TableExprFuncNode::checkOperands
           }
         }
         dtypeOper.resize (nodes.size());
-        dtypeOper = NTInt;
+        std::fill(dtypeOper.begin(), dtypeOper.end(), NTInt);
         dtypeOper[0] = NTString;
         return NTString;
     case replaceFUNC:
@@ -1716,7 +1716,7 @@ TableExprNodeRep::NodeDataType TableExprFuncNode::checkOperands
           }
         }
         dtypeOper.resize (nodes.size());
-        dtypeOper = NTString;
+        std::fill(dtypeOper.begin(), dtypeOper.end(), NTString);
         dtypeOper[1] = nodes[1]->dataType();
         return NTString;
     case datetimeFUNC:
@@ -1900,7 +1900,7 @@ TableExprNodeRep::NodeDataType TableExprFuncNode::checkOperands
         vector<TENShPtr> nodeArg(2);
         nodeArg[0] = nodes[1];
         nodeArg[1] = nodes[2];
-        Block<Int> dtypeTmp;
+        std::vector<Int> dtypeTmp;
         checkDT (dtypeTmp, NTBool, NTBool, nodeCond);
         dtypeOper.resize(3);
         dtypeOper[0] = dtypeTmp[0];

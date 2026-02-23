@@ -85,14 +85,14 @@ namespace casacore { //# NAMESPACE CASACORE - BEGIN
     TableExprAggrNode (FunctionType, NodeDataType, ValueType,
                        const TableExprNodeSet& source,
                        const vector<TENShPtr>& nodes,
-                       const Block<Int>& dtypeOper);
+                       const std::vector<Int>& dtypeOper);
 
     // This node does aggregation.
     virtual Bool isAggregate() const;
     
     // Check the operands of the aggregate function and return the
     // result's data type.
-    static NodeDataType checkOperands (Block<Int>& dtypeOper,
+    static NodeDataType checkOperands (std::vector<Int>& dtypeOper,
                                        ValueType& resVT, FunctionType ftype,
                                        std::vector<TENShPtr>& nodes);
 

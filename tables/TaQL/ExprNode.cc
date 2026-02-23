@@ -47,7 +47,7 @@
 #include <casacore/tables/Tables/TableRecord.h>
 #include <casacore/tables/Tables/ColumnDesc.h>
 #include <casacore/tables/Tables/TableError.h>
-#include <casacore/casa/Containers/Block.h>
+#include <vector>
 #include <casacore/casa/Utilities/DataType.h>
 #include <casacore/tables/TaQL/ExprNodeArray.h>
 
@@ -1343,8 +1343,8 @@ TableExprNode TableExprNode::newFunctionNode
     // It also fills the expected data and value type of the operands.
     TableExprNodeRep::ValueType resVT;
     TableExprNodeRep::NodeDataType resDT;
-    Block<Int> dtypeOper;
-    Block<Int> vtypeOper;
+    std::vector<Int> dtypeOper;
+    std::vector<Int> vtypeOper;
     TENShPtr fnode;
     // Create new function node depending on the type.
     if (ftype >= TableExprFuncNode::FirstAggrFunc) {
@@ -1454,8 +1454,8 @@ TableExprNode TableExprNode::newConeNode
     // Check all the operands and get the resulting data type and value type
     // of the function.
     // It also fills the expected data and value type of the operands.
-    Block<Int> dtypeOper;
-    Block<Int> vtypeOper;
+    std::vector<Int> dtypeOper;
+    std::vector<Int> vtypeOper;
     TableExprNodeRep::ValueType resVT;
     TableExprNodeRep::NodeDataType resDT;
     resDT = TableExprConeNode::checkOperands (dtypeOper, resVT, vtypeOper,

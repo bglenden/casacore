@@ -73,7 +73,7 @@ public:
                             NodeDataType, ValueType,
                             const TableExprNodeSet& source,
                             const vector<TENShPtr>& nodes,
-                            const Block<Int>& dtypeOper,
+                            const std::vector<Int>& dtypeOper,
                             const TaQLStyle&);
 
     // Destructor

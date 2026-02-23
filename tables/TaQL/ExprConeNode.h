@@ -70,7 +70,7 @@ public:
   TableExprConeNode (FunctionType, NodeDataType,
                      const TableExprNodeSet& source,
                      const vector<TENShPtr>& nodes,
-                     const Block<Int>& dtypeOper,
+                     const std::vector<Int>& dtypeOper,
                      uInt origin);
 
   // Destructor
@@ -86,9 +86,9 @@ public:
   // It sets the exptected data and value types of the operands.
   // Set the value type of the function result and returns
   // the data type of the function result.
-  static NodeDataType checkOperands (Block<Int>& dtypeOper,
+  static NodeDataType checkOperands (std::vector<Int>& dtypeOper,
                                      ValueType& resVT,
-                                     Block<Int>& vtypeOper,
+                                     std::vector<Int>& vtypeOper,
                                      FunctionType,
                                      const std::vector<TENShPtr>&);
 
@@ -111,7 +111,7 @@ public:
   TableExprConeNodeArray (TableExprFuncNode::FunctionType, NodeDataType,
                           const TableExprNodeSet& source,
                           const vector<TENShPtr>& nodes,
-                          const Block<Int>& dtypeOper,
+                          const std::vector<Int>& dtypeOper,
                           uInt origin);
 
   // Destructor

@@ -101,7 +101,7 @@ namespace casacore { //# NAMESPACE CASACORE - BEGIN
     String getTypeString (const String& typeStr, DataType type);
 
     // Find the names of all stored columns in a table.
-    Block<String> getStoredColumns (const Table& tab);
+    std::vector<String> getStoredColumns (const Table& tab);
 
     // Make an array from the contents of a column in a subquery.
     TableExprNode getColSet (const Table& table);

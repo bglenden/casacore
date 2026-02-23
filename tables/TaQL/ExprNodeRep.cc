@@ -998,7 +998,7 @@ uInt TableExprNodeMulti::checkNumOfArg (uInt low, uInt high,
 }
 
 TableExprNodeRep::NodeDataType TableExprNodeMulti::checkDT
-                                    (Block<Int>& dtypeOper,
+                                    (std::vector<Int>& dtypeOper,
                                      NodeDataType dtIn,
                                      NodeDataType dtOut,
                                      const vector<TENShPtr>& nodes,
@@ -1006,7 +1006,7 @@ TableExprNodeRep::NodeDataType TableExprNodeMulti::checkDT
 {
     uInt nelem = nodes.size();
     dtypeOper.resize (nelem);
-    dtypeOper.set (dtIn);
+    std::fill (dtypeOper.begin(), dtypeOper.end(), dtIn);
     // NTAny means that it can be any type.
     // An output of NTAny means that the types have to match.
     if (dtIn == NTAny) {

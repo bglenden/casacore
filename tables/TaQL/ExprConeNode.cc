@@ -36,7 +36,7 @@ namespace casacore { //# NAMESPACE CASACORE - BEGIN
 TableExprConeNode::TableExprConeNode (FunctionType ftype, NodeDataType dtype,
                                       const TableExprNodeSet& source,
                                       const vector<TENShPtr>& nodes,
-                                      const Block<Int>& dtypeOper,
+                                      const std::vector<Int>& dtypeOper,
                                       uInt origin)
   : TableExprFuncNode (ftype, dtype, VTScalar, source, nodes, dtypeOper),
     origin_p          (origin)
@@ -288,8 +288,8 @@ Int64 TableExprConeNode::getInt (const TableExprId& id)
 
 
 TableExprNodeRep::NodeDataType TableExprConeNode::checkOperands
-                                 (Block<Int>& dtypeOper,
-                                  ValueType& resVT, Block<Int>&,
+                                 (std::vector<Int>& dtypeOper,
+                                  ValueType& resVT, std::vector<Int>&,
                                   FunctionType fType,
                                   const vector<TENShPtr>& nodes)
 {
@@ -370,7 +370,7 @@ TableExprConeNodeArray::TableExprConeNodeArray (TableExprFuncNode::FunctionType 
                                                 NodeDataType dtype,
                                                 const TableExprNodeSet& source,
                                                 const vector<TENShPtr>& nodes,
-                                                const Block<Int>& dtypeOper,
+                                                const std::vector<Int>& dtypeOper,
                                                 uInt origin)
   : TableExprFuncNodeArray (ftype, dtype, VTArray, source,
                             nodes, dtypeOper, TaQLStyle()),

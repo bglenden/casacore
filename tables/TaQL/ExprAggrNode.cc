@@ -40,7 +40,7 @@ namespace casacore { //# NAMESPACE CASACORE - BEGIN
                                         ValueType vtype,
                                         const TableExprNodeSet& source,
                                         const vector<TENShPtr>& nodes,
-                                        const Block<Int>& dtypeOper)
+                                        const std::vector<Int>& dtypeOper)
     : TableExprFuncNode (ftype, dtype, vtype, source, nodes, dtypeOper)
   {
     // Always treat an aggregate as a variable expression.
@@ -55,7 +55,7 @@ namespace casacore { //# NAMESPACE CASACORE - BEGIN
   }
   
   TableExprFuncNode::NodeDataType TableExprAggrNode::checkOperands
-  (Block<Int>& dtypeOper, ValueType& resVT, FunctionType ftype,
+  (std::vector<Int>& dtypeOper, ValueType& resVT, FunctionType ftype,
    vector<TENShPtr>& nodes)
   {
     if (ftype >= FirstAggrArrayFunc  &&  ftype < LastAggrArrayFunc  &&
