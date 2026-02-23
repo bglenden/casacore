@@ -40,3 +40,6 @@ foreach (test ${tests})
     endif()
     add_dependencies(check ${test})
 endforeach (test)
+
+add_test(NAME tLatticeStatistics_full COMMAND tLatticeStatistics --full)
+set_tests_properties(tLatticeStatistics_full PROPERTIES LABELS "long")

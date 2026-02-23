@@ -42,6 +42,8 @@
 
 #include <casacore/casa/iostream.h>
 
+#include <cstring>
+
 #include <casacore/casa/namespace.h>
 
 void doitFloat(LogIO& os);
@@ -59,9 +61,10 @@ void test2DFloat (LatticeStatistics<Float>& stats, const Vector<Float>& results,
                   const Vector<Bool>& hasResult, const IPosition& shape);
 
 
-int main()
+int main(int argc, char* argv[])
 {
     try {
+        bool fullMode = (argc > 1 && strcmp(argv[1], "--full") == 0);
         LogOrigin lor("tLatticeStatistics", "main()", WHERE);
         LogIO os(lor);
         doitFloat(os);
@@ -413,7 +416,7 @@ int main()
             stats.getStatistic(v, LatticeStatsBase::SIGMA, False);
             AlwaysAssert(near(*v.begin(), 461.243958957, 2e-5), AipsError);
         }
-        {
+        if (fullMode) {
             cout << "test stats for complex value lattice using old and new methods" << endl;
             uInt size = 500000;
             Vector<Complex> cdata(size);
@@ -744,7 +747,7 @@ int main()
             AlwaysAssert(mymin(pos) == DComplex(1, 1), AipsError);
             AlwaysAssert(mymax(pos) == DComplex(399999, 399999), AipsError);
         }
-        {
+        if (fullMode) {
             // CAS-10938
             cout << "test CAS-10938" << endl;
             Array<Float> largeArray(IPosition(3, 4000, 4000, OMP::nMaxThreads() + 1));
@@ -783,7 +786,7 @@ int main()
             stats.getStatistic(v, LatticeStatsBase::Q1, False);
             AlwaysAssert(*v.begin() == 0, AipsError);
         }
-        {
+        if (fullMode) {
             // tests using the various lattice stats algorithms
             IPosition shape(3, 100, 100, 100);
             Array<Float> adata(shape);
@@ -869,7 +872,7 @@ int main()
                 AlwaysAssert(maxPos.empty(), AipsError);
             }
         }
-        {
+        if (fullMode) {
             // CAS-14660; all pixels being incorrectly masked in certain cursor axes selection cases.
             cout << "test CAS-14660" << endl;
             Array<Float> arr(IPosition(4, 1, 4300, 4, 117));
