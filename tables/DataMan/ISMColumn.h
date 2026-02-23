@@ -320,7 +320,7 @@ private:
 		  Bool afterLastRow = False, Bool canSplit = True);
 
     // Handle the duplicated values after a bucket split.
-    void handleSplit (ISMBucket& bucket, const Block<Bool>& duplicated);
+    void handleSplit (ISMBucket& bucket, const std::vector<Bool>& duplicated);
 
     // Compare the values.
     virtual Bool compareValue (const void* val1, const void* val2) const;

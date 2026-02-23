@@ -400,7 +400,7 @@ void ISMBucket::read (const char* bucketStorage)
 
 
 Bool ISMBucket::simpleSplit (ISMBucket* left, ISMBucket* right,
-			     Block<Bool>& duplicated,
+			     std::vector<Bool>& duplicated,
 			     rownr_t& splitRownr, rownr_t rownr)
 {
     // Determine the last rownr in the bucket.
@@ -448,7 +448,7 @@ Bool ISMBucket::simpleSplit (ISMBucket* left, ISMBucket* right,
 }
 
 rownr_t ISMBucket::split (ISMBucket*& left, ISMBucket*& right,
-                          Block<Bool>& duplicated,
+                          std::vector<Bool>& duplicated,
                           rownr_t bucketStartRow, rownr_t bucketNrrow,
                           uInt colnr, rownr_t rownr, uInt lengToAdd)
 {

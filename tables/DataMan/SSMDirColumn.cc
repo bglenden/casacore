@@ -58,10 +58,10 @@ void SSMDirColumn::deleteRow(rownr_t aRowNr)
       uInt64 anOffr = (aRowNr-aSRow+1) * itsNrCopy;
       uInt64 anOfto = (aRowNr-aSRow) * itsNrCopy;
       uInt64 nr = (anERow-aRowNr) * itsNrCopy;
-      Block<Bool> tmp(nr);
-      Conversion::bitToBool (tmp.storage(), aValue + anOffr/8,
+      auto tmp = std::make_unique<Bool[]>(nr);
+      Conversion::bitToBool (tmp.get(), aValue + anOffr/8,
 			     anOffr%8, nr);
-      Conversion::boolToBit (aValue + anOfto/8, tmp.storage(),
+      Conversion::boolToBit (aValue + anOfto/8, tmp.get(),
 			     anOfto%8, nr);
     } else {
       // remove from bucket

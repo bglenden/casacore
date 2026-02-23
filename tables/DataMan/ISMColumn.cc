@@ -914,7 +914,7 @@ void ISMColumn::replaceData (ISMBucket* bucket, rownr_t bucketStartRow,
     AlwaysAssert (canSplit, AipsError);
     ISMBucket* left;
     ISMBucket* right;
-    Block<Bool> duplicated;
+    std::vector<Bool> duplicated;
     rownr_t splitRownr = bucket->split (left, right, duplicated,
                                         bucketStartRow, bucketNrrow,
                                         colnr_p, bucketRownr, lenData - oldLeng);
@@ -953,7 +953,7 @@ Bool ISMColumn::addData (ISMBucket* bucket, rownr_t bucketStartRow,
     AlwaysAssert (canSplit, AipsError);
     ISMBucket* left;
     ISMBucket* right;
-    Block<Bool> duplicated;
+    std::vector<Bool> duplicated;
     rownr_t splitRownr = bucket->split (left, right, duplicated,
                                         bucketStartRow, bucketNrrow,
                                         colnr_p, bucketRownr, lenData);
@@ -1006,7 +1006,7 @@ void ISMColumn::handleRemove (rownr_t, const char*)
 }
 
 
-void ISMColumn::handleSplit (ISMBucket& bucket, const Block<Bool>& duplicated)
+void ISMColumn::handleSplit (ISMBucket& bucket, const std::vector<Bool>& duplicated)
 {
     // Loop through all columns.
     // If the split duplicated a value, handle the copied value.

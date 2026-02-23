@@ -204,7 +204,7 @@ public:
     // The starting values in the right bucket may be copies of the
     // values in the left bucket. The duplicated Block contains a switch
     // per column indicating if the value is copied.
-    rownr_t split (ISMBucket*& left, ISMBucket*& right, Block<Bool>& duplicated,
+    rownr_t split (ISMBucket*& left, ISMBucket*& right, std::vector<Bool>& duplicated,
                    rownr_t bucketStartRow, rownr_t bucketNrrow,
                    uInt colnr, rownr_t rownr, uInt lengToAdd);
 
@@ -217,7 +217,7 @@ public:
     // <br>This fuction is only called by split, which created the
     // left and right bucket.
     Bool simpleSplit (ISMBucket* left, ISMBucket* right,
-		      Block<Bool>& duplicated,
+		      std::vector<Bool>& duplicated,
 		      rownr_t& splitRownr, rownr_t rownr);
 
     // Return the index where the bucket should be split to get
