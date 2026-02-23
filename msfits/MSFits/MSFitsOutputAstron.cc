@@ -28,7 +28,6 @@
 #include <casacore/ms/MeasurementSets/MSColumns.h>
 #include <casacore/tables/Tables.h>
 #include <casacore/casa/Exceptions/Error.h>
-#include <casacore/casa/Containers/Block.h>
 #include <casacore/casa/Containers/Record.h>
 #include <casacore/casa/Containers/RecordDesc.h>
 #include <casacore/casa/Containers/RecordField.h>
@@ -59,7 +58,10 @@
 #include <casacore/casa/iomanip.h>
 #include <casacore/casa/Logging/LogIO.h>
 
+#include <algorithm>
 #include <limits>
+#include <memory>
+#include <vector>
 
 
 namespace casacore { //# NAMESPACE CASACORE - BEGIN
@@ -131,7 +133,7 @@ Bool MSFitsOutputAstron::writeFitsFile(const String& fitsfile,
   }
 
   // Find the number of IF's (spectral-windows).
-  Block<Int> spwidMap;
+  std::vector<Int> spwidMap;
   Vector<Int> spwids;
   uInt nrspw;
   {
@@ -140,7 +142,7 @@ Bool MSFitsOutputAstron::writeFitsFile(const String& fitsfile,
   }
 
   // If not asMultiSource, check if multiple sources are present.
-  Block<Int> fieldidMap;
+  std::vector<Int> fieldidMap;
   uInt nrfield;
   {
     ScalarColumn<Int> fldidcol(ms, MS::columnName(MS::FIELD_ID));
@@ -237,10 +239,10 @@ FitsOutput *MSFitsOutputAstron::writeMain(Int& refPixelFreq,
 				    const String &outFITSFile,
 				    const MeasurementSet &rawms,
 				    const String &column,
-				    const Block<Int>& spwidMap,
+				    const std::vector<Int>& spwidMap,
 				    Int nrspw, Int chanstart, Int nchan,
 				    Int chanstep,
-				    const Block<Int>& fieldidMap,
+				    const std::vector<Int>& fieldidMap,
 				    Bool asMultiSource,
 				    Bool combineSpw)
 {
@@ -324,7 +326,7 @@ FitsOutput *MSFitsOutputAstron::writeMain(Int& refPixelFreq,
   Vector<Int> stokes;
   uInt i;
   for (i=0; i<ndds; i++) {
-    if (i < spwidMap.nelements()  &&  spwidMap[i] >= 0) {
+    if (i < spwidMap.size()  &&  spwidMap[i] >= 0) {
       const Int s = spwId(i);
       const Int p = polId(i);
       // Get channel width.
@@ -767,7 +769,7 @@ FitsOutput *MSFitsOutputAstron::writeMain(Int& refPixelFreq,
 
   // Sort the table in order of TIME, ANTENNA1, ANTENNA2, FIELDID, SPWID.
   // Iterate through the table on the first 4 fields.
-  Block<String> sortNames(5);
+  std::vector<String> sortNames(5);
   sortNames[0] = MS::columnName(MS::TIME);
   sortNames[1] = MS::columnName(MS::ANTENNA1);
   sortNames[2] = MS::columnName(MS::ANTENNA2);
@@ -938,7 +940,7 @@ FitsOutput *MSFitsOutputAstron::writeMain(Int& refPixelFreq,
 
 
 Bool MSFitsOutputAstron::writeFQ(FitsOutput *output, const MeasurementSet &ms,
-			   const Block<Int>& spwidMap, Int nrspw,
+			   const std::vector<Int>& spwidMap, Int nrspw,
 			   Double refFreq, Int refPixelFreq,
 			   Double chanbw, Bool combineSpw)
 {
@@ -1011,7 +1013,7 @@ Bool MSFitsOutputAstron::writeFQ(FitsOutput *output, const MeasurementSet &ms,
 
   IPosition inx(1,0);
   for (uInt i=0; i<nwin; i++) {
-    if (i < spwidMap.nelements()  &&  spwidMap[i] >= 0) {
+    if (i < spwidMap.size()  &&  spwidMap[i] >= 0) {
       *freqsel = 1 + spwidMap[i];
       Vector<Double> freqs = inchanfreq(i);
       if (telescopeName == "IRAM PDB" || telescopeName == "IRAM_PDB") {
@@ -1236,7 +1238,7 @@ Bool MSFitsOutputAstron::writeAN(FitsOutput *output, const MeasurementSet &ms,
     *polab = 0.0;
     *polcalb = 0.0;
 
-    Block<Int> id(nant);
+    std::vector<Int> id(nant);
     Bool useAntId = True;
     for (uInt a = 0; a < nant; a++) {
       const String& antName = antid(a) ;
@@ -1325,8 +1327,8 @@ Bool MSFitsOutputAstron::writeAN(FitsOutput *output, const MeasurementSet &ms,
 }
 
 Bool MSFitsOutputAstron::writeSU(FitsOutput *output, const MeasurementSet &ms,
-			   const Block<Int>& fieldidMap, Int nrfield,
-			   const Block<Int>& /*spwidMap*/, Int nrspw)
+			   const std::vector<Int>& fieldidMap, Int nrfield,
+			   const std::vector<Int>& /*spwidMap*/, Int nrspw)
 {
   LogIO os(LogOrigin("MSFitsOutputAstron", "writeSU"));
   // Basically we make the FIELD_ID the source ID.
@@ -1493,7 +1495,7 @@ Bool MSFitsOutputAstron::writeSU(FitsOutput *output, const MeasurementSet &ms,
   // Only take those fields which are part of the fieldidMap
   // (which represents the fields written in the main table).
   for (uInt fieldnum=0; fieldnum<nrow; fieldnum++) {
-    if (fieldnum < fieldidMap.nelements()  &&  fieldidMap[fieldnum] >= 0) {
+    if (fieldnum < fieldidMap.size()  &&  fieldidMap[fieldnum] >= 0) {
       *idno = 1 + fieldidMap[fieldnum];
       dir=msfc.phaseDirMeas(fieldnum);
       *source = inname(fieldnum) + "                ";
@@ -1572,7 +1574,7 @@ Bool MSFitsOutputAstron::writeSU(FitsOutput *output, const MeasurementSet &ms,
 
 Bool MSFitsOutputAstron::writeTY(FitsOutput *output, const MeasurementSet &ms,
 			   const Table& syscal,
-			   const Block<Int>& spwidMap, uInt nrif,
+			   const std::vector<Int>& spwidMap, uInt nrif,
 			   Bool combineSpw)
 {
   LogIO os(LogOrigin("MSFitsOutputAstron", "writeTY"));
@@ -1688,7 +1690,7 @@ Bool MSFitsOutputAstron::writeTY(FitsOutput *output, const MeasurementSet &ms,
 }
 
 Bool MSFitsOutputAstron::writeGC(FitsOutput *output, const MeasurementSet &ms,
-			   const Table& syscal, const Block<Int>& /*spwidMap*/,
+			   const Table& syscal, const std::vector<Int>& /*spwidMap*/,
 			   uInt nrif, Bool combineSpw, Double sensitivity,
 			   Int refPixelFreq, Double refFreq, Double chanbw)
 {
@@ -1697,7 +1699,7 @@ Bool MSFitsOutputAstron::writeGC(FitsOutput *output, const MeasurementSet &ms,
   // We need to write an entry per antenna (and spw if !combineSpw).
   // So sort the SYSCAL table in that order and skip duplicate
   // spectral-windows. Use insertion sort, since the table is already in order.
-  Block<String> sortNames(2);
+  std::vector<String> sortNames(2);
   sortNames[0] = MSSysCal::columnName(MSSysCal::ANTENNA_ID);
   sortNames[1] = MSSysCal::columnName(MSSysCal::TIME);
   Table sorcal = syscal.sort (sortNames, Sort::Ascending,
@@ -1706,7 +1708,7 @@ Bool MSFitsOutputAstron::writeGC(FitsOutput *output, const MeasurementSet &ms,
   // Remove TIME from the sort columns.
   // Use insertion sort, because the table is already in order.
   Int nrant;
-  sortNames.resize (1, True, True);
+  sortNames.resize(1);
   {
     Table sorcal2 = sorcal.sort (sortNames, Sort::Ascending,
 				 Sort::InsSort + Sort::NoDuplicates);
@@ -1928,7 +1930,7 @@ Table MSFitsOutputAstron::handleSysCal (const MeasurementSet& ms,
   // Only take the antennas found in the main table.
   // This is better and also solves an NFRA problem where incorrect
   // antennas were written in the SYSCAL table.
-  Block<Bool> antFlag;
+  std::vector<Bool> antFlag;
   {
     // Find the maximum antenna number.
     // Assure that the minimum >= 0.
@@ -1945,8 +1947,7 @@ Table MSFitsOutputAstron::handleSysCal (const MeasurementSet& ms,
     // Make an array which contains a flag True for all antennas in the
     // main table.
     Int nrant = 1 + max (maxant1, maxant2);
-    antFlag.resize (nrant);
-    antFlag = False;
+    antFlag.assign (nrant, False);
     Bool delAnt1, delAnt2;
     const Int* ant1ptr = ant1.getStorage (delAnt1);
     const Int* ant2ptr = ant2.getStorage (delAnt2);
@@ -1969,8 +1970,7 @@ Table MSFitsOutputAstron::handleSysCal (const MeasurementSet& ms,
       throw (AipsError ("Antenna_id < 0 in SYSCAL " + syscal.tableName()));
     }
     uInt nrrow = ant.nelements();
-    Block<Bool> rowFlag(nrrow);
-    rowFlag = True;
+    std::vector<Bool> rowFlag(nrrow, True);
     Bool flagged = False;
     Bool delAnt;
     const Int* antptr = ant.getStorage (delAnt);
@@ -2013,7 +2013,7 @@ Table MSFitsOutputAstron::handleSysCal (const MeasurementSet& ms,
        .in (TableExprNode(spwids)));
   }
   // Sort the SYSCAL table in order of antenna, time, spectral-window.
-  Block<String> sortNames(3);
+  std::vector<String> sortNames(3);
   sortNames[0] = MSSysCal::columnName(MSSysCal::ANTENNA_ID);
   sortNames[1] = MSSysCal::columnName(MSSysCal::TIME);
   sortNames[2] = MSSysCal::columnName(MSSysCal::SPECTRAL_WINDOW_ID);
@@ -2021,7 +2021,7 @@ Table MSFitsOutputAstron::handleSysCal (const MeasurementSet& ms,
 }
 
 
-Int MSFitsOutputAstron::makeIdMap (Block<Int>& map, Vector<Int>& selids,
+Int MSFitsOutputAstron::makeIdMap (std::vector<Int>& map, Vector<Int>& selids,
 			     const Vector<Int>& allids, Bool isSubset)
 {
   // Determine the number of ids and make a mapping of
@@ -2029,8 +2029,8 @@ Int MSFitsOutputAstron::makeIdMap (Block<Int>& map, Vector<Int>& selids,
   // Only if the MS is a subset, we have to determine this mapping
   // explicitly (because then some ids might be left out).
   Int nrid = 1 + max(allids);
-  map.resize (nrid, True, True);
-  map = -1;
+  map.resize(nrid);
+  std::fill(map.begin(), map.end(), -1);
   if (!isSubset) {
     selids.resize (nrid);
     for (Int i=0; i<nrid; i++) {
@@ -2042,7 +2042,7 @@ Int MSFitsOutputAstron::makeIdMap (Block<Int>& map, Vector<Int>& selids,
     // fields need to be written from the FIELD table.
     Bool deleteIt;
     const Int* data = allids.getStorage (deleteIt);
-    Block<Bool> idUsed(nrid, False);
+    std::vector<Bool> idUsed(nrid, False);
     Int nrow = allids.nelements();
     for (Int i=0; i<nrow; i++) {
       idUsed[data[i]] = True;

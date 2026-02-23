@@ -44,7 +44,6 @@ class MSFeed;
 class MSField;
 class MSPolarization;
 class MSSpectralWindow;
-template <class T> class Block;
 
 // <summary>A class with functions for concatenating MeasurementSets</summary>
 
@@ -102,22 +101,22 @@ private:
   void checkShape(const IPosition& otherShape) const;
   void checkCategories(const MSMainColumns& otherCols) const;
   Bool checkEphIdInField(const MSFieldColumns& otherFldCol) const;
-  Bool copyPointing(const MSPointing& otherPoint, const Block<uInt>& newAntIndices);
-  Bool copyPointingB(MSPointing& otherPoint, const Block<uInt>& newAntIndices);
-  Bool copySysCal(const MSSysCal& otherSysCal, const Block<uInt>& newAndIndices);
-  Bool copyWeather(const MSWeather& otherWeather, const Block<uInt>& newAndIndices);
-  Bool copyGainCurve(const MeasurementSet& otherMS, const Block<uInt>& newAndIndices);
-  Bool copyPhaseCal(const MeasurementSet& otherMS, const Block<uInt>& newAndIndices);
+  Bool copyPointing(const MSPointing& otherPoint, const std::vector<uInt>& newAntIndices);
+  Bool copyPointingB(MSPointing& otherPoint, const std::vector<uInt>& newAntIndices);
+  Bool copySysCal(const MSSysCal& otherSysCal, const std::vector<uInt>& newAndIndices);
+  Bool copyWeather(const MSWeather& otherWeather, const std::vector<uInt>& newAndIndices);
+  Bool copyGainCurve(const MeasurementSet& otherMS, const std::vector<uInt>& newAndIndices);
+  Bool copyPhaseCal(const MeasurementSet& otherMS, const std::vector<uInt>& newAndIndices);
   Bool copyEOP(const MeasurementSet& otherMS);
   Int copyObservation(const MSObservation& otherObs, const Bool remRedunObsId=True);
                              //# by default remove redundant observation table rows
   Int copyProcessor(const MSProcessor& otherObs, const Bool remRedunProcId=True);
                              //# by default remove redundant processor table rows
-  Block<uInt> copyAntennaAndFeed(const MSAntenna& otherAnt,
+  std::vector<uInt> copyAntennaAndFeed(const MSAntenna& otherAnt,
 				 const MSFeed& otherFeed);
-  Block<uInt> copyState(const MSState& otherState);
-  Block<uInt> copyField(const MeasurementSet& otherms);
-  Block<uInt> copySpwAndPol(const MSSpectralWindow& otherSpw,
+  std::vector<uInt> copyState(const MSState& otherState);
+  std::vector<uInt> copyField(const MeasurementSet& otherms);
+  std::vector<uInt> copySpwAndPol(const MSSpectralWindow& otherSpw,
 			    const MSPolarization& otherPol,
 			    const MSDataDescription& otherDD);
   Bool copySource(const MeasurementSet& otherms);

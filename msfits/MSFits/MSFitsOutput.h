@@ -33,6 +33,8 @@
 
 #include <casacore/casa/aips.h>
 
+#include <vector>
+
 namespace casacore {
 
 //# Forward Declarations
@@ -40,7 +42,6 @@ class File;
 class FitsOutput;
 template<class T> class ScalarColumn;
 class Table;
-template<class T> class Block;
 // <summary>
 // Write a MeasurementSet to a random group uvfits file.
 // </summary>
@@ -149,8 +150,8 @@ private:
     std::shared_ptr<FitsOutput> _writeMain(
         Int& refPixelFreq, Double& refFreq,
         Double& chanbw, const String& outFITSFile,
-        const Block<Int>& spwidMap, Int nrspw,
-        const Block<Int>& fieldidMap,
+        const std::vector<Int>& spwidMap, Int nrspw,
+        const std::vector<Int>& fieldidMap,
         Bool asMultiSource
     ) const;
 
@@ -158,7 +159,7 @@ private:
     // If combineSpw is True, all spectral-windows are written in one
     // row of the FITS table.
     static Bool _writeFQ(std::shared_ptr<FitsOutput> output, const MeasurementSet& ms,
-        const Block<Int>& spwidMap, Int nrspw,
+        const std::vector<Int>& spwidMap, Int nrspw,
         Double refFreq, Int refPixelFreq,
         Double chanbw, Bool combineSpw,
         Int chanstart = 0, Int nchan = -1, Int chanstep = 1,
@@ -174,21 +175,21 @@ private:
     // Write the SU table.
     static Bool _writeSU(
         std::shared_ptr<FitsOutput> output, const MeasurementSet& ms,
-        const Block<Int>& fieldidMap, Int nrfield,
-		const Block<Int>& spwidMap, Int nrspw
+        const std::vector<Int>& fieldidMap, Int nrfield,
+		const std::vector<Int>& spwidMap, Int nrspw
     );
 
     // Write the TY table.
     static Bool _writeTY(
         std::shared_ptr<FitsOutput> output, const MeasurementSet& ms,
-        const Table& syscal, const Block<Int>& spwidMap,
+        const Table& syscal, const std::vector<Int>& spwidMap,
         uInt nrif, Bool combineSpw
     );
 
     // Write the GC table.
     static Bool _writeGC(
         std::shared_ptr<FitsOutput> output, const MeasurementSet& ms,
-        const Table& syscal, const Block<Int>& spwidMap,
+        const Table& syscal, const std::vector<Int>& spwidMap,
         uInt nrif, Bool combineSpw, Double sensitivity,
         Int refPixelFreq, Double refFreq, Double chanbw
     );
@@ -199,7 +200,7 @@ private:
     // Write the SY table.
     static Bool _writeSY(
         std::shared_ptr<FitsOutput> output, const MeasurementSet& ms,
-        Table& syspower, Int nspw, const Block<Int>& spwIDMap,
+        Table& syspower, Int nspw, const std::vector<Int>& spwIDMap,
         Bool combineSpw
     );
 
@@ -235,7 +236,7 @@ private:
     //    @return number of selected IDs in allids
 
     static Int _makeIdMap(
-        Block<Int>& map, Vector<Int>& selids,
+        std::vector<Int>& map, Vector<Int>& selids,
         const Vector<Int>& allids
     );
 

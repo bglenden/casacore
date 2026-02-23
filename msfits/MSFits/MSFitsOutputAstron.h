@@ -30,6 +30,8 @@
 #include <casacore/casa/aips.h>
 #include <casacore/casa/Arrays/ArrayFwd.h>
 
+#include <vector>
+
 namespace casacore { //# NAMESPACE CASACORE - BEGIN
 
 //# Forward Declarations
@@ -37,7 +39,6 @@ class String;
 class FitsOutput;
 class MeasurementSet;
 class Table;
-template<class T> class Block;
 
 
 // <summary>
@@ -68,10 +69,10 @@ private:
 			       const String& outFITSFile,
 			       const MeasurementSet& rawms,
 			       const String& column,
-			       const Block<Int>& spwidMap,
+			       const std::vector<Int>& spwidMap,
 			       Int nrspw,
 			       Int startchan, Int nchan, Int stepchan,
-			       const Block<Int>& fieldidMap,
+			       const std::vector<Int>& fieldidMap,
 			       Bool asMultiSource,
 			       Bool combineSpw);
 
@@ -79,7 +80,7 @@ private:
   // If combineSpw is True, all spectral-windows are written in one
   // row of the FITS table.
   static Bool writeFQ(FitsOutput *output, const MeasurementSet& ms, 
-		      const Block<Int>& spwidMap, Int nrspw,
+		      const std::vector<Int>& spwidMap, Int nrspw,
 		      Double refFreq, Int refPixelFreq, 
 		      Double chanbw, Bool combineSpw);
 
@@ -89,17 +90,17 @@ private:
 
   // Write the SU table.
   static Bool writeSU(FitsOutput *output, const MeasurementSet& ms,
-		      const Block<Int>& fieldidMap, Int nrfield,
-		      const Block<Int>& spwidMap, Int nrspw);
+		      const std::vector<Int>& fieldidMap, Int nrfield,
+		      const std::vector<Int>& spwidMap, Int nrspw);
 
   // Write the TY table.
   static Bool writeTY(FitsOutput *output, const MeasurementSet& ms,
-		      const Table& syscal, const Block<Int>& spwidMap,
+		      const Table& syscal, const std::vector<Int>& spwidMap,
 		      uInt nrif, Bool combineSpw);
 
   // Write the GC table.
   static Bool writeGC(FitsOutput *output, const MeasurementSet& ms,
-		      const Table& syscal, const Block<Int>& spwidMap,
+		      const Table& syscal, const std::vector<Int>& spwidMap,
 		      uInt nrif, Bool combineSpw, Double sensitivity,
 		      Int refPixelFreq, Double refFreq, Double chanbw);
 
@@ -125,7 +126,7 @@ private:
   // If isSubset is False the main table is not a selection, but
   // represents an entire MS. In that case the map and selids are
   // simply filled with values 0-nrid.
-  static Int makeIdMap (Block<Int>& map, Vector<Int>& selids,
+  static Int makeIdMap (std::vector<Int>& map, Vector<Int>& selids,
 			const Vector<Int>& allids, Bool isSubset);
 };
 

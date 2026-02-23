@@ -1946,7 +1946,7 @@ void MSConcat::checkCategories(const MSMainColumns& otherCols) const {
 
 
 Bool MSConcat::copyPointing(const MSPointing& otherPoint,const
-			    Block<uInt>& newAntIndices ){
+			    std::vector<uInt>& newAntIndices ){
 
   LogIO os(LogOrigin("MSConcat", "copyPointing"));
 
@@ -1995,7 +1995,7 @@ Bool MSConcat::copyPointing(const MSPointing& otherPoint,const
     // check antenna IDs
     Vector<Int> antennaIDs=pointCol.antennaId().getColumn();
     Bool idsOK = True;
-    Int maxID = static_cast<Int>(newAntIndices.nelements()) - 1;
+    Int maxID = static_cast<Int>(newAntIndices.size()) - 1;
     for (Int k=origNRow; k <  (origNRow+rowToBeAdded); ++k){
       if(antennaIDs[k] < 0 || antennaIDs[k] > maxID){
 	idsOK = False;
@@ -2021,7 +2021,7 @@ Bool MSConcat::copyPointing(const MSPointing& otherPoint,const
 }
 
 Bool MSConcat::copyPointingB(MSPointing& otherPoint,const
-			    Block<uInt>& newAntIndices ){
+			    std::vector<uInt>& newAntIndices ){
 
   // prepare otherPoint such that it can be virtually concatenated later
   // (don't write the itsMS)
@@ -2066,7 +2066,7 @@ Bool MSConcat::copyPointingB(MSPointing& otherPoint,const
     // check antenna IDs
     Vector<Int> antennaIDs=pointCol.antennaId().getColumn();
     Bool idsOK = True;
-    Int maxID = static_cast<Int>(newAntIndices.nelements()) - 1;
+    Int maxID = static_cast<Int>(newAntIndices.size()) - 1;
     for (Int k=0; k < rowToBeAdded; k++){
       if(antennaIDs[k] < 0 || antennaIDs[k] > maxID){
 	idsOK = False;
@@ -2101,7 +2101,7 @@ Bool MSConcat::copyPointingB(MSPointing& otherPoint,const
 
 
 Bool MSConcat::copySysCal(const MSSysCal& otherSysCal,
-			  const Block<uInt>& newAntIndices){
+			  const std::vector<uInt>& newAntIndices){
   // uses newSPWIndex_p; to be called after copySpwAndPol
 
   LogIO os(LogOrigin("MSConcat", "copySysCal"));
@@ -2139,7 +2139,7 @@ Bool MSConcat::copySysCal(const MSSysCal& otherSysCal,
     // check antenna IDs
     Vector<Int> antennaIDs=sysCalCol.antennaId().getColumn();
     Bool idsOK = True;
-    Int maxID = static_cast<Int>(newAntIndices.nelements()) - 1;
+    Int maxID = static_cast<Int>(newAntIndices.size()) - 1;
     for (Int k=origNRow; k < (origNRow+rowToBeAdded); ++k){
       if(antennaIDs[k] < 0 || antennaIDs[k] > maxID){
 	idsOK = False;
@@ -2193,7 +2193,7 @@ Bool MSConcat::copySysCal(const MSSysCal& otherSysCal,
 }
 
 Bool MSConcat::copyWeather(const MSWeather& otherWeather,
-			   const Block<uInt>& newAntIndices){
+			   const std::vector<uInt>& newAntIndices){
 
   LogIO os(LogOrigin("MSConcat", "copyWeather"));
 
@@ -2230,7 +2230,7 @@ Bool MSConcat::copyWeather(const MSWeather& otherWeather,
     // check antenna IDs
     Vector<Int> antennaIDs=weatherCol.antennaId().getColumn();
     Bool idsOK = True;
-    Int maxID = static_cast<Int>(newAntIndices.nelements()) - 1;
+    Int maxID = static_cast<Int>(newAntIndices.size()) - 1;
     for (Int k=origNRow; k < (origNRow+rowToBeAdded); ++k){
       if(antennaIDs[k] < -1 || antennaIDs[k] > maxID){
 	os << LogIO::WARN
@@ -2265,7 +2265,7 @@ Bool MSConcat::copyWeather(const MSWeather& otherWeather,
 }
 
 Bool MSConcat::copyGainCurve(const MeasurementSet& otherMS,
-			     const Block<uInt>& newAntIndices){
+			     const std::vector<uInt>& newAntIndices){
   // uses newSPWIndex_p; to be called after copySpwAndPol
 
   LogIO os(LogOrigin("MSConcat", "copyGainCurve"));
@@ -2307,7 +2307,7 @@ Bool MSConcat::copyGainCurve(const MeasurementSet& otherMS,
     // check antenna IDs
     Vector<Int> antennaIDs=antCol.getColumn();
     Bool idsOK = True;
-    Int maxID = static_cast<Int>(newAntIndices.nelements()) - 1;
+    Int maxID = static_cast<Int>(newAntIndices.size()) - 1;
     for (Int k=origNRow; k < (origNRow+rowToBeAdded); ++k){
       if(antennaIDs[k] < 0 || antennaIDs[k] > maxID){
 	idsOK = False;
@@ -2361,7 +2361,7 @@ Bool MSConcat::copyGainCurve(const MeasurementSet& otherMS,
 }
 
 Bool MSConcat::copyPhaseCal(const MeasurementSet& otherMS,
-			     const Block<uInt>& newAntIndices){
+			     const std::vector<uInt>& newAntIndices){
   // uses newSPWIndex_p; to be called after copySpwAndPol
 
   LogIO os(LogOrigin("MSConcat", "copyPhaseCal"));
@@ -2403,7 +2403,7 @@ Bool MSConcat::copyPhaseCal(const MeasurementSet& otherMS,
     // check antenna IDs
     Vector<Int> antennaIDs=antCol.getColumn();
     Bool idsOK = True;
-    Int maxID = static_cast<Int>(newAntIndices.nelements()) - 1;
+    Int maxID = static_cast<Int>(newAntIndices.size()) - 1;
     for (Int k=origNRow; k < (origNRow+rowToBeAdded); ++k){
       if(antennaIDs[k] < 0 || antennaIDs[k] > maxID){
 	idsOK = False;
@@ -2696,7 +2696,7 @@ Int MSConcat::copyProcessor(const MSProcessor& otherProc,
 
 
 
-Block<uInt> MSConcat::copyAntennaAndFeed(const MSAntenna& otherAnt,
+std::vector<uInt> MSConcat::copyAntennaAndFeed(const MSAntenna& otherAnt,
 					 const MSFeed& otherFeed) {
   // uses newSPWIndex_p; to be called after copySpwAndPol
 
@@ -2912,7 +2912,7 @@ Block<uInt> MSConcat::copyAntennaAndFeed(const MSAntenna& otherAnt,
   return antMap;
 }
 
-Block<uInt> MSConcat::copyState(const MSState& otherState) {
+std::vector<uInt> MSConcat::copyState(const MSState& otherState) {
   const uInt nStateIds = otherState.nrow();
   std::vector<uInt> stateMap(nStateIds);
 
@@ -2942,7 +2942,7 @@ Block<uInt> MSConcat::copyState(const MSState& otherState) {
   return stateMap;
 }
 
-Block<uInt>  MSConcat::copyField(const MeasurementSet& otherms) {
+std::vector<uInt>  MSConcat::copyField(const MeasurementSet& otherms) {
   const MSField otherFld = otherms.field();
   const rownr_t nFlds = otherFld.nrow();
   std::vector<uInt> fldMap(nFlds);
@@ -3596,7 +3596,7 @@ Bool MSConcat::procRowsEquivalent(const MSProcessorColumns& procCol, const uInt&
 }
 
 
-Block<uInt> MSConcat::copySpwAndPol(const MSSpectralWindow& otherSpw,
+std::vector<uInt> MSConcat::copySpwAndPol(const MSSpectralWindow& otherSpw,
 				    const MSPolarization& otherPol,
 				    const MSDataDescription& otherDD) {
 
