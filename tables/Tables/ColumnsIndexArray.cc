@@ -516,7 +516,7 @@ void ColumnsIndexArray::getArray (Vector<uChar>& result, const String& name)
   ArrayColumn<uChar> arrCol (itsTable, name);
   rownr_t nrrow = arrCol.nrow();
   if (nrrow > 0) {
-    Block<rownr_t> nrel(nrrow, rownr_t(0));
+    std::vector<rownr_t> nrel(nrrow, rownr_t(0));
     Array<uChar> arr = arrCol(0);
     rownr_t npts = arr.nelements();
     nrel[0] = npts;
@@ -544,7 +544,7 @@ void ColumnsIndexArray::getArray (Vector<Short>& result, const String& name)
   ArrayColumn<Short> arrCol (itsTable, name);
   rownr_t nrrow = arrCol.nrow();
   if (nrrow > 0) {
-    Block<rownr_t> nrel(nrrow, rownr_t(0));
+    std::vector<rownr_t> nrel(nrrow, rownr_t(0));
     Array<Short> arr = arrCol(0);
     rownr_t npts = arr.nelements();
     nrel[0] = npts;
@@ -572,7 +572,7 @@ void ColumnsIndexArray::getArray (Vector<Int>& result, const String& name)
   ArrayColumn<Int> arrCol (itsTable, name);
   rownr_t nrrow = arrCol.nrow();
   if (nrrow > 0) {
-    Block<rownr_t> nrel(nrrow, rownr_t(0));
+    std::vector<rownr_t> nrel(nrrow, rownr_t(0));
     Array<Int> arr = arrCol(0);
     rownr_t npts = arr.nelements();
     nrel[0] = npts;
@@ -600,7 +600,7 @@ void ColumnsIndexArray::getArray (Vector<uInt>& result, const String& name)
   ArrayColumn<uInt> arrCol (itsTable, name);
   rownr_t nrrow = arrCol.nrow();
   if (nrrow > 0) {
-    Block<rownr_t> nrel(nrrow, rownr_t(0));
+    std::vector<rownr_t> nrel(nrrow, rownr_t(0));
     Array<uInt> arr = arrCol(0);
     rownr_t npts = arr.nelements();
     nrel[0] = npts;
@@ -628,7 +628,7 @@ void ColumnsIndexArray::getArray (Vector<Int64>& result, const String& name)
   ArrayColumn<Int64> arrCol (itsTable, name);
   rownr_t nrrow = arrCol.nrow();
   if (nrrow > 0) {
-    Block<rownr_t> nrel(nrrow, rownr_t(0));
+    std::vector<rownr_t> nrel(nrrow, rownr_t(0));
     Array<Int64> arr = arrCol(0);
     rownr_t npts = arr.nelements();
     nrel[0] = npts;
@@ -656,7 +656,7 @@ void ColumnsIndexArray::getArray (Vector<String>& result, const String& name)
   ArrayColumn<String> arrCol (itsTable, name);
   rownr_t nrrow = arrCol.nrow();
   if (nrrow > 0) {
-    Block<rownr_t> nrel(nrrow, rownr_t(0));
+    std::vector<rownr_t> nrel(nrrow, rownr_t(0));
     Array<String> arr = arrCol(0);
     rownr_t npts = arr.nelements();
     nrel[0] = npts;
@@ -679,11 +679,11 @@ void ColumnsIndexArray::getArray (Vector<String>& result, const String& name)
   }
 }
 
-void ColumnsIndexArray::fillRownrs (rownr_t npts, const Block<rownr_t>& nrel)
+void ColumnsIndexArray::fillRownrs (rownr_t npts, const std::vector<rownr_t>& nrel)
 {
   itsRownrs.resize (npts);
   rownr_t* data = itsRownrs.storage();
-  for (rownr_t i=0; i<nrel.nelements(); i++) {
+  for (rownr_t i=0; i<nrel.size(); i++) {
     rownr_t nr = nrel[i];
     for (rownr_t j=0; j<nr; j++) {
       *data++ = i;

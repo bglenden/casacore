@@ -33,6 +33,7 @@
 #include <casacore/casa/Arrays/Vector.h>
 #include <casacore/casa/Containers/Block.h>
 #include <casacore/casa/Containers/Record.h>
+#include <vector>
 
 namespace casacore { //# NAMESPACE CASACORE - BEGIN
 
@@ -293,7 +294,7 @@ protected:
   // </group>
 
   // Fill the rownrs belonging to each array value.
-  void fillRownrs (rownr_t npts, const Block<rownr_t>& nrel);
+  void fillRownrs (rownr_t npts, const std::vector<rownr_t>& nrel);
 
 private:
   Table   itsTable;

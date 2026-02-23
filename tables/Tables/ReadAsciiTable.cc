@@ -1069,8 +1069,8 @@ Table ReadAsciiTable::makeTab (String& formatString,
 {
     char  string1[lineSize], string2[lineSize], stringsav[lineSize];
     char  first[lineSize], second[lineSize];
-    Block<String>  nameOfColumn(100);
-    Block<String>  tstrOfColumn(100);
+    std::vector<String>  nameOfColumn(100);
+    std::vector<String>  tstrOfColumn(100);
     String  keyName;
 
     LogIO logger(LogOrigin("readAsciiTable", WHERE));
@@ -1209,9 +1209,9 @@ Table ReadAsciiTable::makeTab (String& formatString,
 	    done1 = getNext (string1, lineSize, first, at1, sep1);
 	    done2 = getNext (string2, lineSize, second, at2, sep2);
 	    if (done1>0 && done2>0) {
-	        if (nrcol >= Int(nameOfColumn.nelements())) {
-		    nameOfColumn.resize (2*nrcol, True, True);
-		    tstrOfColumn.resize (2*nrcol, True, True);
+	        if (nrcol >= Int(nameOfColumn.size())) {
+		    nameOfColumn.resize (2*nrcol);
+		    tstrOfColumn.resize (2*nrcol);
 		}
 		nameOfColumn[nrcol] = String(first);
 		tstrOfColumn[nrcol] = String(second);
@@ -1234,8 +1234,8 @@ Table ReadAsciiTable::makeTab (String& formatString,
 
 // Create the TABLE Columns for these variables
 
-    Block<IPosition> shapeOfColumn(nrcol);
-    Block<Int>       typeOfColumn(nrcol);
+    std::vector<IPosition> shapeOfColumn(nrcol);
+    std::vector<Int>       typeOfColumn(nrcol);
     Int              varAxis=0;
 
     for (Int i5=0; i5<nrcol; i5++) {

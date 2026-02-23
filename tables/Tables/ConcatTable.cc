@@ -37,6 +37,7 @@
 #include <casacore/casa/BasicMath/Math.h>
 #include <casacore/tables/Tables/TableError.h>
 #include <casacore/casa/Utilities/Assert.h>
+#include <vector>
 
 
 namespace casacore { //# NAMESPACE CASACORE - BEGIN
@@ -279,7 +280,7 @@ namespace casacore { //# NAMESPACE CASACORE - BEGIN
   {
     //# Open the file, read name and type of root and read object data.
     uInt nrtab;
-    Block<String> rootNames;
+    std::vector<String> rootNames;
     Int version = ios.getstart ("ConcatTable");
     AlwaysAssert (version==0, AipsError);
     ios >> nrtab;
@@ -366,7 +367,7 @@ namespace casacore { //# NAMESPACE CASACORE - BEGIN
   {
     // Check for each subtable if it exists in all tables.
     // If fine, create a ConcatTable for each subtable.
-    Block<Table> subtables(tables_p.nelements());
+    std::vector<Table> subtables(tables_p.nelements());
     for (uInt i=0; i<subTableNames_p.nelements(); ++i) {
       const String& tname = subTableNames_p[i];
       for (uInt j=0; j<tables_p.nelements(); ++j) {
@@ -382,7 +383,8 @@ namespace casacore { //# NAMESPACE CASACORE - BEGIN
   {
     //# Open the file, read name and type of root and read object data.
     uInt nrtab;
-    Block<String> rootNames, subNames;
+    std::vector<String> rootNames;
+    Block<String> subNames;
     Int version = ios.getstart ("ConcatTable");
     AlwaysAssert (version==0, AipsError);
     ios >> nrtab;
