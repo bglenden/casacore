@@ -53,7 +53,7 @@ template<class Container, class ElType>
 Int linearSearch1 (const Container& container, const ElType& value,
 		   uInt lower)
 {
-    uInt n = container.nelements();
+    uInt n = container.size();
     while (lower < n) {
 	if (container(lower) == value) {
 	    return lower;
@@ -83,7 +83,7 @@ template<class Container, class ElType>
 Int linearSearchBrackets1 (const Container& container, const ElType& value,
 			   uInt lower)
 {
-    uInt n = container.nelements();
+    uInt n = container.size();
     while (lower < n) {
 	if (container[lower] == value) {
 	    return lower;

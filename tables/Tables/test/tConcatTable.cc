@@ -39,6 +39,7 @@
 #include <casacore/casa/Arrays/Slice.h>
 #include <casacore/casa/Utilities/Sort.h>
 #include <casacore/casa/Containers/BlockIO.h>
+#include <casacore/casa/BasicSL/STLIO.h>
 #include <casacore/casa/Exceptions/Error.h>
 #include <casacore/casa/iostream.h>
 #include <casacore/casa/stdio.h>

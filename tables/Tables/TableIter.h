@@ -156,15 +156,15 @@ public:
     // <group>
     TableIterator (const Table&, const String& columnName,
 		   Order = Ascending, Option = ParSort);
-    TableIterator (const Table&, const Block<String>& columnNames,
+    TableIterator (const Table&, const std::vector<String>& columnNames,
 		   Order = Ascending, Option = ParSort);
     // Give the iteration order per column.
     // <note>If an interval comparison object like CompareIntervalReal
     // is used, the data are sorted on the interval, not on the value.
     // One should consider to do an explicitsort on value and no iteration sort.
     // </note>
-    TableIterator (const Table&, const Block<String>& columnNames,
-		   const Block<Int>& orders, Option = ParSort);
+    TableIterator (const Table&, const std::vector<String>& columnNames,
+		   const std::vector<Int>& orders, Option = ParSort);
     // Give the iteration order per column.
     // Give an optional compare object per column.
     // A zero pointer means that the default compare function will be used.
@@ -175,9 +175,9 @@ public:
     // iteration boundary. This improves performance in general but will
     // break existing applications that change the comparison objects
     // (cmpObjs) between iterations.
-    TableIterator (const Table&, const Block<String>& columnNames,
-                   const Block<std::shared_ptr<BaseCompare>>& cmpObjs,
-                   const Block<Int>& orders, Option = ParSort,
+    TableIterator (const Table&, const std::vector<String>& columnNames,
+                   const std::vector<std::shared_ptr<BaseCompare>>& cmpObjs,
+                   const std::vector<Int>& orders, Option = ParSort,
                    bool cacheIterationBoundaries = false);
     // </group>
 

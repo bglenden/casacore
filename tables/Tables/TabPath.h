@@ -29,7 +29,7 @@
 //# Includes
 #include <casacore/casa/aips.h>
 #include <casacore/casa/BasicSL/String.h>
-#include <casacore/casa/Containers/Block.h>
+#include <vector>
 
 
 namespace casacore { //# NAMESPACE CASACORE - BEGIN
@@ -77,7 +77,7 @@ public:
     const String& dir (uInt dirnr) const;
    
 private:
-    Block<String>  tabDir_p;           // file directories
+    std::vector<String>  tabDir_p;     // file directories
     uInt           nrDir_p;            // # directories
 };
 

@@ -38,6 +38,7 @@
 #include <casacore/casa/Utilities/DataType.h>
 #include <casacore/casa/Utilities/Sort.h>
 #include <memory>
+#include <vector>
 
 #ifdef HAVE_MPI
 #include <mpi.h>
@@ -339,15 +340,15 @@ public:
     // of 5 seconds. Otherwise DefaultLocking keeps the locking options
     // of the already open table.
     // <group>
-    explicit Table (const Block<Table>& tables,
-		    const Block<String>& subTables = Block<String>(),
+    explicit Table (const std::vector<Table>& tables,
+		    const std::vector<String>& subTables = std::vector<String>(),
                     const String& subDirName = String());
-    explicit Table (const Block<String>& tableNames,
-		    const Block<String>& subTables = Block<String>(),
+    explicit Table (const std::vector<String>& tableNames,
+		    const std::vector<String>& subTables = std::vector<String>(),
 		    TableOption = Table::Old, const TSMOption& = TSMOption(),
                     const String& subDirName = String());
-    Table (const Block<String>& tableNames,
-	   const Block<String>& subTables,
+    Table (const std::vector<String>& tableNames,
+	   const std::vector<String>& subTables,
 	   const TableLock& lockOptions,
 	   TableOption = Table::Old, const TSMOption& = TSMOption());
     // </group>
@@ -373,7 +374,7 @@ public:
     // for a ConcatTable the names of all its parts.
     // <br>Note that a part can be any type of table (e.g. a ConcatTable).
     // The recursive switch tells how to deal with that.
-    Block<String> getPartNames (Bool recursive=False) const;
+    std::vector<String> getPartNames (Bool recursive=False) const;
 
     // Is this table the same as the other?
     Bool isSameTable (const Table& other) const
@@ -805,10 +806,10 @@ public:
     // The length of the block must match the number of rows in the table.
     // If an element in the mask is True, the corresponding row will be
     // selected.
-    Table operator() (const Block<Bool>& mask) const;
+    Table operator() (const std::vector<Bool>& mask) const;
 
     // Project the given columns (i.e. select the columns).
-    Table project (const Block<String>& columnNames) const;
+    Table project (const std::vector<String>& columnNames) const;
 
     //# Virtually concatenate all tables in this column.
     //# The column cells must contain tables with the same description.
@@ -843,14 +844,14 @@ public:
 		int = Sort::ParSort) const;
     // Sort on multiple columns. The principal column has to be the
     // first element in the Block of column names.
-    Table sort (const Block<String>& columnNames,
+    Table sort (const std::vector<String>& columnNames,
 		int = Sort::Ascending,
 		int = Sort::ParSort) const;
     // Sort on multiple columns. The principal column has to be the
     // first element in the Block of column names.
     // The order can be given per column.
-    Table sort (const Block<String>& columnNames,
-		const Block<Int>& sortOrders,
+    Table sort (const std::vector<String>& columnNames,
+		const std::vector<Int>& sortOrders,
 		int = Sort::ParSort) const;
     // Sort on multiple columns. The principal column has to be the
     // first element in the Block of column names.
@@ -858,9 +859,9 @@ public:
     // Provide some special comparisons via std::shared_ptrs of compare objects.
     // A null std::shared_ptr means using the standard compare object
     // from class <linkto class="ObjCompare:description">ObjCompare</linkto>.
-    Table sort (const Block<String>& columnNames,
-		const Block<std::shared_ptr<BaseCompare>>& compareObjects,
-		const Block<Int>& sortOrders,
+    Table sort (const std::vector<String>& columnNames,
+		const std::vector<std::shared_ptr<BaseCompare>>& compareObjects,
+		const std::vector<Int>& sortOrders,
 		int = Sort::ParSort) const;
     // </group>
 

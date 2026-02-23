@@ -263,8 +263,8 @@ Table::Table (MPI_Comm mpiComm, SetupNewTable& newtab, const TableLock& lockOpti
 
 #endif
 
-Table::Table (const Block<Table>& tables,
-	      const Block<String>& subTables,
+Table::Table (const std::vector<Table>& tables,
+	      const std::vector<String>& subTables,
               const String& subDirName)
 : baseTabPtr_p     (0),
   lastModCounter_p (0)
@@ -272,8 +272,8 @@ Table::Table (const Block<Table>& tables,
     initBasePtr (new ConcatTable (tables, subTables, subDirName));
 }
 
-Table::Table (const Block<String>& tableNames,
-	      const Block<String>& subTables,
+Table::Table (const std::vector<String>& tableNames,
+	      const std::vector<String>& subTables,
 	      TableOption option, const TSMOption& tsmOpt,
               const String& subDirName)
 : baseTabPtr_p     (0),
@@ -283,8 +283,8 @@ Table::Table (const Block<String>& tableNames,
                                   option, TableLock(), tsmOpt));
 }
 
-Table::Table (const Block<String>& tableNames,
-	      const Block<String>& subTables,
+Table::Table (const std::vector<String>& tableNames,
+	      const std::vector<String>& subTables,
 	      const TableLock& lockOptions,
 	      TableOption option, const TSMOption& tsmOpt)
 : baseTabPtr_p     (0),
@@ -339,11 +339,11 @@ void Table::initBasePtr (BaseTable* ptr)
   countedTabPtr_p.reset (baseTabPtr_p);
 }
 
-Block<String> Table::getPartNames (Bool recursive) const
+std::vector<String> Table::getPartNames (Bool recursive) const
 {
     Block<String> names;
     baseTabPtr_p->getPartNames (names, recursive);
-    return names;
+    return std::vector<String>(names.begin(), names.end());
 }
 
 void Table::closeSubTables() const
@@ -713,27 +713,27 @@ Table Table::sort (const String& name, int order, int option) const
 
 //# Sort on multiple columns, where a global order is given.
 //# This is converted to a sort with mixed orders.
-Table Table::sort (const Block<String>& names,
+Table Table::sort (const std::vector<String>& names,
 		   int order, int option) const
 {
     //# Expand the order argument into a vector.
-    return sort (names, std::vector<Int>(names.nelements(), order), option);
+    return sort (names, std::vector<Int>(names.size(), order), option);
 }
 
 //# Sort on multiple columns and orders.
-Table Table::sort (const Block<String>& names,
-		   const Block<Int>& orders, int option) const
+Table Table::sort (const std::vector<String>& names,
+		   const std::vector<Int>& orders, int option) const
 {
     //# Insert a vector with null compare objects.
     return sort (names,
-                 std::vector<std::shared_ptr<BaseCompare>>(names.nelements()),
+                 std::vector<std::shared_ptr<BaseCompare>>(names.size()),
                  orders, option);
 }
 
 //# Sort on multiple columns and orders with given functions.
-Table Table::sort (const Block<String>& names,
-		   const Block<std::shared_ptr<BaseCompare>>& cmpObjs,
-		   const Block<Int>& orders, int option) const
+Table Table::sort (const std::vector<String>& names,
+		   const std::vector<std::shared_ptr<BaseCompare>>& cmpObjs,
+		   const std::vector<Int>& orders, int option) const
     { return Table(baseTabPtr_p->sort (names, cmpObjs, orders, option)); }
 
 
@@ -782,11 +782,11 @@ Table Table::operator() (const TableExprNode& expr,
 Table Table::operator() (const RowNumbers& rownrs) const
     { return Table (baseTabPtr_p->select (rownrs)); }
 //# Select rows based on a mask.
-Table Table::operator() (const Block<Bool>& mask) const
+Table Table::operator() (const std::vector<Bool>& mask) const
     { return Table (baseTabPtr_p->select (mask)); }
 
 //# Select columns.
-Table Table::project (const Block<String>& names) const
+Table Table::project (const std::vector<String>& names) const
     { return Table (baseTabPtr_p->project (names)); }
 
 //# Combine tables.

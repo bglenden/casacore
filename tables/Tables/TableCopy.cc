@@ -131,7 +131,7 @@ void TableCopy::copyInfo (Table& out, const Table& in)
 }
 
 void TableCopy::copySubTables (Table& out, const Table& in, Bool noRows,
-                               const Block<String>& omit)
+                               const std::vector<String>& omit)
 {
   copySubTables (out.rwKeywordSet(), in.keywordSet(), out.tableName(),
 		 out.tableType(), in, noRows, omit);
@@ -158,7 +158,7 @@ void TableCopy::copySubTables (TableRecord& outKeys,
 			       Table::TableType outType,
 			       const Table& in,
 			       Bool noRows,
-                               const Block<String>& omit)
+                               const std::vector<String>& omit)
 {
   for (uInt i=0; i<inKeys.nfields(); i++) {
     if (inKeys.type(i) == TpTable) {

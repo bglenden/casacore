@@ -33,6 +33,7 @@
 #include <casacore/tables/Tables/Table.h>
 #include <casacore/casa/Arrays/Vector.h>
 #include <casacore/casa/Containers/Record.h>
+#include <vector>
 
 namespace casacore { //# NAMESPACE CASACORE - BEGIN
 
@@ -128,7 +129,7 @@ public:
   // Subtables of which the keyword name matches an omit value are skipped.
   // Optionally the row contents are not copied.
   static void copySubTables (Table& out, const Table& in, Bool noRows=False,
-			     const Block<String>& omit=Block<String>());
+			     const std::vector<String>& omit=std::vector<String>());
 
   // Copy the subtables in the given keywordset to the output keywordset
   // in the table with the given name.
@@ -140,7 +141,7 @@ public:
 			     Table::TableType outType,
 			     const Table& in,
 			     Bool noRows=False,
-			     const Block<String>& omit=Block<String>());
+			     const std::vector<String>& omit=std::vector<String>());
 
   // Clone a column in the from table to a new column in the to table.
   // The new column gets the same table description as the source column.

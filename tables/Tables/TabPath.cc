@@ -33,18 +33,15 @@ namespace casacore { //# NAMESPACE CASACORE - BEGIN
 //# This is the implementation of the class TabPath.
 
 TabPath::TabPath()
-: tabDir_p (10)
+: tabDir_p ({"./", "~/TabDir/"}),
+  nrDir_p  (2)
 {
-    tabDir_p[0] = "./";
-    tabDir_p[1] = "~/TabDir/";
-    nrDir_p     = 2;
 }
 
 TabPath::TabPath (const String& dir)
-: tabDir_p (10)
+: tabDir_p ({dir}),
+  nrDir_p  (1)
 {
-    tabDir_p[0] = dir;
-    nrDir_p     = 1;
 }
 
 TabPath::~TabPath ()
