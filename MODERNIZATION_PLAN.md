@@ -370,9 +370,34 @@ Coverage Expansion Track (started):
 - Full suite validation after all fixes: **500/500 passing** (0 failures).
   Test count reduced from 509 to 500 due to 8 HDF5 tests excluded when `USE_HDF5=OFF`
   and 1 test no longer double-counted after CMake reconfiguration.
-- Next tranche target set (before large class substitutions):
-  - continue Wave 1 sub-targeting for remaining `tables/Tables` helper classes
-    (ArrColData, ScaColData, ColumnCache, TableLockData).
+- Tranche J implemented (ISMBucket split/merge/shift characterization test):
+  - `tables/DataMan/test/tISMBucketCoverage.cc`
+  - 8 test functions exercising ISMBucket Block-intensive internals through the
+    IncrementalStMan API with small explicit bucket sizes (128-256 bytes):
+    sequential splits (simpleSplit path), mid-bucket splits (general getSplit path),
+    variable-length String splits, replaceData (same-size memcpy + size-change paths),
+    shiftLeft merge (equal-neighbor optimization with nr>1), multi-column bucket
+    management, row removal through ISM, stress test with 1200 rows / 50+ splits.
+  - Tranche J validation: `1/1` passing (0.09s).
+- Tranche K implemented (TiledStMan internal paths characterization test):
+  - `tables/DataMan/test/tTiledStManCoverage.cc`
+  - 10 test functions exercising TiledStMan Block/PtrBlock-intensive paths:
+    multi-data-column layout (getLengthOffset, dataCols_p ordering by pixel size),
+    coordinate columns (coordColSet_p, checkCoordinatesShapes), TiledCellStMan
+    multi-cube (cubeSet_p growing), TiledShapeStMan multi-shape (automatic cube
+    assignment), makeTileShape static method (both overloads, 1D-4D), cache control
+    (ROTiledStManAccessor setCacheSize/clearCaches/showCacheStatistics),
+    dataManagerInfo/properties, flush-reopen serialization round-trip
+    (headerFilePut/headerFileGet), cross-tile-boundary slice access
+    (readTile/writeTile with non-divisible shapes), emptyCaches + re-read.
+  - Tranche K validation: `1/1` passing (0.10s).
+- Full suite validation after Tranches J/K: **502/502 passing**. No regressions.
+- **Coverage tranches complete for Block/PtrBlock substitution safety.** All high-usage
+  Block files in `tables/` now have dedicated characterization tests: ISMBucket (20 hits),
+  TiledStMan (15+5 hits), ColumnSet, PlainTable, BaseTable, RefTable, BaseColumn,
+  StManColumn, TableProxy. Pre-existing tests adequately cover ReadAsciiTable, TableIter,
+  ConcatTable, ColumnsIndex, TableRow, RowCopier, TableCopy. Block.h itself has a thorough
+  unit test (tBlock.cc). CountedPtr is already absent from `tables/` implementation files.
 
 ---
 

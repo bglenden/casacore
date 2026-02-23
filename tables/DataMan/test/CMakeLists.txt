@@ -24,6 +24,8 @@ tStMan
 tStMan1
 tStManColumnDispatch
 tStorageManagerCoverage
+tISMBucketCoverage
+tTiledStManCoverage
 tStManAll
 tTiledBool
 tTiledCellStM_1
