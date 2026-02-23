@@ -200,7 +200,7 @@ public:
 
     // Get the names of the tables this table consists of.
     // The default implementation adds the name of this table to the block.
-    virtual void getPartNames (Block<String>& names, Bool recursive) const;
+    virtual void getPartNames (std::vector<String>& names, Bool recursive) const;
 
     // Rename the table.
     // The following options can be given:
@@ -369,10 +369,10 @@ public:
     // Select rows using a mask block.
     // The length of the block must match the number of rows in the table.
     // If True, the corresponding row will be selected.
-    std::shared_ptr<BaseTable> select (const Block<Bool>& mask);
+    std::shared_ptr<BaseTable> select (const std::vector<Bool>& mask);
 
     // Project the given columns (i.e. select the columns).
-    std::shared_ptr<BaseTable> project (const Block<String>& columnNames);
+    std::shared_ptr<BaseTable> project (const std::vector<String>& columnNames);
 
     // Do logical operations on a table.
     // <group>
@@ -390,16 +390,16 @@ public:
 
     // Sort a table on one or more columns of scalars.
     std::shared_ptr<BaseTable> sort
-    (const Block<String>& columnNames,
-     const Block<std::shared_ptr<BaseCompare>>& compareObjects,
-     const Block<Int>& sortOrder, int sortOption,
+    (const std::vector<String>& columnNames,
+     const std::vector<std::shared_ptr<BaseCompare>>& compareObjects,
+     const std::vector<Int>& sortOrder, int sortOption,
      std::shared_ptr<Vector<rownr_t>> sortIterBoundaries = nullptr,
      std::shared_ptr<Vector<size_t>> sortIterKeyIdxChange = nullptr);
 
     // Create an iterator.
-    BaseTableIterator* makeIterator (const Block<String>& columnNames,
-                                     const Block<std::shared_ptr<BaseCompare>>&,
-                                     const Block<Int>& orders, int option,
+    BaseTableIterator* makeIterator (const std::vector<String>& columnNames,
+                                     const std::vector<std::shared_ptr<BaseCompare>>&,
+                                     const std::vector<Int>& orders, int option,
                                      bool cacheIterationBoundaries = false);
 
     // Add one or more columns to the table.

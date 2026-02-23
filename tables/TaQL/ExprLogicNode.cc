@@ -374,7 +374,7 @@ Bool TableExprNodeNOT::getBool (const TableExprId& id)
 
 
 
-void TableExprNodeEQDouble::ranges (Block<TableExprRange>& blrange)
+void TableExprNodeEQDouble::ranges (std::vector<TableExprRange>& blrange)
 {
     Double dval = 0;
     TENShPtr tsncol = 0;
@@ -400,7 +400,7 @@ void TableExprNodeEQDouble::ranges (Block<TableExprRange>& blrange)
                                    dval, dval);
 }
 
-void TableExprNodeGEDouble::ranges (Block<TableExprRange>& blrange)
+void TableExprNodeGEDouble::ranges (std::vector<TableExprRange>& blrange)
 {
     Double st = 0;
     Double end = 0;
@@ -429,7 +429,7 @@ void TableExprNodeGEDouble::ranges (Block<TableExprRange>& blrange)
                                    st, end);
 }
 
-void TableExprNodeGTDouble::ranges (Block<TableExprRange>& blrange)
+void TableExprNodeGTDouble::ranges (std::vector<TableExprRange>& blrange)
 {
     Double st = 0;
     Double end = 0;
@@ -460,26 +460,23 @@ void TableExprNodeGTDouble::ranges (Block<TableExprRange>& blrange)
 
 
 //# Or two blocks of ranges.
-void TableExprNodeOR::ranges (Block<TableExprRange>& blrange)
+void TableExprNodeOR::ranges (std::vector<TableExprRange>& blrange)
 {
     //# Get the ranges of the children.
-    Block<TableExprRange> left,right;
+    std::vector<TableExprRange> left,right;
     lnode_p->ranges (left);
     rnode_p->ranges (right);
     //# Now or the ranges.
     //# If a column appears in one, but not in the other it needs
     //# to be removed. Only equal columns can be combined and what
     //# gets created is a superset of the original blocks.
-    blrange.resize(0,True);
-    size_t nr=0;
-    for (size_t i=0; i<left.nelements(); i++) {
-        for (size_t j=0; j<right.nelements(); j++) {
+    blrange.resize(0);
+    for (size_t i=0; i<left.size(); i++) {
+        for (size_t j=0; j<right.size(); j++) {
             if (right[j].getColumn().columnDesc().name() ==
                                 left[i].getColumn().columnDesc().name()) {
-                blrange.resize(nr+1, True);
-                blrange[nr] = left[i];
-                blrange[nr].mixOr (right[j]);
-                nr++;
+                blrange.push_back(left[i]);
+                blrange.back().mixOr (right[j]);
             }
         }
     }
@@ -487,17 +484,17 @@ void TableExprNodeOR::ranges (Block<TableExprRange>& blrange)
 
 
 //# And two blocks of ranges.
-void TableExprNodeAND::ranges (Block<TableExprRange>& blrange)
+void TableExprNodeAND::ranges (std::vector<TableExprRange>& blrange)
 {
     //# Get the ranges of the children.
-    Block<TableExprRange> other;
+    std::vector<TableExprRange> other;
     lnode_p->ranges (blrange);
     rnode_p->ranges (other);
     //# If one of them is empty (which means all), return the other.
-    if (other.nelements() == 0) {
+    if (other.size() == 0) {
         return;
     }
-    if (blrange.nelements() == 0) {
+    if (blrange.size() == 0) {
         blrange = other;
         return;
     }
@@ -505,10 +502,10 @@ void TableExprNodeAND::ranges (Block<TableExprRange>& blrange)
     //# First handle one and intersect its ranges with matching
     //# column names in the other one.
     //# Keep a vector with flags for non-processed other ones.
-    Vector<Int> vec(other.nelements());
+    Vector<Int> vec(other.size());
     vec = 0;
-    for (size_t i=0; i<blrange.nelements(); i++) {
-        for (size_t j=0; j<other.nelements(); j++) {
+    for (size_t i=0; i<blrange.size(); i++) {
+        for (size_t j=0; j<other.size(); j++) {
             if (other[j].getColumn().columnDesc().name() ==
                                 blrange[i].getColumn().columnDesc().name()) {
                 blrange[i].mixAnd (other[j]);
@@ -517,11 +514,9 @@ void TableExprNodeAND::ranges (Block<TableExprRange>& blrange)
         }
     }
     //# Now add the non-processed other ones to the result.
-    size_t nr = blrange.nelements();
-    for (size_t i=0; i<other.nelements(); i++) {
+    for (size_t i=0; i<other.size(); i++) {
         if (vec(i) == 0) {
-            blrange.resize(nr+1, True);
-            blrange[nr++] = other[i];
+            blrange.push_back(other[i]);
         }
     }
 }

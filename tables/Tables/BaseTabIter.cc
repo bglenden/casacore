@@ -43,18 +43,18 @@ namespace casacore { //# NAMESPACE CASACORE - BEGIN
 
 
 BaseTableIterator::BaseTableIterator (const std::shared_ptr<BaseTable>& btp,
-                                      const Block<String>& keys,
-                                      const Block<std::shared_ptr<BaseCompare>>& cmp,
-                                      const Block<Int>& order,
+                                      const std::vector<String>& keys,
+                                      const std::vector<std::shared_ptr<BaseCompare>>& cmp,
+                                      const std::vector<Int>& order,
                                       int option,
                                       bool cacheIterationBoundaries)
   : lastRow_p (0),
-    nrkeys_p  (keys.nelements()),
+    nrkeys_p  (keys.size()),
     keyChangeAtLastNext_p(""),
-    colPtr_p  (keys.nelements()),
+    colPtr_p  (keys.size()),
     cmpObj_p  (cmp),
-    lastVal_p (keys.nelements()),
-    curVal_p  (keys.nelements()),
+    lastVal_p (keys.size()),
+    curVal_p  (keys.size()),
     sortIterBoundaries_p   (nullptr),
     sortIterKeyIdxChange_p (nullptr),
     aRefTable_p(nullptr)

@@ -132,7 +132,7 @@ public:
     TableExprNodeEQDouble (const TableExprNodeRep&);
     ~TableExprNodeEQDouble() = default;
     Bool getBool (const TableExprId& id) override;
-    void ranges (Block<TableExprRange>&) override;
+    void ranges (std::vector<TableExprRange>&) override;
 };
 
 
@@ -525,7 +525,7 @@ public:
     TableExprNodeGTDouble (const TableExprNodeRep&);
     ~TableExprNodeGTDouble() = default;
     Bool getBool (const TableExprId& id) override;
-    void ranges (Block<TableExprRange>&) override;
+    void ranges (std::vector<TableExprRange>&) override;
 };
 
 
@@ -677,7 +677,7 @@ public:
     TableExprNodeGEDouble (const TableExprNodeRep&);
     ~TableExprNodeGEDouble() = default;
     Bool getBool (const TableExprId& id) override;
-    void ranges (Block<TableExprRange>&) override;
+    void ranges (std::vector<TableExprRange>&) override;
 };
 
 
@@ -964,7 +964,7 @@ public:
     TableExprNodeOR (const TableExprNodeRep&);
     ~TableExprNodeOR() = default;
     Bool getBool (const TableExprId& id) override;
-    void ranges (Block<TableExprRange>&) override;
+    void ranges (std::vector<TableExprRange>&) override;
 };
 
 
@@ -993,7 +993,7 @@ public:
     TableExprNodeAND (const TableExprNodeRep&);
     ~TableExprNodeAND() = default;
     Bool getBool (const TableExprId& id) override;
-    void ranges (Block<TableExprRange>&) override;
+    void ranges (std::vector<TableExprRange>&) override;
 };
 
 

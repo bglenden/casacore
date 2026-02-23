@@ -162,14 +162,12 @@ RefTable::~RefTable()
 }
 
 
-void RefTable::getPartNames (Block<String>& names, Bool recursive) const
+void RefTable::getPartNames (std::vector<String>& names, Bool recursive) const
 {
   if (recursive) {
     baseTabPtr_p->getPartNames (names, recursive);
   } else {
-    uInt inx = names.size();
-    names.resize (inx + 1);
-    names[inx] = baseTabPtr_p->tableName();
+    names.push_back (baseTabPtr_p->tableName());
   }
 }
 

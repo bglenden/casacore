@@ -341,9 +341,9 @@ void Table::initBasePtr (BaseTable* ptr)
 
 std::vector<String> Table::getPartNames (Bool recursive) const
 {
-    Block<String> names;
+    std::vector<String> names;
     baseTabPtr_p->getPartNames (names, recursive);
-    return std::vector<String>(names.begin(), names.end());
+    return names;
 }
 
 void Table::closeSubTables() const

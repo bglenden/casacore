@@ -284,11 +284,9 @@ int BaseTable::tableType() const
   return Table::Plain;
 }
 
-void BaseTable::getPartNames (Block<String>& names, Bool) const
+void BaseTable::getPartNames (std::vector<String>& names, Bool) const
 {
-  uInt inx = names.size();
-  names.resize (inx + 1);
-  names[inx] = name_p;
+  names.push_back (name_p);
 }
 
 TableInfo BaseTable::tableInfo (const String& tableName)
@@ -676,17 +674,17 @@ Vector<rownr_t>& BaseTable::rowStorage()
 
 //# Sort a table.
 std::shared_ptr<BaseTable> BaseTable::sort
-(const Block<String>& names,
- const Block<std::shared_ptr<BaseCompare>>& cmpObj,
- const Block<Int>& order, int option,
+(const std::vector<String>& names,
+ const std::vector<std::shared_ptr<BaseCompare>>& cmpObj,
+ const std::vector<Int>& order, int option,
  std::shared_ptr<Vector<rownr_t>> sortIterBoundaries,
  std::shared_ptr<Vector<size_t>> sortIterKeyIdxChange)
 
 {
     AlwaysAssert (!isNull(), AipsError);
     //# Check if the vectors have equal length.
-    uInt nrkey = names.nelements();
-    if (nrkey != order.nelements()) {
+    uInt nrkey = names.size();
+    if (nrkey != order.size()) {
         throw (TableInvSort
                ("Length of column sort names and order vectors mismatch"
                 " for table " + name_p));
@@ -839,13 +837,13 @@ std::shared_ptr<BaseTable> BaseTable::select (const Vector<rownr_t>& rownrs)
     return std::make_shared<RefTable>(this, rownrs);
 }
 
-std::shared_ptr<BaseTable> BaseTable::select (const Block<Bool>& mask)
+std::shared_ptr<BaseTable> BaseTable::select (const std::vector<Bool>& mask)
 {
     AlwaysAssert (!isNull(), AipsError);
     return std::make_shared<RefTable>(this, Vector<Bool>(mask.begin(), mask.end()));
 }
 
-std::shared_ptr<BaseTable> BaseTable::project (const Block<String>& names)
+std::shared_ptr<BaseTable> BaseTable::project (const std::vector<String>& names)
 {
     AlwaysAssert (!isNull(), AipsError);
     return std::make_shared<RefTable>(this, Vector<String>(names.begin(), names.end()));
@@ -997,14 +995,14 @@ Vector<rownr_t> BaseTable::logicRows()
 
 
 BaseTableIterator* BaseTable::makeIterator
-(const Block<String>& names,
- const Block<std::shared_ptr<BaseCompare>>& cmpObj,
- const Block<Int>& order, int option,
+(const std::vector<String>& names,
+ const std::vector<std::shared_ptr<BaseCompare>>& cmpObj,
+ const std::vector<Int>& order, int option,
  bool cacheIterationBoundaries)
 {
     AlwaysAssert (!isNull(), AipsError);
-    if (names.nelements() != order.nelements()
-    ||  names.nelements() != cmpObj.nelements()) {
+    if (names.size() != order.size()
+    ||  names.size() != cmpObj.size()) {
 	throw (TableInvOper ("TableIterator: Unequal block lengths"));
     }
     BaseTableIterator* bti = new BaseTableIterator (shared_from_this(), names,

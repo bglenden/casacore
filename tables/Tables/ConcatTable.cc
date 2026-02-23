@@ -134,17 +134,15 @@ namespace casacore { //# NAMESPACE CASACORE - BEGIN
     }
   }
 
-  void ConcatTable::getPartNames (Block<String>& names, Bool recursive) const
+  void ConcatTable::getPartNames (std::vector<String>& names, Bool recursive) const
   {
     if (recursive) {
       for (uInt i=0; i<tables_p.nelements(); ++i) {
         tables_p[i].baseTablePtr()->getPartNames (names, recursive);
       }
     } else {
-      uInt inx = names.size();
-      names.resize (inx + tables_p.nelements());
       for (uInt i=0; i<tables_p.nelements(); ++i) {
-        names[inx+i] = tables_p[i].tableName();
+        names.push_back (tables_p[i].tableName());
       }
     }
   }

@@ -433,7 +433,7 @@ public:
     // The function can only convert direct comparisons of columns
     // with constants (via ==, !=, >, >=, < or <=) and their combinations
     // using && or ||.
-    virtual void ranges (Block<TableExprRange>&);
+    virtual void ranges (std::vector<TableExprRange>&);
 
     // Get the data type of the derived TableExprNode object.
     // This is the data type of the resulting value. E.g. a compare
@@ -499,11 +499,11 @@ public:
     virtual void adaptSetUnits (const Unit&);
 
     // Create a range object from a column and an interval.
-    static void createRange (Block<TableExprRange>&,
+    static void createRange (std::vector<TableExprRange>&,
                              TableExprNodeColumn*, Double start, Double end);
 
     // Create a empty range object.
-    static void createRange (Block<TableExprRange>&);
+    static void createRange (std::vector<TableExprRange>&);
 
     // Convert a NodeDataType to a string.
     static String typeString (NodeDataType);

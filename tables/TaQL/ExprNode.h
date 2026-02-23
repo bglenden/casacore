@@ -433,7 +433,7 @@ public:
     // The function can only convert direct comparisons of columns
     // with constants (via ==, !=, >, >=, < or <=) and their combinations
     // using && or ||.
-    void ranges (Block<TableExprRange>&);
+    void ranges (std::vector<TableExprRange>&);
 
     // Check if tables used in expression have the same number of
     // rows as the given table.
@@ -572,7 +572,7 @@ private:
 
 
 
-inline void TableExprNode::ranges (Block<TableExprRange>& blrange)
+inline void TableExprNode::ranges (std::vector<TableExprRange>& blrange)
     { node_p->ranges (blrange); }
 
 //# Get the value of an expression.

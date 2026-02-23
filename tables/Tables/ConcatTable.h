@@ -156,7 +156,7 @@ namespace casacore { //# NAMESPACE CASACORE - BEGIN
     ConcatTable& operator= (const ConcatTable&) = delete;
 
     // Get the names of the tables this table consists of.
-    virtual void getPartNames (Block<String>& names, Bool recursive) const;
+    virtual void getPartNames (std::vector<String>& names, Bool recursive) const;
 
     // Return the layout of a table (i.e. description and #rows).
     // This function has the advantage that only the minimal amount of

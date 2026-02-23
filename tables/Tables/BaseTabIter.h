@@ -95,9 +95,9 @@ public:
     // break existing applications that change the comparison objects
     // (cmpObjs) between iterations.
     BaseTableIterator (const std::shared_ptr<BaseTable>&,
-                       const Block<String>& columnNames,
-                       const Block<std::shared_ptr<BaseCompare>>& cmpObjs,
-                       const Block<Int>& orders,
+                       const std::vector<String>& columnNames,
+                       const std::vector<std::shared_ptr<BaseCompare>>& cmpObjs,
+                       const std::vector<Int>& orders,
                        int option,
                        bool cacheIterationBoundaries = false);
 

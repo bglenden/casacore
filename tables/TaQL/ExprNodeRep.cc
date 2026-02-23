@@ -155,25 +155,25 @@ Bool TableExprNodeRep::getColumnDataType (DataType&) const
 // Convert the tree to a number of range vectors which at least
 // select the same things.
 // By default a not possible is returned (an empty block).
-void TableExprNodeRep::ranges (Block<TableExprRange>& blrange)
+void TableExprNodeRep::ranges (std::vector<TableExprRange>& blrange)
 {
-    blrange.resize (0, True);
+    blrange.resize (0);
 }
 
 // Create a range.
-void TableExprNodeRep::createRange (Block<TableExprRange>& blrange)
+void TableExprNodeRep::createRange (std::vector<TableExprRange>& blrange)
 {
-    blrange.resize (0, True);
+    blrange.resize (0);
 }
 
-void TableExprNodeRep::createRange (Block<TableExprRange>& blrange,
+void TableExprNodeRep::createRange (std::vector<TableExprRange>& blrange,
                                     TableExprNodeColumn* tsn,
                                     Double st, Double end)
 {
     if (tsn == 0) {
-        blrange.resize (0, True);
+        blrange.resize (0);
     } else {
-        blrange.resize (1, True);
+        blrange.resize (1);
         blrange[0] = TableExprRange (tsn->getColumn(), st, end);
     }
 }
