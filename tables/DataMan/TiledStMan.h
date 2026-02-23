@@ -35,6 +35,7 @@
 #include <casacore/casa/Arrays/IPosition.h>
 #include <casacore/casa/OS/Conversion.h>
 #include <casacore/casa/BasicSL/String.h>
+#include <vector>
 
 namespace casacore { //# NAMESPACE CASACORE - BEGIN
 
@@ -264,8 +265,8 @@ public:
 
     // Get the length of the data for the given number of pixels.
     // This can be used to calculate the length of a tile.
-    uInt64 getLengthOffset (uInt64 nrPixels, Block<uInt>& dataOffset,
-                            Block<uInt>& localOffset,
+    uInt64 getLengthOffset (uInt64 nrPixels, std::vector<uInt>& dataOffset,
+                            std::vector<uInt>& localOffset,
                             uInt& localTileLength) const;
 
     // Get the number of coordinate vectors.
@@ -310,13 +311,13 @@ public:
                           const Record& values, Int64 fileOffset=-1);
 
     // Read a tile and convert the data to local format.
-    void readTile (char* local, const Block<uInt>& localOffset,
-		   const char* external, const Block<uInt>& externalOffset,
+    void readTile (char* local, const std::vector<uInt>& localOffset,
+		   const char* external, const std::vector<uInt>& externalOffset,
 		   uInt nrpixels);
 
     // Write a tile after converting the data to external format.
-    void writeTile (char* external, const Block<uInt>& externalOffset,
-		    const char* local, const Block<uInt>& localOffset,
+    void writeTile (char* external, const std::vector<uInt>& externalOffset,
+		    const char* local, const std::vector<uInt>& localOffset,
 		    uInt nrpixels);
 
     // Get the TSMFile object with the given sequence number.

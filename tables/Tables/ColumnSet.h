@@ -36,6 +36,7 @@
 #include <casacore/casa/Arrays/ArrayFwd.h>
 
 #include <map>
+#include <vector>
 
 namespace casacore { //# NAMESPACE CASACORE - BEGIN
 
@@ -235,7 +236,7 @@ public:
     void setTableChanged();
 
     // Get the data manager change flags (used by PlainTable).
-    Block<Bool>& dataManChanged();
+    std::vector<Bool>& dataManChanged();
 
     // Synchronize the data managers when data in them have changed.
     // It returns the number of rows it think it has, which is needed for
@@ -324,8 +325,8 @@ private:
     std::map<String,void*>  colMap_p;         //# list of PlainColumns
     uInt                    seqCount_p;       //# sequence number count
     //#                                           (used for unique seqnr)
-    Block<void*>            blockDataMan_p;   //# list of data managers
-    Block<Bool>             dataManChanged_p; //# data has changed
+    std::vector<void*>      blockDataMan_p;   //# list of data managers
+    std::vector<Bool>       dataManChanged_p; //# data has changed
 };
 
 
@@ -369,7 +370,7 @@ inline void ColumnSet::autoReleaseLock()
 {
     lockPtr_p->autoRelease();
 }
-inline Block<Bool>& ColumnSet::dataManChanged()
+inline std::vector<Bool>& ColumnSet::dataManChanged()
 {
     return dataManChanged_p;
 }

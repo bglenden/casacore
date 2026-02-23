@@ -28,7 +28,7 @@
 #include <casacore/tables/Tables/TableSyncData.h>
 #include <casacore/tables/Tables/TableError.h>
 #include <casacore/tables/DataMan/DataManager.h>
-#include <casacore/casa/Containers/BlockIO.h>
+#include <casacore/casa/BasicSL/STLIO.h>
 
 namespace casacore { //# NAMESPACE CASACORE - BEGIN
 
@@ -48,7 +48,7 @@ TableSyncData::~TableSyncData()
 }
 
 void TableSyncData::write (rownr_t nrrow, uInt nrcolumn, Bool tableChanged,
-			   const Block<Bool>& dataManChanged)
+			   const std::vector<Bool>& dataManChanged)
 {
     // Increment change counter when the table has changed.
     Bool changed = False;
@@ -59,14 +59,11 @@ void TableSyncData::write (rownr_t nrrow, uInt nrcolumn, Bool tableChanged,
 	changed = True;
     }
     // Increment a counter when a data manager has changed.
-    // Resize and initialize the block when needed.
-    uInt ndmOld = itsDataManChangeCounter.nelements();
-    uInt ndmNew = dataManChanged.nelements();
+    // Resize and initialize the vector when needed.
+    uInt ndmOld = itsDataManChangeCounter.size();
+    uInt ndmNew = dataManChanged.size();
     if (ndmNew != ndmOld) {
-	itsDataManChangeCounter.resize (ndmNew, True, True);
-	for (uInt i=ndmOld; i<ndmNew; i++) {
-	    itsDataManChangeCounter[i] = 0;
-	}
+	itsDataManChangeCounter.resize (ndmNew, uInt(0));
     }
     for (uInt i=0; i<ndmNew; i++) {
 	if (dataManChanged[i]) {
@@ -120,7 +117,7 @@ void TableSyncData::write (rownr_t nrrow)
 }
 
 Bool TableSyncData::read (rownr_t& nrrow, uInt& nrcolumn, Bool& tableChanged,
-			  Block<Bool>& dataManChanged)
+			  std::vector<Bool>& dataManChanged)
 {
     // Read the data into the memoryIO object.
     // When no columns, don't read the remaining part (then it is used
@@ -144,7 +141,7 @@ Bool TableSyncData::read (rownr_t& nrrow, uInt& nrcolumn, Bool& tableChanged,
     }
     if (nrcol < 0) {
 	tableChanged = True;
-	dataManChanged.set (True);
+	std::fill (dataManChanged.begin(), dataManChanged.end(), True);
 	if (itsMemIO->length() > 0) {
 	    itsAipsIO.getend();
 	    return True;                       // not empty
@@ -155,7 +152,7 @@ Bool TableSyncData::read (rownr_t& nrrow, uInt& nrcolumn, Bool& tableChanged,
     nrcolumn = nrcol;
     // The table has changed when the change counter has changed.
     uInt tableChangeCounter;
-    Block<uInt> dataManChangeCounter;
+    std::vector<uInt> dataManChangeCounter;
     itsAipsIO >> tableChangeCounter;
     itsAipsIO >> dataManChangeCounter;
     itsAipsIO.getend();
@@ -163,13 +160,12 @@ Bool TableSyncData::read (rownr_t& nrrow, uInt& nrcolumn, Bool& tableChanged,
     itsTableChangeCounter = tableChangeCounter;
     // A data manager has changed when its change counter has changed.
     // Increment a change counter when a data manager has changed.
-    // Resize and initialize the array when needed.
-    uInt ndmOld = itsDataManChangeCounter.nelements();
-    uInt ndmNew = dataManChangeCounter.nelements();
-    dataManChanged.resize (ndmNew, True, False);
-    dataManChanged.set (False);
+    // Resize and initialize the vector when needed.
+    uInt ndmOld = itsDataManChangeCounter.size();
+    uInt ndmNew = dataManChangeCounter.size();
+    dataManChanged.assign (ndmNew, False);
     if (ndmNew != ndmOld) {
-	itsDataManChangeCounter.resize (ndmNew, True, True);
+	itsDataManChangeCounter.resize (ndmNew, uInt(0));
 	for (uInt i=ndmOld; i<ndmNew; i++) {
 	    dataManChanged[i] = True;
 	    itsDataManChangeCounter[i] = dataManChangeCounter[i];

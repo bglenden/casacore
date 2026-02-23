@@ -31,6 +31,7 @@
 #include <casacore/casa/aips.h>
 #include <casacore/tables/DataMan/DataManager.h>
 #include <casacore/casa/Containers/Block.h>
+#include <vector>
 
 namespace casacore { //# NAMESPACE CASACORE - BEGIN
 
@@ -401,10 +402,10 @@ private:
   rownr_t         itsNrRows;
   
   // Column offset
-  Block<uInt> itsColumnOffset;
+  std::vector<uInt> itsColumnOffset;
 
   // Row Index ID containing all the columns in a bucket
-  Block<uInt> itsColIndexMap;
+  std::vector<uInt> itsColIndexMap;
 
   // Will contain all indices
   PtrBlock<SSMIndex*>  itsPtrIndex;

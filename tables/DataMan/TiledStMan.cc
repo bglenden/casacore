@@ -506,8 +506,8 @@ TSMCube* TiledStMan::singleHypercube()
 }
 
 
-uInt64 TiledStMan::getLengthOffset (uInt64 nrPixels, Block<uInt>& dataOffset,
-                                    Block<uInt>& localOffset,
+uInt64 TiledStMan::getLengthOffset (uInt64 nrPixels, std::vector<uInt>& dataOffset,
+                                    std::vector<uInt>& localOffset,
                                     uInt& localTileLength) const
 {
     localTileLength = 0;
@@ -525,9 +525,9 @@ uInt64 TiledStMan::getLengthOffset (uInt64 nrPixels, Block<uInt>& dataOffset,
 }
 
 void TiledStMan::readTile (char* local,
-			   const Block<uInt>& localOffset,
+			   const std::vector<uInt>& localOffset,
 			   const char* external,
-			   const Block<uInt>& externalOffset,
+			   const std::vector<uInt>& externalOffset,
 			   uInt nrPixels)
 {
     uInt nr = dataCols_p.nelements();
@@ -539,9 +539,9 @@ void TiledStMan::readTile (char* local,
 }
 
 void TiledStMan::writeTile (char* external,
-			    const Block<uInt>& externalOffset,
+			    const std::vector<uInt>& externalOffset,
 			    const char* local,
-			    const Block<uInt>& localOffset,
+			    const std::vector<uInt>& localOffset,
 			    uInt nrPixels)
 {
     uInt nr = dataCols_p.nelements();

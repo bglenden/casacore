@@ -30,10 +30,10 @@
 //# Includes
 #include <casacore/casa/aips.h>
 #include <casacore/tables/DataMan/StManColumnBase.h>
-#include <casacore/casa/Containers/Block.h>
 #include <casacore/casa/BasicSL/Complex.h>
 #include <casacore/casa/Arrays/IPosition.h>
 #include <casacore/casa/BasicSL/String.h>
+#include <vector>
 
 namespace casacore { //# NAMESPACE CASACORE - BEGIN
 
@@ -198,9 +198,9 @@ protected:
   // The nr of extensions in use.
   uInt     nrext_p;
   // The assembly of all extensions (actually Block<T*>).
-  Block<void*> data_p;
+  std::vector<void*> data_p;
   // The cumulative nr of rows in all extensions.
-  Block<rownr_t> ncum_p;
+  std::vector<rownr_t> ncum_p;
 
   // Find the extension in which the row number is.
   // If the flag is true, it also sets the columnCache object.

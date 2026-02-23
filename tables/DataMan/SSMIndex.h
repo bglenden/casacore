@@ -28,8 +28,8 @@
 
 //# Includes
 #include <casacore/casa/aips.h>
-#include <casacore/casa/Containers/Block.h>
 #include <casacore/casa/Arrays/Vector.h>
+#include <vector>
 #include <map>
 
 namespace casacore { //# NAMESPACE CASACORE - BEGIN
@@ -155,12 +155,12 @@ private:
   uInt itsNUsed;
 
   //# Last row nr indexed together with itsBucketNumber
-  Block<rownr_t> itsLastRow;
+  std::vector<rownr_t> itsLastRow;
 
   //# Bucketnumbers indexed together with itsLastRow.
   //# So itsLastRow[0] contains the last rownumber of the bucket
   //# in itsBucketNumber[0]
-  Block<uInt> itsBucketNumber;
+  std::vector<uInt> itsBucketNumber;
 
   //# Map that contains length/offset pairs for free size (size in bytes).
   std::map<Int,Int> itsFreeSpace;

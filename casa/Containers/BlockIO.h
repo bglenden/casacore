@@ -30,6 +30,7 @@
 
 //# Forward declarations.
 #include <casacore/casa/iosfwd.h>
+#include <vector>
 
 namespace casacore { //# NAMESPACE CASACORE - BEGIN
 
@@ -124,6 +125,19 @@ template<class T> std::ostream& operator<< (std::ostream& ios, const Block<T>& b
 }
 // </group>
 // </group>
+
+
+// std::vector<T> overloads of putBlock/getBlock.
+// These write/read the same "Block" AipsIO format, so vectors and Blocks
+// are wire-compatible.
+// Note: operator<< and operator>> for AipsIO and std::vector are defined
+// in STLIO.h/tcc (not here) to avoid duplicate definitions.
+template<class T> void putBlock (AipsIO&, const std::vector<T>&, Int);
+
+template<class T> void putBlock (AipsIO& ios, const std::vector<T>& vec)
+    { putBlock (ios, vec, (Int)(vec.size())); }
+
+template<class T> void getBlock (AipsIO&, std::vector<T>&);
 
 
 //# Implement the specialization for the void* data type.

@@ -38,8 +38,8 @@ namespace casacore { //# NAMESPACE CASACORE - BEGIN
 
 ISMIndex::ISMIndex()
 : nused_p    (1),
-  rows_p     (2, 0),
-  bucketNr_p (1, 0)
+  rows_p     (2, rownr_t(0)),
+  bucketNr_p (1, uInt(0))
 {}
 
 ISMIndex::~ISMIndex()
@@ -54,7 +54,7 @@ void ISMIndex::get (AipsIO& os)
       getBlock (os, rows_p);
     } else {
       // stored as 32-bit
-      Block<uInt> rows;
+      std::vector<uInt> rows;
       getBlock (os, rows);
       rows_p.resize (rows.size());
       std::copy (rows.begin(), rows.end(), rows_p.begin());
@@ -72,7 +72,7 @@ void ISMIndex::put (AipsIO& os)
     if (version > 1) {
       putBlock (os, rows_p, nused_p + 1);
     } else {
-      Block<uInt> rows(nused_p +1);
+      std::vector<uInt> rows(nused_p + 1);
       std::copy (rows_p.begin(), rows_p.begin() + nused_p + 1, rows.begin());
       putBlock (os, rows, nused_p + 1);
     }
@@ -82,16 +82,19 @@ void ISMIndex::put (AipsIO& os)
 
 void ISMIndex::addBucketNr (rownr_t rownr, uInt bucketNr)
 {
-    if (nused_p >= bucketNr_p.nelements()) {
+    if (nused_p >= bucketNr_p.size()) {
 	rows_p.resize (nused_p + 64 + 1);
 	bucketNr_p.resize (nused_p + 64);
     }
     Bool found;
     uInt index = binarySearchBrackets (found, rows_p, rownr, nused_p);
     AlwaysAssert (!found, AipsError);
-    objmove (&rows_p[index+1], &rows_p[index], nused_p + 1 - index);
+    // Shift elements right to make room for the new entry.
+    std::copy_backward (&rows_p[index], &rows_p[nused_p + 1],
+                        &rows_p[nused_p + 2]);
     if (nused_p > index) {
-	objmove (&bucketNr_p[index+1], &bucketNr_p[index], nused_p - index);
+	std::copy_backward (&bucketNr_p[index], &bucketNr_p[nused_p],
+	                    &bucketNr_p[nused_p + 1]);
     }
     rows_p[index] = rownr;
     bucketNr_p[index] = bucketNr;
@@ -116,9 +119,10 @@ Int ISMIndex::removeRow (rownr_t rownr)
     if (rows_p[index] == rows_p[index+1]) {
 	emptyBucket = bucketNr_p[index];
 	if (nused_p > index+1) {
-	    objmove (&rows_p[index+1], &rows_p[index+2], nused_p - index - 1);
-	    objmove (&bucketNr_p[index], &bucketNr_p[index+1],
-		     nused_p - index - 1);
+	    std::copy (&rows_p[index+2], &rows_p[nused_p + 1],
+	               &rows_p[index+1]);
+	    std::copy (&bucketNr_p[index+1], &bucketNr_p[nused_p],
+	               &bucketNr_p[index]);
 	}
 	rows_p[nused_p] = 0;
 	// There should always be one interval.

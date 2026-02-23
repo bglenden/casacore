@@ -51,7 +51,7 @@ Bool ExternalLockSync::acquire (FileLocker::LockType type, uInt nattempts)
     }
     uInt nrcol;
     Bool tableChanged;
-    Block<Bool> dataManChanged;
+    std::vector<Bool> dataManChanged;
     itsSync.read (itsNrrow, nrcol, tableChanged, dataManChanged);
     return True;
 }

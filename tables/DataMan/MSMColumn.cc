@@ -46,8 +46,8 @@ MSMColumn::MSMColumn (MSMBase* smptr, int dataType, Bool byPtr)
   byPtr_p    (byPtr),
   nralloc_p  (0),
   nrext_p    (0),
-  data_p     (EXTBLSZ,static_cast<void*>(0)),
-  ncum_p     (EXTBLSZ,(rownr_t)0)
+  data_p     (EXTBLSZ, static_cast<void*>(0)),
+  ncum_p     (EXTBLSZ, rownr_t(0))
 {}
 
 MSMColumn::~MSMColumn()
@@ -77,7 +77,7 @@ void MSMColumn::addRow (rownr_t nrnew, rownr_t)
 void MSMColumn::resize (rownr_t nr)
 {
   //# Extend internal blocks if needed.
-  if (nrext_p+1 >= data_p.nelements()) {
+  if (nrext_p+1 >= data_p.size()) {
     //#cout << "resize internal blocks " << nrext_p << endl;
     data_p.resize(nrext_p + 1+EXTBLSZ);
     ncum_p.resize(nrext_p + 1+EXTBLSZ);
@@ -488,9 +488,9 @@ Bool MSMColumn::ok() const
   //# Internal blocks cannot be empty and must be equal in length.
   //# Their lengths must be >= nr of extensions.
   //# Their first elements must be zero.
-  if (data_p.nelements() == 0  ||  data_p.nelements() < nrext_p)
+  if (data_p.size() == 0  ||  data_p.size() < nrext_p)
     return False;
-  if (data_p.nelements() != ncum_p.nelements())
+  if (data_p.size() != ncum_p.size())
     return False;
   if (data_p[0] != 0  || ncum_p[0] != 0)
     return False;

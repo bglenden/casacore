@@ -28,9 +28,9 @@
 
 //# Includes
 #include <casacore/casa/aips.h>
-#include <casacore/casa/Containers/Block.h>
 #include <casacore/casa/IO/MemoryIO.h>
 #include <casacore/casa/IO/AipsIO.h>
+#include <vector>
 
 
 namespace casacore { //# NAMESPACE CASACORE - BEGIN
@@ -90,7 +90,7 @@ public:
     // This function is called when a table flush is done to reflect
     // if anything has changed compared to the previous flush.
     void write (rownr_t nrrow, uInt nrcolumn, Bool tableChanged,
-		const Block<Bool>& dataManChanged);
+		const std::vector<Bool>& dataManChanged);
 
     // Update the synchronization data and write it into the MemoryIO object.
     // This function should be used by an external filler when it flushes
@@ -102,7 +102,7 @@ public:
     // table data has to be reread.
     // <br>It returns False when the MemoryIO object is empty.
     Bool read (rownr_t& nrrow, uInt& nrcolumn, Bool& tableChanged,
-	       Block<Bool>& dataManChanged);
+	       std::vector<Bool>& dataManChanged);
 
     // Get the MemoryIO object.
     // This is used to let <src>LockFile</src> read or write the
@@ -119,7 +119,7 @@ private:
     Int         itsNrcolumn;
     uInt        itsModifyCounter;
     uInt        itsTableChangeCounter;
-    Block<uInt> itsDataManChangeCounter;
+    std::vector<uInt> itsDataManChangeCounter;
     std::shared_ptr<MemoryIO> itsMemIO;
     AipsIO      itsAipsIO;
 };

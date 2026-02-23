@@ -59,7 +59,7 @@ void SSMIndex::get (AipsIO& anOs)
   anOs >> itsNrColumns;
   anOs >> itsFreeSpace;
   if (version == 1) {
-    Block<uInt> tmp;
+    std::vector<uInt> tmp;
     getBlock (anOs, tmp);
     itsLastRow.resize (tmp.size());
     for (size_t i=0; i<tmp.size(); ++i) {
@@ -85,7 +85,7 @@ void SSMIndex::put (AipsIO& anOs) const
   anOs << itsNrColumns;
   anOs << itsFreeSpace;
   if (version == 1) {
-    Block<uInt> tmp(itsNUsed);
+    std::vector<uInt> tmp(itsNUsed);
     for (uInt i=0; i<itsNUsed; ++i) {
       tmp[i] = itsLastRow[i];
     }
@@ -161,8 +161,8 @@ void SSMIndex::addRow (rownr_t aNrRows)
   uInt aNr = (aNrRows+itsRowsPerBucket-1) / itsRowsPerBucket;
   
   uInt aNewNr = itsNUsed+aNr;
-  uInt aOldNr = itsLastRow.nelements();
-  if (aNewNr > aOldNr) { 
+  uInt aOldNr = itsLastRow.size();
+  if (aNewNr > aOldNr) {
     uInt newSize = aOldNr*2;
     if (aNewNr < newSize) {
       aNewNr = newSize;
@@ -210,12 +210,10 @@ Int SSMIndex::deleteRow (rownr_t aRowNr)
   if (static_cast<Int>(itsLastRow[anIndex]) == last || isEmpty) {
     anEmptyBucket = itsBucketNumber[anIndex];
     if (anIndex+1 < itsNUsed) {
-      objmove (&itsLastRow[anIndex],
-	       &itsLastRow[anIndex+1],
-	       itsNUsed-anIndex-1);
-      objmove (&itsBucketNumber[anIndex],
-	       &itsBucketNumber[anIndex+1],
-	       itsNUsed-anIndex-1);
+      std::copy (&itsLastRow[anIndex+1], &itsLastRow[itsNUsed],
+                 &itsLastRow[anIndex]);
+      std::copy (&itsBucketNumber[anIndex+1], &itsBucketNumber[itsNUsed],
+                 &itsBucketNumber[anIndex]);
     }
     itsNUsed--;
     itsLastRow[itsNUsed]=0;

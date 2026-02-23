@@ -74,6 +74,30 @@ template<class T> void showBlock (ostream& ios, const Block<T>& blk, Int nr)
     ios << "]";
 }
 
+template<class T> void putBlock (AipsIO& ios, const std::vector<T>& vec, Int nr)
+{
+    if (nr < 0) {
+	nr = 0;
+    } else if (nr > Int(vec.size())) {
+	nr = vec.size();
+    }
+    ios.putstart("Block", 1);
+    putAipsIO(ios, (uInt)nr, vec.data());
+    ios.putend();
+}
+
+
+template<class T> void getBlock (AipsIO& ios, std::vector<T>& vec)
+{
+    ios.getstart("Block");
+    uInt nr;
+    ios >> nr;
+    vec.resize(nr);
+    getAipsIO(ios, (uInt)nr, vec.data());
+    ios.getend();
+}
+
+
 } //# NAMESPACE CASACORE - END
 
 

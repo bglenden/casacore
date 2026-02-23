@@ -196,7 +196,7 @@ PlainTable::PlainTable (AipsIO&, uInt version, const String& tabname,
     }
     uInt ncolumn;
     Bool tableChanged;
-    Block<Bool> dmChanged;
+    std::vector<Bool> dmChanged;
     lockSync_p.read (nrrow_p, ncolumn, tableChanged, dmChanged);
     tdescPtr_p = std::make_shared<TableDesc>("", TableDesc::Scratch);
 
@@ -582,7 +582,8 @@ Bool PlainTable::putFile (Bool always)
     }
     // Clear the change-flags for the next round.
     tableChanged_p = False;
-    colSetPtr_p->dataManChanged() = False;
+    std::fill (colSetPtr_p->dataManChanged().begin(),
+               colSetPtr_p->dataManChanged().end(), False);
     return writeTab;
 }
 

@@ -34,6 +34,7 @@
 #include <casacore/casa/Arrays/IPosition.h>
 #include <casacore/casa/OS/Conversion.h>
 #include <casacore/casa/iosfwd.h>
+#include <vector>
 
 namespace casacore { //# NAMESPACE CASACORE - BEGIN
 
@@ -42,7 +43,6 @@ class TiledStMan;
 class TSMFile;
 class TSMColumn;
 class BucketCache;
-template<class T> class Block;
 
 // <summary>
 // Tiled hypercube in a table
@@ -383,9 +383,9 @@ protected:
     // Offset in the TSMFile object where the data of this hypercube starts.
     Int64           fileOffset_p;
     // Offset for each data column in a tile (in external format).
-    Block<uInt>     externalOffset_p;
+    std::vector<uInt> externalOffset_p;
     // Offset for each data column in a tile (in local format).
-    Block<uInt>     localOffset_p;
+    std::vector<uInt> localOffset_p;
     // The bucket size in bytes (is equal to tile size in bytes).
     uInt            bucketSize_p;
     // The tile size in bytes in local format.

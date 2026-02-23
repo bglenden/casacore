@@ -765,8 +765,8 @@ void SSMBase::addColumn (DataManagerColumn* aColumn)
 
   // If fit found use this space, else make new column
   uInt nCol = aSSMC->getColNr();
-  itsColumnOffset.resize(ncolumn(),True);                            
-  itsColIndexMap.resize(ncolumn(),True);
+  itsColumnOffset.resize(ncolumn());
+  itsColIndexMap.resize(ncolumn());
   if (aBestFit != -1) {
     itsPtrIndex[saveIndex]->addColumn(saveOffset,aSearchLength);
     itsColIndexMap[nCol]=saveIndex;
@@ -972,8 +972,8 @@ Bool SSMBase::flush (AipsIO& ios, Bool doFsync)
   }
   ios.putstart ("SSM", 2);
   ios << itsDataManName;
-  putBlock (ios, itsColumnOffset, itsColumnOffset.nelements());
-  putBlock (ios, itsColIndexMap,  itsColIndexMap.nelements());
+  putBlock (ios, itsColumnOffset, itsColumnOffset.size());
+  putBlock (ios, itsColIndexMap,  itsColIndexMap.size());
   ios.putend();
   return changed;
 }
@@ -1072,9 +1072,9 @@ void SSMBase::init()
 {
   // Size the blocks as needed.
   uInt nrCol = ncolumn();
-  itsColumnOffset.resize (nrCol, True);                            
-  itsColIndexMap.resize (nrCol, True);                            
-  itsColIndexMap = 0;
+  itsColumnOffset.resize (nrCol);
+  itsColIndexMap.resize (nrCol);
+  std::fill (itsColIndexMap.begin(), itsColIndexMap.end(), uInt(0));
   // Set the bucket size and get nr of rows per bucket.
   // If an advised nr of rows per bucket was given and the actual
   // nr is smaller, adjust it to fill up the last bucket.

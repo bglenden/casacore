@@ -29,7 +29,7 @@
 //# Includes
 #include <casacore/casa/aips.h>
 #include <casacore/tables/Tables/RefRows.h>
-#include <casacore/casa/Containers/Block.h>
+#include <vector>
 
 namespace casacore { //# NAMESPACE CASACORE - BEGIN
 
@@ -83,7 +83,7 @@ namespace casacore { //# NAMESPACE CASACORE - BEGIN
   public:
     // Construct an empty block.
     ConcatRows()
-      : itsRows       (1,0),
+      : itsRows       (1, rownr_t(0)),
 	itsNTable     (0),
 	itsLastStRow  (1),
 	itsLastEndRow (0)
@@ -127,7 +127,7 @@ namespace casacore { //# NAMESPACE CASACORE - BEGIN
     void findRownr (rownr_t rownr) const;
 
     //# Data members.
-    Block<rownr_t>  itsRows;
+    std::vector<rownr_t> itsRows;
     uInt            itsNTable;
     mutable rownr_t itsLastStRow;         //# Cached variables to spped up
     mutable rownr_t itsLastEndRow;        //# function mapRownr().

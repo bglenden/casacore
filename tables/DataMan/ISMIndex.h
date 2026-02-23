@@ -28,7 +28,7 @@
 
 //# Includes
 #include <casacore/casa/aips.h>
-#include <casacore/casa/Containers/Block.h>
+#include <vector>
 
 namespace casacore { //# NAMESPACE CASACORE - BEGIN
 
@@ -138,9 +138,9 @@ private:
     // Number of entries used.
     uInt              nused_p;
     // Rownr index (i.e. row rows_p[i] starts in bucketNr_p[i]).
-    Block<rownr_t>    rows_p;
+    std::vector<rownr_t> rows_p;
     // Corresponding bucket number.
-    Block<uInt>       bucketNr_p;
+    std::vector<uInt>    bucketNr_p;
 };
 
 

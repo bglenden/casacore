@@ -26,7 +26,7 @@
 #include <casacore/tables/Tables/Table.h>
 #include <casacore/tables/Tables/TableSyncData.h>
 #include <casacore/casa/IO/LockFile.h>
-#include <casacore/casa/Containers/BlockIO.h>
+#include <casacore/casa/BasicSL/STLIO.h>
 #include <casacore/casa/OS/Path.h>
 #include <stdexcept>
 #include <iostream>
@@ -44,7 +44,7 @@ void showVerbose (const String& lockFileName)
   rownr_t nrrow;
   uInt nrcolumn;
   Bool tableChanged;
-  Block<Bool> dataManChanged;
+  std::vector<Bool> dataManChanged;
   data.read (nrrow, nrcolumn, tableChanged, dataManChanged);
   // Show the data.
   cout << "Lock file info   (of " << data.memoryIO().length() << " bytes)" << endl;
