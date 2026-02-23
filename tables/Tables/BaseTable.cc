@@ -46,6 +46,7 @@
 #include <casacore/casa/BasicSL/STLIO.h>
 #include <casacore/casa/Containers/Block.h>
 #include <casacore/casa/Containers/Record.h>
+#include <vector>
 #include <casacore/casa/Containers/ValueHolder.h>
 #include <casacore/casa/Utilities/Sort.h>
 #include <casacore/casa/BasicSL/String.h>
@@ -717,8 +718,8 @@ std::shared_ptr<BaseTable> BaseTable::doSort
     //# Create a sort object.
     //# Pass all keys (and their data) to it.
     Sort sortobj;
-    Block<std::shared_ptr<ArrayBase>> data(nrkey);        // to remember data blocks
-    Block<std::shared_ptr<BaseCompare>> cmp(cmpObj);
+    std::vector<std::shared_ptr<ArrayBase>> data(nrkey);  // to remember data blocks
+    std::vector<std::shared_ptr<BaseCompare>> cmp(cmpObj.begin(), cmpObj.end());
     for (uInt i=0; i<nrkey; i++) {
         sortCol[i]->makeSortKey (sortobj, cmp[i], order[i], data[i]);
     }

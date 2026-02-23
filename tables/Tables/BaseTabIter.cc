@@ -30,6 +30,7 @@
 #include <casacore/casa/Utilities/Sort.h>
 #include <casacore/casa/IO/ArrayIO.h>
 #include <casacore/tables/Tables/TableError.h>
+#include <vector>
 
 namespace casacore { //# NAMESPACE CASACORE - BEGIN
 
@@ -71,7 +72,7 @@ BaseTableIterator::BaseTableIterator (const std::shared_ptr<BaseTable>& btp,
         } else if (option == TableIterator::InsSort) {
             sortopt = Sort::InsSort;
         }
-        Block<Int> ord(nrkeys_p, Sort::Ascending);
+        std::vector<Int> ord(nrkeys_p, Sort::Ascending);
         for (uInt i=0; i<nrkeys_p; i++) {
             if (order[i] == TableIterator::Descending) {
                 ord[i] = Sort::Descending;

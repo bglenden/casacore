@@ -44,6 +44,7 @@
 #include <casacore/casa/Arrays/Slice.h>
 #include <casacore/casa/Containers/Block.h>
 #include <casacore/casa/Containers/Record.h>
+#include <vector>
 #include <casacore/casa/IO/AipsIO.h>
 #include <casacore/casa/OS/File.h>
 #include <casacore/casa/OS/Directory.h>
@@ -706,8 +707,8 @@ Bool Table::fastRowNumbers (const Vector<rownr_t>& v1, const Vector<rownr_t>& v2
 //# This is converted to a sort on a vector of column names.
 Table Table::sort (const String& name, int order, int option) const
 {
-    //# Turn the name argument into a block.
-    return sort (Block<String>(1, name), order, option);
+    //# Turn the name argument into a vector.
+    return sort (std::vector<String>(1, name), order, option);
 }
 
 //# Sort on multiple columns, where a global order is given.
@@ -715,17 +716,17 @@ Table Table::sort (const String& name, int order, int option) const
 Table Table::sort (const Block<String>& names,
 		   int order, int option) const
 {
-    //# Expand the order argument into a block.
-    return sort (names, Block<Int>(names.nelements(), order), option);
+    //# Expand the order argument into a vector.
+    return sort (names, std::vector<Int>(names.nelements(), order), option);
 }
 
 //# Sort on multiple columns and orders.
 Table Table::sort (const Block<String>& names,
 		   const Block<Int>& orders, int option) const
 {
-    //# Insert a block with null compare objects.
+    //# Insert a vector with null compare objects.
     return sort (names,
-                 Block<std::shared_ptr<BaseCompare>>(names.nelements()),
+                 std::vector<std::shared_ptr<BaseCompare>>(names.nelements()),
                  orders, option);
 }
 

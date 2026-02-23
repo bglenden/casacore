@@ -28,6 +28,7 @@
 #include <casacore/casa/Containers/Block.h>
 #include <casacore/casa/BasicSL/String.h>
 #include <casacore/tables/Tables/TableError.h>
+#include <vector>
 
 
 namespace casacore { //# NAMESPACE CASACORE - BEGIN
@@ -42,9 +43,9 @@ TableIterator::TableIterator (const Table& tab,
 			      Option option)
 : tabIterPtr_p (0)
 {
-    Block<String> keys(1, key);
-    Block<Int> ord(1, order);
-    Block<std::shared_ptr<BaseCompare>> cmpObj(1);
+    std::vector<String> keys(1, key);
+    std::vector<Int> ord(1, order);
+    std::vector<std::shared_ptr<BaseCompare>> cmpObj(1);
     tabIterPtr_p = tab.baseTablePtr()->makeIterator (keys, cmpObj,
 						     ord, option);
     next();                            // get first subtable
@@ -56,8 +57,8 @@ TableIterator::TableIterator (const Table& tab,
 			      Option option)
 : tabIterPtr_p (0)
 {
-    Block<Int> ord(keys.nelements(), order);
-    Block<std::shared_ptr<BaseCompare>> cmpObj(keys.nelements());
+    std::vector<Int> ord(keys.nelements(), order);
+    std::vector<std::shared_ptr<BaseCompare>> cmpObj(keys.nelements());
     tabIterPtr_p = tab.baseTablePtr()->makeIterator (keys, cmpObj,
 						     ord, option);
     next();                            // get first subtable
@@ -69,7 +70,7 @@ TableIterator::TableIterator (const Table& tab,
 			      Option option)
 : tabIterPtr_p (0)
 {
-    Block<std::shared_ptr<BaseCompare>> cmpObj(keys.nelements());
+    std::vector<std::shared_ptr<BaseCompare>> cmpObj(keys.nelements());
     tabIterPtr_p = tab.baseTablePtr()->makeIterator (keys, cmpObj,
 						     orders, option);
     next();                            // get first subtable

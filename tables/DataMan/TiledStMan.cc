@@ -43,6 +43,7 @@
 #include <casacore/casa/Utilities/GenSort.h>
 #include <casacore/casa/IO/AipsIO.h>
 #include <casacore/casa/OS/DOos.h>
+#include <vector>
 #include <casacore/casa/BasicMath/Math.h>
 #include <casacore/tables/DataMan/DataManError.h>
 
@@ -205,7 +206,7 @@ IPosition TiledStMan::makeTileShape (const IPosition& hypercubeShape,
 	cubeSpace *= hypercubeShape(i);
     }
     // Find the shapes on each axis that will be tried.
-    Block<uInt64> nval(nrdim, uInt64(0));
+    std::vector<uInt64> nval(nrdim, uInt64(0));
     PtrBlock<Block<Int64>*> values(nrdim);
     for (i=0; i<nrdim; i++) {
 	values[i] = new Block<Int64> (maxShape(i) - minShape(i) + 1);
@@ -227,7 +228,7 @@ IPosition TiledStMan::makeTileShape (const IPosition& hypercubeShape,
     }
     // Now calculate the cost for all the possibilities.
     // Take the one with the lowest cost.
-    Block<uInt64> ndone (nrdim, uInt64(0));
+    std::vector<uInt64> ndone (nrdim, uInt64(0));
     IPosition tshape (nrdim);
     for (i=0; i<nrdim; i++) {
 	tshape(i) = (*values[i])[0];
@@ -735,7 +736,7 @@ void TiledStMan::setup (Int extraNdim)
     // the same order.
     // In that way we are sure that their data are aligned in a tile
     // (which may be needed for TSMCube::accessLine).
-    Block<uInt> lengths(nrd);
+    std::vector<uInt> lengths(nrd);
     for (i=0; i<nrd; i++) {
 	lengths[i] = dataColSet[i]->tilePixelSize();
     }

@@ -51,6 +51,7 @@
 #include <casacore/casa/Containers/ValueHolder.h>
 #include <casacore/casa/Containers/Block.h>
 #include <casacore/casa/Containers/Record.h>
+#include <vector>
 #include <casacore/casa/Containers/RecordFieldId.h>
 #include <casacore/casa/Arrays/Vector.h>
 #include <casacore/casa/Arrays/ArrayMath.h>
@@ -118,26 +119,26 @@ TableProxy::TableProxy (const Vector<String>& tableNames,
   // Open the tables here (and not by Table ctor) to make it
   // possible to use the :: syntax for subtables.
   TableLock lockOpt = makeLockOptions(lockOptions);
-  Block<Table> tabs(tableNames.size());
+  std::vector<Table> tabs(tableNames.size());
   for (uInt i=0; i<tableNames.size(); ++i) {
     tabs[i] = TableUtil::openTable (tableNames[i], lockOpt,
                                     Table::TableOption(option));
   }
-  Block<String> subNames(concatenateSubTableNames.size());
+  std::vector<String> subNames(concatenateSubTableNames.size());
   std::copy (concatenateSubTableNames.begin(), concatenateSubTableNames.end(),
 	     subNames.begin());
   table_p = Table (tabs, subNames);
 }
- 
+
 TableProxy::TableProxy (const std::vector<TableProxy>& tables,
 			const Vector<String>& concatenateSubTableNames,
 			int, int, int)
 {
-  Block<Table> tabs(tables.size());
+  std::vector<Table> tabs(tables.size());
   for (uInt i=0; i<tables.size(); ++i) {
     tabs[i] = tables[i].table();
   }
-  Block<String> subNames(concatenateSubTableNames.size());
+  std::vector<String> subNames(concatenateSubTableNames.size());
   std::copy (concatenateSubTableNames.begin(), concatenateSubTableNames.end(),
 	     subNames.begin());
   table_p = Table (tabs, subNames);
@@ -971,7 +972,7 @@ String TableProxy::tableName()
 
 Vector<String> TableProxy::getPartNames (Bool recursive)
 {
-	Block<String> partNames(table_p.getPartNames (recursive));
+	std::vector<String> partNames(table_p.getPartNames (recursive));
   return Vector<String>(partNames.begin(), partNames.end());
 }
 

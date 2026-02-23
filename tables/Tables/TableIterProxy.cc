@@ -29,6 +29,7 @@
 #include <casacore/tables/Tables/TableError.h>
 #include <casacore/casa/Containers/IterError.h>
 #include <casacore/casa/Arrays/Vector.h>
+#include <vector>
 
 namespace casacore { //# NAMESPACE CASACORE - BEGIN
 
@@ -42,8 +43,8 @@ TableIterProxy::TableIterProxy (const TableProxy& tab,
                                 const Vector<Double>& iterSteps)
 : firstTime_p (True)
 {
-  Block<String> names(columns.nelements());
-  for (uInt i=0; i<names.nelements(); i++) {
+  std::vector<String> names(columns.nelements());
+  for (uInt i=0; i<names.size(); i++) {
     names[i] = columns(i);
   }
   String corder(order);
@@ -85,8 +86,8 @@ void TableIterProxy::makeStepIter (const Table& tab,
 {
   // First determine if all columns are scalar and have a valid data type.
   // Also find out if a case-insenstive string comparison is needed.
-  Block<std::shared_ptr<BaseCompare>> comps(columns.size());
-  Block<Int> orders (columns.size(), order);
+  std::vector<std::shared_ptr<BaseCompare>> comps(columns.size());
+  std::vector<Int> orders (columns.size(), order);
   for (uInt i=0; i<iterSteps.size(); ++i) {
     if (i < columns.size()  &&  iterSteps[i] > 0) {
       const ColumnDesc& colDesc = tab.tableDesc()[columns[i]];

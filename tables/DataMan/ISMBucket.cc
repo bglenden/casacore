@@ -28,6 +28,7 @@
 #include <casacore/tables/DataMan/ISMBase.h>
 #include <casacore/tables/DataMan/ISMColumn.h>
 #include <casacore/casa/Containers/Block.h>
+#include <vector>
 #include <casacore/casa/Containers/BlockIO.h>
 #include <casacore/casa/Utilities/BinarySearch.h>
 #include <casacore/casa/Utilities/ValType.h>
@@ -469,9 +470,9 @@ rownr_t ISMBucket::split (ISMBucket*& left, ISMBucket*& right,
     for (uInt i=0; i<nrcol; i++) {
 	nr += indexUsed_p[i];
     }
-    // Create a block containing the row numbers of all
+    // Create a vector containing the row numbers of all
     // values in all columns. Include the new item.
-    Block<rownr_t> rows(nr + 1);
+    std::vector<rownr_t> rows(nr + 1);
     rows[0] = rownr;               // new item
     nr = 1;
     for (uInt i=0; i<nrcol; i++) {
@@ -480,7 +481,7 @@ rownr_t ISMBucket::split (ISMBucket*& left, ISMBucket*& right,
 	}
     }
     // Sort it (uniquely) to get all row numbers with a value.
-    uInt nruniq = GenSort<rownr_t>::sort (rows, rows.nelements(), 
+    uInt nruniq = GenSort<rownr_t>::sort (rows, rows.size(),
                                           Sort::Ascending, Sort::NoDuplicates);
     // If the bucket contains values of only one row, a simple split
     // can be done (and should succeed).
@@ -493,7 +494,7 @@ rownr_t ISMBucket::split (ISMBucket*& left, ISMBucket*& right,
     // Also determine the index of the row to be added.
     Matrix<uInt> itemLeng(nrcol, nruniq);
     itemLeng = 0;
-    Block<uInt> cursor(nrcol, uInt(0));
+    std::vector<uInt> cursor(nrcol, uInt(0));
     uInt index = 0;
     for (uInt j=0; j<nruniq; j++) {
 	for (uInt i=0; i<nrcol; i++) {
@@ -519,9 +520,9 @@ rownr_t ISMBucket::split (ISMBucket*& left, ISMBucket*& right,
     }
     // Now determine the length of all items in each row.
     // Determine the cumulative and total size.
-    Block<uInt> size(nrcol, uInt(0));
-    Block<uInt> rowLeng(nruniq, uInt(0));
-    Block<uInt> cumLeng(nruniq);
+    std::vector<uInt> size(nrcol, uInt(0));
+    std::vector<uInt> rowLeng(nruniq, uInt(0));
+    std::vector<uInt> cumLeng(nruniq);
     uInt totLeng = 0;
     for (uInt j=0; j<nruniq; j++) {
 	for (uInt i=0; i<nrcol; i++) {
@@ -540,7 +541,7 @@ rownr_t ISMBucket::split (ISMBucket*& left, ISMBucket*& right,
     // Maintain a cursor block to keep track of the row processed for
     // each column. A row has to be copied completely, because a row
     // cannot be split over multiple buckets.
-    cursor = 0;
+    std::fill(cursor.begin(), cursor.end(), uInt(0));
     for (uInt j=0; j<index; j++) {
 	rownr_t row = rows[j];
 	for (uInt i=0; i<nrcol; i++) {
@@ -568,7 +569,7 @@ rownr_t ISMBucket::split (ISMBucket*& left, ISMBucket*& right,
 	}
     }
     // Now copy the rest of the values.
-    Block<uInt> toCursor(nrcol, 1);
+    std::vector<uInt> toCursor(nrcol, 1);
     index++;
     while (index < nruniq) {
 	rownr_t row = rows[index];

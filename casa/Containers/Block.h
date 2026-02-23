@@ -36,6 +36,7 @@
 #include <cstddef>                  // for ptrdiff_t
 #include <algorithm> // for std:min/max
 #include <type_traits>
+#include <vector>
 
 //# For index checking
 #if defined(AIPS_ARRAY_INDEX_CHECK)
@@ -326,7 +327,41 @@ public:
       throw;
     }
   }
-  
+
+  // Construct a Block from a std::vector (copy semantics).
+  // Temporary bridge for Block<T> -> std::vector<T> migration.
+  template<typename U = T,
+           typename std::enable_if<!std::is_same<U, bool>::value, int>::type = 0>
+  Block(const std::vector<T> &vec) :
+      allocator_p(get_allocator<typename DefaultAllocator<T>::type>()), used_p(
+          vec.size()), destroyPointer(True), keep_allocator_p(False) {
+    init(ArrayInitPolicies::NO_INIT);
+    try {
+      objthrowcp1(array, vec.data(), get_size());
+      allocator_p->construct(array, get_size(), vec.data());
+    } catch (...) {
+      dealloc();
+      throw;
+    }
+  }
+  // Specialization for bool (std::vector<bool> has no data() member).
+  template<typename U = T,
+           typename std::enable_if<std::is_same<U, bool>::value, int>::type = 0>
+  Block(const std::vector<T> &vec) :
+      allocator_p(get_allocator<typename DefaultAllocator<T>::type>()), used_p(
+          vec.size()), destroyPointer(True), keep_allocator_p(False) {
+    init(init_anyway() ? ArrayInitPolicies::INIT : ArrayInitPolicies::NO_INIT);
+    for (size_t i = 0; i < get_size(); ++i) {
+      array[i] = vec[i];
+    }
+  }
+
+  // Convert Block to std::vector (copy semantics).
+  // Temporary bridge for Block<T> -> std::vector<T> migration.
+  operator std::vector<T>() const {
+    return std::vector<T>(begin(), end());
+  }
+
   // Assign other to this. this resizes itself to the size of other, so after
   // the assignment, this->nelements() == other.nelements() always.
   Block<T> &operator=(const Block<T> &other) {

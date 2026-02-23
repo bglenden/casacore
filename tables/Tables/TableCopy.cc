@@ -38,6 +38,7 @@
 #include <casacore/casa/Utilities/LinearSearch.h>
 #include <casacore/casa/Arrays/Vector.h>
 #include <casacore/casa/OS/Path.h>
+#include <vector>
 #include <casacore/casa/BasicSL/String.h>
 
 
@@ -213,7 +214,7 @@ void TableCopy::doCloneColumn (const Table& fromTable, const String& fromColumn,
   TableDesc td;
   td.addColumn (newColumn);
   // Get datamanager info of source column.
-  Block<String> selcol(1);
+  std::vector<String> selcol(1);
   selcol[0] = fromColumn;
   // Use the given datamanager info; if empty use that of input column.
   Record dminfo(newdmInfo);

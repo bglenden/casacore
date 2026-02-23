@@ -483,6 +483,12 @@ uInt GenSort<T>::sort (Block<T>& data, uInt nr, Sort::Order ord, int opt)
   return sort (data.storage(), std::min<uInt>(nr, data.nelements()), ord, opt);
 }
 
+template<class T>
+uInt GenSort<T>::sort (std::vector<T>& data, uInt nr, Sort::Order ord, int opt)
+{
+  return sort (data.data(), std::min<uInt>(nr, data.size()), ord, opt);
+}
+
 
 
 
@@ -504,6 +510,15 @@ INX GenSortIndirect<T,INX>::sort (Vector<INX>& indexVector, const Block<T>& data
 {
     return sort (indexVector, data.storage(),
                  std::min(nr, static_cast<INX>(data.nelements())),
+		 ord, opt);
+}
+
+template<class T, class INX>
+INX GenSortIndirect<T,INX>::sort (Vector<INX>& indexVector, const std::vector<T>& data,
+                                  INX nr, Sort::Order ord, int opt)
+{
+    return sort (indexVector, data.data(),
+                 std::min(nr, static_cast<INX>(data.size())),
 		 ord, opt);
 }
 

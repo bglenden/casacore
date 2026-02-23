@@ -29,6 +29,7 @@
 #include <casacore/casa/aips.h>
 #include <casacore/casa/Arrays/ArrayFwd.h>
 #include <casacore/casa/Utilities/Sort.h>
+#include <vector>
 
 namespace casacore { //# NAMESPACE CASACORE - BEGIN
 
@@ -128,8 +129,11 @@ public:
 
     static uInt sort (Block<T>&, uInt nr, Sort::Order = Sort::Ascending,
 		      int options = 0);
+
+    static uInt sort (std::vector<T>&, uInt nr, Sort::Order = Sort::Ascending,
+		      int options = 0);
     // <group>
-  
+
     // Find the k-th largest value.
     // <br>Note: it does a partial quicksort, thus the data array gets changed.
     static T kthLargest (T* data, uInt nr, uInt k);
@@ -222,6 +226,10 @@ public:
     // Sort a C-array containing <src>nr</src> <src>T</src>-type objects.
     // The resulting index vector gives the sorted indices.
     static INX sort (Vector<INX>& indexVector, const Block<T>& data, INX nr,
+		      Sort::Order = Sort::Ascending,
+		      int options = Sort::QuickSort);
+
+    static INX sort (Vector<INX>& indexVector, const std::vector<T>& data, INX nr,
 		      Sort::Order = Sort::Ascending,
 		      int options = Sort::QuickSort);
 
@@ -330,6 +338,18 @@ inline
 uInt genSort (Block<T>& data, uInt nr,
               Sort::Order order = Sort::Ascending, int options=0)
   { return GenSort<T>::sort (data, nr, order, options); }
+
+template<class T>
+inline
+uInt genSort (std::vector<T>& data,
+              Sort::Order order = Sort::Ascending, int options=0)
+  { return GenSort<T>::sort (data, data.size(), order, options); }
+
+template<class T>
+inline
+uInt genSort (std::vector<T>& data, uInt nr,
+              Sort::Order order = Sort::Ascending, int options=0)
+  { return GenSort<T>::sort (data, nr, order, options); }
 // </group>
 
 
@@ -375,6 +395,19 @@ uInt genSort (Vector<INX>& indexVector, const Block<T>& data,
 template<class T, class INX=uInt>
 inline
 uInt genSort (Vector<INX>& indexVector, const Block<T>& data, INX nr,
+              Sort::Order order = Sort::Ascending, int options=0)
+  { return GenSortIndirect<T,INX>::sort (indexVector, data, nr, order, options); }
+
+template<class T, class INX=uInt>
+inline
+uInt genSort (Vector<INX>& indexVector, const std::vector<T>& data,
+              Sort::Order order = Sort::Ascending, int options=0)
+  { return GenSortIndirect<T,INX>::sort (indexVector, data, data.size(),
+                                         order, options); }
+
+template<class T, class INX=uInt>
+inline
+uInt genSort (Vector<INX>& indexVector, const std::vector<T>& data, INX nr,
               Sort::Order order = Sort::Ascending, int options=0)
   { return GenSortIndirect<T,INX>::sort (indexVector, data, nr, order, options); }
 // </group>
