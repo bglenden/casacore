@@ -91,7 +91,7 @@ Related findings: 9.1, 9.2, 10.1, 2.5b, 6.2.
 
 ---
 
-## Execution Status (As Of 2026-02-22)
+## Execution Status (As Of 2026-02-23)
 
 ### Wave Zero
 
@@ -135,9 +135,14 @@ Validation snapshot:
 - Remaining known failures in that targeted run are numerical-baseline diffs in
   `tLSQaips` and `tLSQFit`, not data-path/home-directory setup failures.
 
-Wave Zero still open:
+Wave Zero final item completed:
 
-- Record and publish a warning baseline per module (formalized metric output).
+- Recorded and published per-module warning baseline in `WAVE0_WARNING_BASELINE.md`:
+  - 15 hand-written source warnings (13 in test code, 1 in library, 2 in Python bindings)
+  - 24 generated-source warnings (flex/bison `.lcc`/`.ycc` — not fixable in source)
+  - Baseline rule established: no new warnings in changed files from this point forward.
+
+**Wave Zero is complete.**
 
 ### Wave One Kickoff
 
