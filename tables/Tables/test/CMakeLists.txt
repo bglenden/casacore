@@ -29,6 +29,7 @@ tConcatTable
 tConcatTable2
 tConcatTable3
 tMemoryTable
+tNullTable
 tReadAsciiTable
 tReadAsciiTable2
 tRefRows
@@ -50,6 +51,9 @@ tTableLockSync_2
 tTableRecord
 tTableRow
 tTableTrace
+tBaseColumnPromotions
+tTableProxy
+tTableProxyAdvanced
 tTableUtil
 tTableVector
 tTable_1

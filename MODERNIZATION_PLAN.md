@@ -226,6 +226,60 @@ Next Wave 1 gating task:
   for low-coverage/high-risk paths discovered by the baseline (starting with `casa`,
   `tables`, and `measures`) before major C++ implementation refactors.
 
+Coverage Expansion Track (started):
+
+- Added an explicit Wave 1 coverage-expansion workstream before class substitution.
+- Initial gap inventory is captured in `WAVE1_COVERAGE_GAP_INVENTORY.md` using the
+  full-project baseline.
+- First candidate targets are core substitution-risk paths with high uncovered-line counts
+  (for example `tables/Tables/TableProxy.cc`, `tables/DataMan/StManColumn.cc`,
+  `tables/Tables/BaseColumn.cc`, `measures/Measures/MeasuresProxy.cc`).
+- Tranche A implemented (characterization tests added and passing):
+  - `tables/Tables/test/tTableProxy.cc`
+  - `measures/Measures/test/tMeasuresProxy.cc`
+  - `tables/Tables/test/tBaseColumnPromotions.cc`
+  - `tables/DataMan/test/tStManColumnDispatch.cc`
+- Tranche A focused coverage delta on initial P1 files:
+  - `tables/Tables/TableProxy.cc`: `13.6%` -> `29.2%`
+  - `measures/Measures/MeasuresProxy.cc`: `0.0%` -> `45.8%`
+  - `tables/Tables/BaseColumn.cc`: `26.2%` -> `68.3%`
+  - `tables/DataMan/StManColumn.cc`: `9.9%` -> `94.4%`
+- Tranche A validation snapshot:
+  - targeted run `4/4` passing (`tBaseColumnPromotions|tStManColumnDispatch|tTableProxy|tMeasuresProxy`)
+  - focused 4-file aggregate: `46.5%` lines (`1841/3958`), `17.6%` branches (`1326/7538`)
+- Tranche B implemented (characterization tests added and passing):
+  - `casa/OS/test/tDOosCoverage.cc`
+  - `tables/Tables/test/tNullTable.cc`
+- Tranche B focused coverage delta on initial P2 files:
+  - `casa/OS/DOos.cc`: `5.7%` -> `98.9%`
+  - `tables/Tables/NullTable.cc`: `6.7%` -> `99.3%`
+- Tranche B validation snapshot:
+  - targeted run `6/6` passing
+    (`tDOosCoverage|tNullTable|tBaseColumnPromotions|tStManColumnDispatch|tTableProxy|tMeasuresProxy`)
+  - focused 6-file aggregate: `51.3%` lines (`2236/4358`), `22.2%` branches (`1902/8567`)
+- Tranche C implemented (additional `TableProxy` branch/surface expansion):
+  - `tables/Tables/test/tTableProxyAdvanced.cc`
+- Tranche C focused coverage delta:
+  - `tables/Tables/TableProxy.cc`: `29.2%` -> `48.3%`
+- Tranche C validation snapshot:
+  - targeted run `7/7` passing
+    (`tDOosCoverage|tNullTable|tBaseColumnPromotions|tStManColumnDispatch|tTableProxy|tTableProxyAdvanced|tMeasuresProxy`)
+  - focused 6-file aggregate: `61.0%` lines (`2660/4358`), `27.5%` branches (`2356/8567`)
+- Tranche D implemented (additional `MeasuresProxy` branch/surface expansion):
+  - `measures/Measures/test/tMeasuresProxy.cc`
+- Tranche D focused coverage delta:
+  - `measures/Measures/MeasuresProxy.cc`: `45.8%` -> `66.0%`
+- Tranche D validation snapshot:
+  - targeted run `7/7` passing
+    (`tDOosCoverage|tNullTable|tBaseColumnPromotions|tStManColumnDispatch|tTableProxy|tTableProxyAdvanced|tMeasuresProxy`)
+  - focused 6-file aggregate: `63.7%` lines (`2775/4358`), `30.4%` branches (`2605/8567`)
+- Fixture-path reliability update:
+  - `casa/OS/test/tDOosCoverage.cc` uses directory-relative symlink targets
+    (`regular.txt`, `sub`) to avoid absolute-path coupling.
+- Next tranche target set (before large class substitutions):
+  - add targeted coverage in remaining low-coverage, high-risk `tables/Tables` helpers discovered by the next focused baseline refresh.
+  - start Wave 1 sub-targeting for selected `tables/Tables` helper classes that are likely substitution points in the upcoming refactor wave.
+
 ---
 
 ## Ranked Initiatives

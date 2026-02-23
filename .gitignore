@@ -1,5 +1,6 @@
 doc/html/
 build/
+cov/
 *~
 *table.lock
 *CMakeCache.txt
@@ -11,3 +12,24 @@ build/
 WSRT_Measures.ztar
 sofa.tgz
 sofa/
+
+# Build artifacts
+*.o
+*.so
+*.so.*
+*.dylib
+*.a
+
+# Python
+*.pyc
+__pycache__/
+
+# OS
+.DS_Store
+
+# IDE
+.idea/
+
+# Build tooling
+compile_commands.json
+.cache/

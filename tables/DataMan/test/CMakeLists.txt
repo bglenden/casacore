@@ -22,6 +22,7 @@ tStandardStMan
 tStArrayFile
 tStMan
 tStMan1
+tStManColumnDispatch
 tStManAll
 tTiledBool
 tTiledCellStM_1

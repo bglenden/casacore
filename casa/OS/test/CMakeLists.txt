@@ -3,6 +3,7 @@ tCanonicalConversion
 tConversion
 tConversionPerf
 tDataConversion
+tDOosCoverage
 tDirectory
 tDirectoryIterator
 tEnvVar

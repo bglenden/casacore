@@ -12,6 +12,7 @@ tMeasIERS
 tMeasJPL
 tMeasMath
 tMeasure
+tMeasuresProxy
 tMeasureHolder
 tMuvw
 tParAngleMachine
