@@ -31,9 +31,9 @@
 #include <casacore/casa/aips.h>
 #include <casacore/casa/IO/FileLocker.h>
 #include <casacore/casa/OS/Time.h>
-#include <casacore/casa/Containers/Block.h>
 #include <casacore/casa/BasicSL/String.h>
 #include <sys/types.h>
+#include <vector>
 
 namespace casacore { //# NAMESPACE CASACORE - BEGIN
 
@@ -259,8 +259,8 @@ public:
     // Get the name of the lock file.
     const String& name() const;
 
-    // Get the block of request id's.
-    const Block<Int>& reqIds() const;
+    // Get the vector of request id's.
+    const std::vector<Int>& reqIds() const;
 
     // Get the request id's and the info from the lock file.
     void getInfo (MemoryIO& info);
@@ -324,7 +324,7 @@ private:
     String       itsName;             //# Name of lock file
     uInt         itsPid;
     uInt         itsHostId;
-    Block<Int>   itsReqId;            //# Id's of processes requesting lock
+    std::vector<Int>   itsReqId;      //# Id's of processes requesting lock
                                       //# First value contains #req id's
                                       //# Thereafter pid, hostid
     Int          itsInspectCount;     //# The number of times inspect() has
@@ -370,7 +370,7 @@ inline const String& LockFile::name() const
 {
     return itsName;
 }
-inline const Block<Int>& LockFile::reqIds() const
+inline const std::vector<Int>& LockFile::reqIds() const
 {
     return itsReqId;
 }

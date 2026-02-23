@@ -33,7 +33,7 @@ namespace casacore { //# NAMESPACE CASACORE - BEGIN
 //The minimum size for the cacheTable
 const uInt MINSIZE = 31; 
 
-Block<uInt>  Primes::cacheTable;
+std::vector<uInt>  Primes::cacheTable;
 std::mutex   Primes::theirMutex;
 
 
@@ -50,12 +50,12 @@ uInt Primes::aLargerPrimeThan( uInt number )
     // the table of primes, this function returns zero; otherwise, this 
     // function returns the next higher prime in the table.
     
-    if ( cacheTable.nelements() < MINSIZE ) initializeCache();
+    if ( cacheTable.size() < MINSIZE ) initializeCache();
 
-    if ( number >= cacheTable[cacheTable.nelements() - 1] ) return 0;
+    if ( number >= cacheTable[cacheTable.size() - 1] ) return 0;
 
     Int index = -1;
-    for ( uInt i = cacheTable.nelements(); i > 0; i-- ) {
+    for ( uInt i = cacheTable.size(); i > 0; i-- ) {
 	if ( cacheTable[(i-1)] > number ) {
 	    index =(i-1);
 	}
@@ -73,12 +73,12 @@ uInt Primes::nextLargerPrimeThan( uInt number )
     // every entry after the stored index is moved over by one.  The new prime
     // number is inserted to the spot marked by the stored index.
 
-    if ( cacheTable.nelements() < MINSIZE ) {
+    if ( cacheTable.size() < MINSIZE ) {
 	initializeCache();
     }
     while( !isPrime( ++number ) ) {}
-    uInt index = cacheTable.nelements();
-    for( i = cacheTable.nelements(); i > 0; i-- ) {
+    uInt index = cacheTable.size();
+    for( i = cacheTable.size(); i > 0; i-- ) {
 	if ( cacheTable[(i-1)] == number ) {
 	    return number;
 	}
@@ -86,11 +86,7 @@ uInt Primes::nextLargerPrimeThan( uInt number )
 	    index =(i-1);
 	}
     }
-    cacheTable.resize(cacheTable.nelements() + 1);
-    for( i = ( cacheTable.nelements()-1 ); i > index; i-- ) {
-	cacheTable[i] = cacheTable[i-1];
-    }
-    cacheTable[ index ] = number;
+    cacheTable.insert(cacheTable.begin() + index, number);
     return number;
 }
  
@@ -140,37 +136,12 @@ void Primes::initializeCache()
     // This function resets the cache to a block of 30, which
     // contains the next prime greater than each power of two.
 
-    cacheTable.resize( 30, True, False );
-    cacheTable[0] = 3;
-    cacheTable[1] = 5;      
-    cacheTable[2] = 11;     
-    cacheTable[3] = 17;     
-    cacheTable[4] = 37;    
-    cacheTable[5] = 67;     
-    cacheTable[6] = 131;    
-    cacheTable[7] = 257;    
-    cacheTable[8] = 521;    
-    cacheTable[9] = 1031;   
-    cacheTable[10] = 2053;  
-    cacheTable[11] = 4099;  
-    cacheTable[12] = 8209;  
-    cacheTable[13] = 16411; 
-    cacheTable[14] = 32771; 
-    cacheTable[15] = 65537; 
-    cacheTable[16] = 131101;
-    cacheTable[17] = 262147;
-    cacheTable[18] = 524309;
-    cacheTable[19] = 1048583;   
-    cacheTable[20] = 2097169;    
-    cacheTable[21] = 4194319;
-    cacheTable[22] = 8388617;   
-    cacheTable[23] = 16777259;
-    cacheTable[24] = 33554467;
-    cacheTable[25] = 67108879;  
-    cacheTable[26] = 134217757;
-    cacheTable[27] = 268435459; 
-    cacheTable[28] = 536870923; 
-    cacheTable[29] = 1073741827;
+    cacheTable = {
+        3, 5, 11, 17, 37, 67, 131, 257, 521, 1031,
+        2053, 4099, 8209, 16411, 32771, 65537, 131101, 262147, 524309, 1048583,
+        2097169, 4194319, 8388617, 16777259, 33554467, 67108879, 134217757,
+        268435459, 536870923, 1073741827
+    };
 }
 
 } //# NAMESPACE CASACORE - END

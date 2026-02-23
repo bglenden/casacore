@@ -117,7 +117,7 @@ Bool MemoryLogSink::postLocally (const LogMessage& message)
   Bool posted = False;
   if (filter().pass(message)) {
     posted = True;
-    if (nmsg_p >= time_p.nelements()) {
+    if (nmsg_p >= time_p.size()) {
       resize (nmsg_p+1);
     }
     time_p[nmsg_p] = message.messageTime().modifiedJulianDay()*24.0*3600.0;
@@ -138,7 +138,7 @@ void MemoryLogSink::writeLocally (Double time,
 				  const String& location,
 				  const String& objectID)
 {
-  if (nmsg_p >= time_p.nelements()) {
+  if (nmsg_p >= time_p.size()) {
     resize (nmsg_p+1);
   }
   time_p[nmsg_p]     = time;
@@ -151,20 +151,20 @@ void MemoryLogSink::writeLocally (Double time,
 
 void MemoryLogSink::clearLocally()
 {
-  // Resize the block to 0 elements.
-  time_p.resize     (0, True, True);
-  priority_p.resize (0, True, True);
-  message_p.resize  (0, True, True);
-  location_p.resize (0, True, True);
-  objectID_p.resize (0, True, True);
+  // Clear all messages.
+  time_p.clear();
+  priority_p.clear();
+  message_p.clear();
+  location_p.clear();
+  objectID_p.clear();
   nmsg_p = 0;
 }
 
 void MemoryLogSink::resize (uInt nrnew)
 {
   // Increase with at least 64 elements.
-  if (nrnew < time_p.nelements()+64) {
-    nrnew = time_p.nelements()+64;
+  if (nrnew < time_p.size()+64) {
+    nrnew = time_p.size()+64;
   }
   time_p.resize     (nrnew);
   priority_p.resize (nrnew);

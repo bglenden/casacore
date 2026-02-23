@@ -34,6 +34,7 @@
 #include <casacore/casa/Arrays/IPosition.h>
 #include <casacore/casa/iosfwd.h>
 #include <map>
+#include <vector>
 
 namespace casacore { //# NAMESPACE CASACORE - BEGIN
 
@@ -271,22 +272,22 @@ private:
     // Number of fields in the description.
     uInt n_p;
     // The DataType of each field.
-    Block<Int> types_p;
+    std::vector<Int> types_p;
     // The name of each field.
-    Block<String> names_p;
+    std::vector<String> names_p;
     // The description of the subrecords. Null if the field is not a subrecord.
     // This isn't the most efficient representation. If this is ever an issue
     // we could calculate these, or store them in one Block, or implement
     // copy-on-write semantics.
     PtrBlock<RecordDesc*> sub_records_p;
     // The shape of the field [1] for scalars and sub-records.
-    Block<IPosition> shapes_p;
+    std::vector<IPosition> shapes_p;
     // True if the corresponding field is an array.
-    Block<Bool> is_array_p;
+    std::vector<Bool> is_array_p;
     // Table description name for table fields.
-    Block<String> tableDescNames_p;
+    std::vector<String> tableDescNames_p;
     // Comments for each field.
-    Block<String> comments_p;
+    std::vector<String> comments_p;
     // Mapping of field name to field number.
     std::map<String,Int> name_map_p;
 };

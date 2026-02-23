@@ -59,7 +59,7 @@ MUString &MUString::operator=(const MUString &other) {
     str = other.str;
     ptr = other.ptr;
     len = other.len;
-    stack = Block<uInt>(0);
+    stack.clear();
     stpt = 0;
     stat = True;
     lget = String();
@@ -77,7 +77,7 @@ String MUString::operator()() {
 
 // General member functions
 void MUString::push() {
-  while (stpt >= stack.nelements()) stack.resize(2*stpt + 1);
+  while (stpt >= stack.size()) stack.resize(2*stpt + 1);
   stack[stpt++] = ptr;
 }
 

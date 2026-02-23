@@ -30,6 +30,7 @@
 #include <casacore/casa/Containers/Block.h>
 
 #include <mutex>
+#include <vector>
 
 namespace casacore { //# NAMESPACE CASACORE - BEGIN
 
@@ -169,7 +170,7 @@ private:
     static void initializeCache();
 
     //This is the table which stores the prime numbers.
-    static Block<uInt> cacheTable;
+    static std::vector<uInt> cacheTable;
     static std::mutex  theirMutex;
 };
 

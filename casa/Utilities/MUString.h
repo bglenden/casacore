@@ -31,7 +31,7 @@
 #include <casacore/casa/aips.h>
 #include <casacore/casa/Arrays/ArrayFwd.h>
 #include <casacore/casa/BasicSL/String.h>
-#include <casacore/casa/Containers/Block.h>
+#include <vector>
 
 //# Forward Declarations
 #include <casacore/casa/iosfwd.h>
@@ -389,7 +389,7 @@ private:
   // Length of string
   uInt len;
   // Pointer stack
-  Block<uInt> stack;
+  std::vector<uInt> stack;
   // Pointer into stack
   uInt stpt;
   // Status of last get

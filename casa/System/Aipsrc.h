@@ -387,9 +387,9 @@ private:
   // Last time data was (re)read
   static Double lastParse; 
   // List of values belonging to keywords found
-  static Block<String> keywordValue;
+  static std::vector<String> keywordValue;
   // List of patterns deducted from names
-  static Block<String> keywordPattern;
+  static std::vector<String> keywordPattern;
   // The start of the non-home values
   static uInt fileEnd;
   // The possibly set external AIPSPATH
@@ -429,8 +429,8 @@ private:
   // The following parse function can be used for any list of files. It will
   // return the list of Patterns and values found, and the last keyword number
   // of first file in list.
-  static uInt genParse(Block<String> &keywordPattern, 
-		       Block<String> &keywordValue,
+  static uInt genParse(std::vector<String> &keywordPattern,
+		       std::vector<String> &keywordValue,
 		       uInt &fileEnd, const String &fileList);
 
   // Locate the right keyword in the static maps

@@ -28,7 +28,7 @@
 
 //# Includes
 #include <casacore/casa/aips.h>
-#include <casacore/casa/Containers/Block.h>
+#include <vector>
 
 namespace casacore { //# NAMESPACE CASACORE - BEGIN
 
@@ -86,7 +86,7 @@ public:
 
  private:
 
-  Block<uInt> itsNumbers;
+  std::vector<uInt> itsNumbers;
   uInt         itsMaxComplete;
 
   void generate(const uInt maxval);

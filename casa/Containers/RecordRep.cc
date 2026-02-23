@@ -80,8 +80,7 @@ void RecordRep::restructure (const RecordDesc& newDescription, Bool recursive)
     delete_myself (desc_p.nfields());
     desc_p  = newDescription;
     nused_p = desc_p.nfields();
-    datavec_p.resize (nused_p);
-    datavec_p = static_cast<void*>(0);
+    datavec_p.assign (nused_p, nullptr);
     data_p.resize (nused_p);
     for (uInt i=0; i<nused_p; i++) {
 	if (desc_p.type(i) == TpRecord) {
@@ -103,7 +102,7 @@ Int RecordRep::fieldNumber (const String& name) const
 
 void RecordRep::addDataPtr (void* ptr)
 {
-    if (nused_p >= data_p.nelements()) {
+    if (nused_p >= data_p.size()) {
 	datavec_p.resize (nused_p + 16);
 	data_p.resize (nused_p + 16);
     }

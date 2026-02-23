@@ -445,11 +445,11 @@ private:
     // Current size of objlen and objptr
     uInt         maxlev_p;
     // Object length at each level
-    Block<uInt>  objlen_p;
+    std::vector<uInt>  objlen_p;
     // Object length to be read at each level
-    Block<uInt>  objtln_p;
+    std::vector<uInt>  objtln_p;
     // Offset of length at each level
-    Block<Int64>  objptr_p;
+    std::vector<Int64>  objptr_p;
     // True = the object type has already been read
     Bool         hasCachedType_p;
     // The cached object type.

@@ -235,7 +235,7 @@ char* BucketCache::getBucket (uInt bucketNr)
 void BucketCache::extend (uInt nrBucket)
 {
     its_NewNrOfBuckets += nrBucket;
-    uInt oldSize = its_SlotNr.nelements();
+    uInt oldSize = its_SlotNr.size();
     if (oldSize < its_NewNrOfBuckets) {
         uInt newSize = oldSize*2;
 	if (newSize < its_NewNrOfBuckets) {

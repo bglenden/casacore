@@ -33,6 +33,7 @@
 #include <casacore/casa/OS/CanonicalConversion.h>
 #include <casacore/casa/Utilities/Assert.h>
 #include <casacore/casa/Exceptions/Error.h>
+#include <algorithm>
 #include <unistd.h>
 #include <fcntl.h>
 #include <casacore/casa/iostream.h>
@@ -324,7 +325,7 @@ Int LockFile::getInt (const uChar* buffer, uInt leng, uInt offset) const
 void LockFile::convReqId (const uChar* buffer, uInt leng)
 {
     if (leng >= SIZEREQID) {
-	CanonicalConversion::toLocal (itsReqId.storage(), buffer,
+	CanonicalConversion::toLocal (itsReqId.data(), buffer,
 				      SIZEREQID/SIZEINT);
     }
 }
@@ -359,7 +360,7 @@ void LockFile::removeReqId()
     }
     if (i < nr) {
 	nr -= i+1;
-	objcopy (&itsReqId[1], &itsReqId[2*i+1], 2*nr);
+	std::copy_n (&itsReqId[2*i+1], 2*nr, &itsReqId[1]);
 	itsReqId[0] = nr;
 	putReqId (itsLocker.fd());
     }
@@ -370,8 +371,8 @@ void LockFile::putReqId (int fd) const
     if (itsAddToList) {
 	uChar buffer[SIZEREQID];
 	uInt leng = CanonicalConversion::fromLocal (buffer,
-						    itsReqId.storage(),
-						    itsReqId.nelements());
+						    itsReqId.data(),
+						    itsReqId.size());
         AlwaysAssert(tracePWRITE(fd, (Char *)buffer, leng, 0) == Int(leng),
                      AipsError);
 	fsync (fd);
@@ -384,8 +385,8 @@ void LockFile::getReqId()
     uChar buffer[SIZEREQID];
     if (tracePREAD(fd, buffer, SIZEREQID, 0) > 0) {
 	CanonicalConversion::fromLocal (buffer,
-					itsReqId.storage(),
-					itsReqId.nelements());
+					itsReqId.data(),
+					itsReqId.size());
     }
 }
 

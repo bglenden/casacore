@@ -47,7 +47,7 @@ namespace casacore { //# NAMESPACE CASACORE - BEGIN
 
 Bool Aipsrc::matchKeyword(uInt &where,  const String &keyword,
 			  uInt start) {
-  for (uInt i=start; i<keywordPattern.nelements(); i++) {
+  for (uInt i=start; i<keywordPattern.size(); i++) {
      if (keyword.contains(Regex(keywordPattern[i]))) {
        where = i;
        return True;
@@ -450,12 +450,12 @@ void Aipsrc::doParse(String &fileList) {
   }
 }
 
-uInt Aipsrc::genParse(Block<String> &keywordPattern, 
-		      Block<String> &keywordValue,
+uInt Aipsrc::genParse(std::vector<String> &keywordPattern,
+		      std::vector<String> &keywordValue,
 		      uInt &fileEnd, const String &fileList) {
-  keywordValue.resize(0, True);  // Clear the old values if any
-  keywordPattern.resize(0, True);
-  Block<String> keywordFile;
+  keywordValue.clear();  // Clear the old values if any
+  keywordPattern.clear();
+  std::vector<String> keywordFile;
   fileEnd = 0;
   uInt nkw = 0;			// # of keywords found
   Int nfile = 0;		// # of files found
@@ -493,9 +493,9 @@ uInt Aipsrc::genParse(Block<String> &keywordPattern,
             value.trim();
 	    if (keyword.length() < 1)
 	      continue;
-	    while (nkw >= keywordPattern.nelements()) {
-	      keywordPattern.resize(2*keywordPattern.nelements() + 1);
-	      keywordValue.resize(keywordPattern.nelements());
+	    while (nkw >= keywordPattern.size()) {
+	      keywordPattern.resize(2*keywordPattern.size() + 1);
+	      keywordValue.resize(keywordPattern.size());
 	    }
 	    keywordValue[nkw] = value;
 	    keywordPattern[nkw] = keyword;
@@ -511,10 +511,10 @@ uInt Aipsrc::genParse(Block<String> &keywordPattern,
   delete [] directories;
 
   // Resize static lists
-  keywordValue.resize(nkw, True);
-  keywordPattern.resize(nkw, True);
+  keywordValue.resize(nkw);
+  keywordPattern.resize(nkw);
 
-  return keywordValue.nelements();
+  return keywordValue.size();
 }
 
 void Aipsrc::show() {
@@ -528,9 +528,9 @@ void Aipsrc::show(ostream &oStream) {
   const String gs01("*");
   const String gs10("\\.");
   const String gs11(".");
-  oStream << keywordValue.nelements() <<
+  oStream << keywordValue.size() <<
     " keyword/value pairs found:" << endl;
-  for (uInt j = 0; j<keywordValue.nelements(); j++) {
+  for (uInt j = 0; j<keywordValue.size(); j++) {
     nam = keywordPattern[j];
     nam.gsub(gs00, gs01);
     nam.gsub(gs10, gs11);
@@ -544,8 +544,8 @@ void Aipsrc::show(ostream &oStream) {
 uInt Aipsrc::genRestore(Vector<String> &namlst, Vector<String> &vallst,
 			const String &fileList) {
   uInt ef;
-  Block<String> nl;
-  Block<String> vl;
+  std::vector<String> nl;
+  std::vector<String> vl;
   Int nkw = Aipsrc::genParse(nl, vl, ef, fileList);
   std::vector<String> names_la;
   std::vector<String> values_la;
@@ -627,8 +627,8 @@ Bool Aipsrc::genGet(String &val, Vector<String> &namlst, Vector<String> &vallst,
 
   std::once_flag Aipsrc::theirCallOnceFlag;
   Double Aipsrc::lastParse = 0;
-  Block<String> Aipsrc::keywordPattern(0);
-  Block<String> Aipsrc::keywordValue(0);
+  std::vector<String> Aipsrc::keywordPattern;
+  std::vector<String> Aipsrc::keywordValue;
   uInt Aipsrc::fileEnd = 0;
   String Aipsrc::extAipsPath  = String();
   String Aipsrc::root = String();

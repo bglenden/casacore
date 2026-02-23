@@ -294,9 +294,9 @@ protected:
     // Holds the structure of this Record.
     RecordDesc   desc_p;
     // Pointers to data values.
-    Block<void*> data_p;
+    std::vector<void*> data_p;
     // Pointers to a vector of a scalar (to access a scalar as an array).
-    Block<void*> datavec_p;
+    std::vector<void*> datavec_p;
     // #Entries used in data_p.
     uInt         nused_p;
 };

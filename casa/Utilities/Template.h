@@ -28,7 +28,7 @@
 
 //# Includes
 #include <casacore/casa/aips.h>
-#include <casacore/casa/Containers/Block.h>
+#include <vector>
 #include <casacore/casa/BasicSL/String.h>
 #include <casacore/casa/iosfwd.h>
 
@@ -130,15 +130,15 @@ class Template {
  private:
   //# Data
   // Each element is a template entry on a single line
-  Block<String> output_p;
+  std::vector<String> output_p;
   // Count the lines
   uInt count_p;
   // Count the templates
   uInt tcount_p;
   // Record comment lines
-  Block<String> comout_p;
+  std::vector<String> comout_p;
   // And where they originated
-  Block<Int> comptr_p;
+  std::vector<Int> comptr_p;
   // And count the comment lines
   uInt ccount_p;
   // Indicate data split
@@ -146,26 +146,26 @@ class Template {
   // Count the duplicates
   uInt dcount_p;
   // Data split of number string (or empty/spaces)
-  Block<String> nstring_p;
+  std::vector<String> nstring_p;
   // Data split all text
-  Block<String> allstring_p;
+  std::vector<String> allstring_p;
   // Data split name string (first include file)
-  Block<String> namstring_p;
+  std::vector<String> namstring_p;
   // Data split numeric number
-  Block<uInt> nval_p;
+  std::vector<uInt> nval_p;
 
   // List of files used
-  Block<String> tdflist_p;
+  std::vector<String> tdflist_p;
   // Number of template definitions extracted from input
   uInt tdcount_p;
   // List of template definitions
-  Block<String> tdlist_p;
+  std::vector<String> tdlist_p;
   // Pointers to in which file in list
-  Block<uInt> tdfile_p;
+  std::vector<uInt> tdfile_p;
   // Line number in file at which template found
-  Block<uInt> tdline_p;
+  std::vector<uInt> tdline_p;
   // List of comparison names
-  Block<String> tdname_p;
+  std::vector<String> tdname_p;
 
   //# Constructors
   // Copy constructor (not implemented)

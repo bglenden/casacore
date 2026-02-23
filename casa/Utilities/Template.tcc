@@ -437,8 +437,8 @@ void Template::read(const String &filename) {
     return;
   }
   // Save filename in list
-  tdflist_p.resize(tdflist_p.nelements()+1);
-  tdflist_p[tdflist_p.nelements()-1] = filename;
+  tdflist_p.resize(tdflist_p.size()+1);
+  tdflist_p[tdflist_p.size()-1] = filename;
   String extracted;			// a single input line
   String combine;			// a full combined line
   uInt c1 = 0;				// the input line count
@@ -484,13 +484,13 @@ void Template::read(const String &filename) {
 	  }
 	} else continue;		// unknown entry
 	if (!extracted.empty()) {	// save the entry
-	  if (tdcount_p >= tdlist_p.nelements()) {
+	  if (tdcount_p >= tdlist_p.size()) {
 	    tdlist_p.resize(tdcount_p+100);
 	    tdfile_p.resize(tdcount_p+100);
 	    tdline_p.resize(tdcount_p+100);
 	  }
 	  tdlist_p[tdcount_p]   = extracted;
-	  tdfile_p[tdcount_p]   = tdflist_p.nelements()-1;
+	  tdfile_p[tdcount_p]   = tdflist_p.size()-1;
 	  tdline_p[tdcount_p++] = c1;
 	}
       }
@@ -616,8 +616,8 @@ void Template::sortName(const Bool renumber) {
   // Indexes and specify sort
   Vector<uInt> inx;
   Sort sort;
-  sort.sortKey(allstring_p.storage(), TpString);
-  sort.sortKey(nstring_p.storage(), TpString);
+  sort.sortKey(allstring_p.data(), TpString);
+  sort.sortKey(nstring_p.data(), TpString);
   // Sort and fill missing numbers
   sort.sort(inx, count_p);
   // Make numbers
@@ -814,7 +814,7 @@ void Template::writeDup(ostream &os, const String &userFile, Bool isSys) {
   // Sort the name list
   Vector<uInt> inx;
   Sort sort;
-  sort.sortKey(tdname_p.storage(), TpString);
+  sort.sortKey(tdname_p.data(), TpString);
   sort.sort(inx, tdcount_p);
   uInt i(0);			// Count the entries
   // Scan all entries for groups
@@ -859,7 +859,7 @@ void Template::writeDup(ostream &os, const String &userFile, Bool isSys) {
 
 void Template::setComment(const String &txt, const Bool atstart) {
   // Resize
-  if (ccount_p >= comout_p.nelements()) {
+  if (ccount_p >= comout_p.size()) {
     comout_p.resize(ccount_p+100);
     comptr_p.resize(ccount_p+100);
   }
@@ -870,7 +870,7 @@ void Template::setComment(const String &txt, const Bool atstart) {
 }
 
 void Template::setOutput(const String &txt) {
-  if (count_p >= output_p.nelements()) output_p.resize(count_p+100);
+  if (count_p >= output_p.size()) output_p.resize(count_p+100);
   output_p[count_p++] = txt;
 }
 

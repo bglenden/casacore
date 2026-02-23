@@ -36,26 +36,14 @@ namespace casacore { //# NAMESPACE CASACORE - BEGIN
 
 RecordDescRep::RecordDescRep()
 : n_p(0),
-  types_p(0),
-  names_p(0),
-  sub_records_p(0),
-  shapes_p(0),
-  is_array_p(0),
-  tableDescNames_p(0),
-  comments_p(0)
+  sub_records_p(0)
 {
     // Nothing
 }
 
 RecordDescRep::RecordDescRep (const RecordDescRep& other)
 : n_p(0),
-  types_p(0),
-  names_p(0),
-  sub_records_p(0),
-  shapes_p(0),
-  is_array_p(0),
-  tableDescNames_p(0),
-  comments_p(0)
+  sub_records_p(0)
 {
     copy_other (other);
 }
@@ -329,13 +317,13 @@ uInt RecordDescRep::removeField (Int whichField)
             x.second -= 1;
         }
     }
-    types_p.remove (whichField);
-    names_p.remove (whichField);
+    types_p.erase (types_p.begin() + whichField);
+    names_p.erase (names_p.begin() + whichField);
     sub_records_p.remove (whichField);
-    shapes_p.remove (whichField);
-    is_array_p.remove (whichField);
-    tableDescNames_p.remove (whichField);
-    comments_p.remove (whichField);
+    shapes_p.erase (shapes_p.begin() + whichField);
+    is_array_p.erase (is_array_p.begin() + whichField);
+    tableDescNames_p.erase (tableDescNames_p.begin() + whichField);
+    comments_p.erase (comments_p.begin() + whichField);
     return n_p;
 }
 
@@ -532,7 +520,7 @@ void RecordDescRep::copy_other (const RecordDescRep& other)
 void RecordDescRep::increment_length()
 {
     n_p++;
-    if (n_p > types_p.nelements()) {
+    if (n_p > types_p.size()) {
 	uInt newSize = 2*n_p;
 	types_p.resize (newSize);
 	names_p.resize (newSize);
@@ -544,7 +532,7 @@ void RecordDescRep::increment_length()
 	// This is to shut up tools that note when you read an unset
 	// value.
 	IPosition scalarShape(1,1);
-	for (uInt i=n_p; i < types_p.nelements(); i++) {
+	for (uInt i=n_p; i < types_p.size(); i++) {
 	    types_p[i] = 0;
 	    sub_records_p[i] = 0;
 	    is_array_p[i] = False;

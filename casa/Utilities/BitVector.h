@@ -28,9 +28,9 @@
 
 //# Includes
 #include <casacore/casa/aips.h>
-#include <casacore/casa/Containers/Block.h>
 #include <casacore/casa/Utilities/Assert.h>
 #include <casacore/casa/iosfwd.h>
+#include <vector>
 
 namespace casacore { //# NAMESPACE CASACORE - BEGIN
 
@@ -226,7 +226,7 @@ private:
 
     // Pointer to the actual bit vector, stored as a contiguous
     // sequence of one or more unsigned integers.
-    Block<uInt> bits_p;
+    std::vector<uInt> bits_p;
 };
 
 

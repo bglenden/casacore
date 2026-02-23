@@ -70,7 +70,7 @@ uInt CompositeNumber::nextLarger(const uInt testValue) {
   if (testValue >  itsMaxComplete) {
     generate(testValue);
   }
-  for (uInt i=0;i< itsNumbers.nelements(); i++) {
+  for (uInt i=0;i< itsNumbers.size(); i++) {
     if (itsNumbers[i] > testValue) {
       return itsNumbers[i];
     }
@@ -85,7 +85,7 @@ uInt CompositeNumber::nextSmaller(const uInt testValue) {
     generate(testValue);
   }
 
-  for (Int i=itsNumbers.nelements()-1; i>=0; i--) {
+  for (Int i=itsNumbers.size()-1; i>=0; i--) {
     if (itsNumbers[i] < testValue) {
       return itsNumbers[i];
     }
@@ -100,7 +100,7 @@ uInt CompositeNumber::nearest(const uInt testValue) {
   if (testValue >  itsMaxComplete) {
     generate(testValue);
   }
-  for (uInt i=0;i< itsNumbers.nelements(); i++) {
+  for (uInt i=0;i< itsNumbers.size(); i++) {
     if (itsNumbers[i] > testValue) {
       if (i==0) {
 	return itsNumbers[0];
@@ -124,7 +124,7 @@ uInt CompositeNumber::nextLargerEven(const uInt testValue) {
   if (testValue >  itsMaxComplete) {
     generate(testValue);
   }
-  for (uInt i=0;i< itsNumbers.nelements(); i++) {
+  for (uInt i=0;i< itsNumbers.size(); i++) {
     if (itsNumbers[i] > testValue && (itsNumbers[i]%2==0)) {
       return itsNumbers[i];
     }
@@ -138,7 +138,7 @@ uInt CompositeNumber::nextSmallerEven(const uInt testValue) {
     generate(testValue);
   }
 
-  for (Int i=itsNumbers.nelements()-1; i>=0; i--) {
+  for (Int i=itsNumbers.size()-1; i>=0; i--) {
     if (itsNumbers[i] < testValue && (itsNumbers[i]%2==0)) {
       return itsNumbers[i];
     }
@@ -163,7 +163,7 @@ Bool CompositeNumber::isComposite(const uInt testValue) {
   if (testValue >  itsMaxComplete) {
     generate(testValue);
   }
-  for (uInt i=0;i< itsNumbers.nelements(); i++) {
+  for (uInt i=0;i< itsNumbers.size(); i++) {
     if (itsNumbers[i] == testValue) {
       return True;
     }

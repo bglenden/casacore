@@ -29,8 +29,8 @@
 //# Includes
 #include <casacore/casa/aips.h>
 #include <casacore/casa/Logging/LogSinkInterface.h>
-#include <casacore/casa/Containers/Block.h>
 #include <casacore/casa/BasicSL/String.h>
+#include <vector>
 
 namespace casacore { //# NAMESPACE CASACORE - BEGIN
 
@@ -122,11 +122,11 @@ private:
   void resize (uInt nrnew);
 
   uInt          nmsg_p;
-  Block<Double> time_p;
-  Block<String> priority_p;
-  Block<String> message_p;
-  Block<String> location_p;
-  Block<String> objectID_p;
+  std::vector<Double> time_p;
+  std::vector<String> priority_p;
+  std::vector<String> message_p;
+  std::vector<String> location_p;
+  std::vector<String> objectID_p;
 };
 
 

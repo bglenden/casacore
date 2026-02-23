@@ -95,7 +95,11 @@ void BitVector::resize (uInt length, Bool state, Bool copy)
 {
     //# Do a true resize.
     uInt oldSize = size_p;
-    bits_p.resize ((length + WORDSIZE - 1) / WORDSIZE, True, copy);
+    if (copy) {
+	bits_p.resize ((length + WORDSIZE - 1) / WORDSIZE);
+    } else {
+	bits_p.assign ((length + WORDSIZE - 1) / WORDSIZE, 0);
+    }
     size_p = length;
     if (!copy) {
 	set (state);
@@ -112,7 +116,7 @@ void BitVector::set (Bool state)
     if (state) {
 	value = ~value;
     }
-    for (uInt i=0; i<bits_p.nelements(); i++) {
+    for (uInt i=0; i<bits_p.size(); i++) {
 	bits_p[i] = value;
     }
 }
@@ -131,7 +135,7 @@ void BitVector::set (uInt start, uInt length, Bool state)
     uInt beginWord = (start + WORDSIZE - 1) / WORDSIZE;
     uInt endWord   = end / WORDSIZE;
     if (end == size_p) {
-	endWord = bits_p.nelements();
+	endWord = bits_p.size();
     }
     uInt i;
     //# When there are no full words, we have to do part of a word only.
@@ -183,7 +187,7 @@ void BitVector::operator&= (const BitVector& that)
     if (size_p != that.size_p) {
 	throw (AipsError ("BitVector::operator&= with different lengths"));
     }
-    for (uInt i=0; i<bits_p.nelements(); i++) {
+    for (uInt i=0; i<bits_p.size(); i++) {
 	bits_p[i] &= that.bits_p[i];
     }
 }
@@ -198,7 +202,7 @@ void BitVector::operator|= (const BitVector& that)
     if (size_p != that.size_p) {
 	throw (AipsError ("BitVector::operator|= with different lengths"));
     }
-    for (uInt i=0; i<bits_p.nelements(); i++) {
+    for (uInt i=0; i<bits_p.size(); i++) {
 	bits_p[i] |= that.bits_p[i];
     }
 }
@@ -213,7 +217,7 @@ void BitVector::operator^= (const BitVector& that)
     if (size_p != that.size_p) {
 	throw (AipsError ("BitVector::operator^= with different lengths"));
     }
-    for (uInt i=0; i<bits_p.nelements(); i++) {
+    for (uInt i=0; i<bits_p.size(); i++) {
 	bits_p[i] ^= that.bits_p[i];
     }
 }
@@ -225,7 +229,7 @@ BitVector BitVector::operator~ () const
 }
 void BitVector::reverse()
 {
-    for (uInt i=0; i<bits_p.nelements(); i++) {
+    for (uInt i=0; i<bits_p.size(); i++) {
 	bits_p[i] = ~(bits_p[i]);
     }
 }

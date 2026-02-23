@@ -29,6 +29,7 @@
 //# Includes
 #include <casacore/casa/aips.h>
 #include <casacore/casa/Containers/Block.h>
+#include <vector>
 
 
 namespace casacore { //# NAMESPACE CASACORE - BEGIN
@@ -153,9 +154,9 @@ private:
     // size of Blocks
     Int          maxnrbuf_p;
     // used length per buffer
-    Block<uInt>  uselen_p;     
+    std::vector<uInt>  uselen_p;
     // total length per buffer
-    Block<uInt>  totlen_p;      
+    std::vector<uInt>  totlen_p;      
     // pointer to buffer
     PtrBlock<Char*> bufptr_p;     
     // used length of current buffer

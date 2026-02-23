@@ -31,6 +31,7 @@
 #include <casacore/casa/IO/BucketFile.h>
 #include <casacore/casa/Containers/Block.h>
 #include <casacore/casa/OS/CanonicalConversion.h>
+#include <vector>
 
 //# Forward clarations
 #include <casacore/casa/iosfwd.h>
@@ -347,13 +348,13 @@ private:
     // The cache slot actually used.
     uInt         its_ActualSlot;
     // The slot numbers of the buckets in the cache (-1 = not in cache).
-    Block<Int>   its_SlotNr;
+    std::vector<Int>   its_SlotNr;
     // The buckets in the cache.
-    Block<uInt>  its_BucketNr;
+    std::vector<uInt>  its_BucketNr;
     // Determine if a block is dirty (i.e. changed) (1=dirty).
-    Block<uInt>  its_Dirty;
+    std::vector<uInt>  its_Dirty;
     // Determine when a block is used for the last time.
-    Block<uInt>  its_LRU;
+    std::vector<uInt>  its_LRU;
     // The Least Recently Used counter.
     uInt         its_LRUCounter;
     // The internal buffer.
