@@ -476,8 +476,8 @@ public:
     // Only in RefTable a smarter implementation is provided.
     virtual std::shared_ptr<BaseTable> doSort
     (PtrBlock<BaseColumn*>&,
-     const Block<std::shared_ptr<BaseCompare>>&,
-     const Block<Int>& sortOrder,
+     const std::vector<std::shared_ptr<BaseCompare>>&,
+     const std::vector<Int>& sortOrder,
      int sortOption,
      std::shared_ptr<Vector<rownr_t>> sortIterBoundaries,
      std::shared_ptr<Vector<size_t>> sortIterKeyIdxChange);

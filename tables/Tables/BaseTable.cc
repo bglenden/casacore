@@ -707,8 +707,8 @@ std::shared_ptr<BaseTable> BaseTable::sort
 //# Do the actual sort.
 std::shared_ptr<BaseTable> BaseTable::doSort
 (PtrBlock<BaseColumn*>& sortCol,
- const Block<std::shared_ptr<BaseCompare>>& cmpObj,
- const Block<Int>& order, int option,
+ const std::vector<std::shared_ptr<BaseCompare>>& cmpObj,
+ const std::vector<Int>& order, int option,
  std::shared_ptr<Vector<rownr_t>> sortIterBoundaries,
  std::shared_ptr<Vector<size_t>> sortIterKeyIdxChange)
 {
