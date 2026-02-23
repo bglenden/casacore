@@ -298,52 +298,54 @@ void ReadAsciiTable::handleKeyset (Int lineSize, char* string1,
       switch (keyRAT) {
       case RATBool:
 	{
-	  Block<Bool> values;
+	  std::vector<Bool> values;
 	  IPosition shp = getArray (string1, lineSize, first, at3, separator,
 				    keyShape, varAxis, keyRAT, &values);
 	  if (!shpDefined  &&  shp(0) == 1) {
 	    keyset.define (keyName, values[0]);
 	  } else {
-	    Array<Bool> array(shp, values.storage(), SHARE);
+	    Array<Bool> array(shp);
+	    std::copy(values.begin(), values.begin() + shp.product(),
+		      array.data());
 	    keyset.define (keyName, array);
 	  }
 	}
 	break;
       case RATShort:
 	{
-	  Block<Short> values;
+	  std::vector<Short> values;
 	  IPosition shp = getArray (string1, lineSize, first, at3, separator,
 				    keyShape, varAxis, keyRAT, &values);
 	  if (!shpDefined  &&  shp(0) == 1) {
 	    keyset.define (keyName, values[0]);
 	  } else {
-	    Array<Short> array(shp, values.storage(), SHARE);
+	    Array<Short> array(shp, values.data(), SHARE);
 	    keyset.define (keyName, array);
 	  }
 	}
 	break;
       case RATInt:
 	{
-	  Block<Int> values;
+	  std::vector<Int> values;
 	  IPosition shp = getArray (string1, lineSize, first, at3, separator,
 				    keyShape, varAxis, keyRAT, &values);
 	  if (!shpDefined  &&  shp(0) == 1) {
 	    keyset.define (keyName, values[0]);
 	  } else {
-	    Array<Int> array(shp, values.storage(), SHARE);
+	    Array<Int> array(shp, values.data(), SHARE);
 	    keyset.define (keyName, array);
 	  }
 	}
 	break;
       case RATFloat:
 	{
-	  Block<Float> values;
+	  std::vector<Float> values;
 	  IPosition shp = getArray (string1, lineSize, first, at3, separator,
 				    keyShape, varAxis, keyRAT, &values);
 	  if (!shpDefined  &&  shp(0) == 1) {
 	    keyset.define (keyName, values[0]);
 	  } else {
-	    Array<Float> array(shp, values.storage(), SHARE);
+	    Array<Float> array(shp, values.data(), SHARE);
 	    keyset.define (keyName, array);
 	  }
 	}
@@ -352,26 +354,26 @@ void ReadAsciiTable::handleKeyset (Int lineSize, char* string1,
       case RATDMS:
       case RATHMS:
 	{
-	  Block<Double> values;
+	  std::vector<Double> values;
 	  IPosition shp = getArray (string1, lineSize, first, at3, separator,
 				    keyShape, varAxis, keyRAT, &values);
 	  if (!shpDefined  &&  shp(0) == 1) {
 	    keyset.define (keyName, values[0]);
 	  } else {
-	    Array<Double> array(shp, values.storage(), SHARE);
+	    Array<Double> array(shp, values.data(), SHARE);
 	    keyset.define (keyName, array);
 	  }
 	}
 	break;
       case RATString:
 	{
-	  Block<String> values;
+	  std::vector<String> values;
 	  IPosition shp = getArray (string1, lineSize, first, at3, separator,
 				    keyShape, varAxis, keyRAT, &values);
 	  if (!shpDefined  &&  shp(0) == 1) {
 	    keyset.define (keyName, values[0]);
 	  } else {
-	    Array<String> array(shp, values.storage(), SHARE);
+	    Array<String> array(shp, values.data(), SHARE);
 	    keyset.define (keyName, array);
 	  }
 	}
@@ -379,13 +381,13 @@ void ReadAsciiTable::handleKeyset (Int lineSize, char* string1,
       case RATComX:
       case RATComZ:
 	{
-	  Block<Complex> values;
+	  std::vector<Complex> values;
 	  IPosition shp = getArray (string1, lineSize, first, at3, separator,
 				    keyShape, varAxis, keyRAT, &values);
 	  if (!shpDefined  &&  shp(0) == 1) {
 	    keyset.define (keyName, values[0]);
 	  } else {
-	    Array<Complex> array(shp, values.storage(), SHARE);
+	    Array<Complex> array(shp, values.data(), SHARE);
 	    keyset.define (keyName, array);
 	  }
 	}
@@ -393,13 +395,13 @@ void ReadAsciiTable::handleKeyset (Int lineSize, char* string1,
       case RATDComX:
       case RATDComZ:
 	{
-	  Block<DComplex> values;
+	  std::vector<DComplex> values;
 	  IPosition shp = getArray (string1, lineSize, first, at3, separator,
 				    keyShape, varAxis, keyRAT, &values);
 	  if (!shpDefined  &&  shp(0) == 1) {
 	    keyset.define (keyName, values[0]);
 	  } else {
-	    Array<DComplex> array(shp, values.storage(), SHARE);
+	    Array<DComplex> array(shp, values.data(), SHARE);
 	    keyset.define (keyName, array);
 	  }
 	}
@@ -737,17 +739,17 @@ IPosition ReadAsciiTable::getArray (char* string1, Int lineSize, char* first,
   switch (type) {
   case RATBool:
     {
-      Block<Bool>& data = *(Block<Bool>*)valueBlock;
+      std::vector<Bool>& data = *(std::vector<Bool>*)valueBlock;
       data.resize (nelem);
-      data = False;
+      std::fill(data.begin(), data.end(), False);
       Bool value;
       while (getValue (string1, lineSize, first, at1, separator,
 		       type, &value)) {
-	if (nfound == data.nelements()) {
-	  data.resize (2*nfound, True, True);
+	if (nfound == data.size()) {
+	  data.resize (2*nfound);
 	}
 	data[nfound++] = value;
-	if (varAxis < 0  &&  nfound == data.nelements()) {
+	if (varAxis < 0  &&  nfound == data.size()) {
 	  break;
 	}
       }
@@ -755,27 +757,27 @@ IPosition ReadAsciiTable::getArray (char* string1, Int lineSize, char* first,
 	shp(varAxis) = (nfound + nelem - 1) / nelem;
 	nelem = shp.product();
 	if (nelem > nfound) {
-	  if (nelem > data.nelements()) {
-	    data.resize (nelem, True, True);
+	  if (nelem > data.size()) {
+	    data.resize (nelem);
 	  }
-	  objset (&data[nfound], False, nelem-nfound);
+	  std::fill(data.begin() + nfound, data.begin() + nelem, False);
 	}
       }
     }
     break;
   case RATShort:
     {
-      Block<Short>& data = *(Block<Short>*)valueBlock;
+      std::vector<Short>& data = *(std::vector<Short>*)valueBlock;
       data.resize (nelem);
-      data = Short(0);
+      std::fill(data.begin(), data.end(), Short(0));
       Short value;
       while (getValue (string1, lineSize, first, at1, separator,
 		       type, &value)) {
-	if (nfound == data.nelements()) {
-	  data.resize (2*nfound, True, True);
+	if (nfound == data.size()) {
+	  data.resize (2*nfound);
 	}
 	data[nfound++] = value;
-	if (varAxis < 0  &&  nfound == data.nelements()) {
+	if (varAxis < 0  &&  nfound == data.size()) {
 	  break;
 	}
       }
@@ -783,27 +785,27 @@ IPosition ReadAsciiTable::getArray (char* string1, Int lineSize, char* first,
 	shp(varAxis) = (nfound + nelem - 1) / nelem;
 	nelem = shp.product();
 	if (nelem > nfound) {
-	  if (nelem > data.nelements()) {
-	    data.resize (nelem, True, True);
+	  if (nelem > data.size()) {
+	    data.resize (nelem);
 	  }
-	  objset (&data[nfound], Short(0), nelem-nfound);
+	  std::fill(data.begin() + nfound, data.begin() + nelem, Short(0));
 	}
       }
     }
     break;
   case RATInt:
     {
-      Block<Int>& data = *(Block<Int>*)valueBlock;
+      std::vector<Int>& data = *(std::vector<Int>*)valueBlock;
       data.resize (nelem);
-      data = False;
+      std::fill(data.begin(), data.end(), 0);
       Int value;
       while (getValue (string1, lineSize, first, at1, separator,
 		       type, &value)) {
-	if (nfound == data.nelements()) {
-	  data.resize (2*nfound, True, True);
+	if (nfound == data.size()) {
+	  data.resize (2*nfound);
 	}
 	data[nfound++] = value;
-	if (varAxis < 0  &&  nfound == data.nelements()) {
+	if (varAxis < 0  &&  nfound == data.size()) {
 	  break;
 	}
       }
@@ -811,27 +813,27 @@ IPosition ReadAsciiTable::getArray (char* string1, Int lineSize, char* first,
 	shp(varAxis) = (nfound + nelem - 1) / nelem;
 	nelem = shp.product();
 	if (nelem > nfound) {
-	  if (nelem > data.nelements()) {
-	    data.resize (nelem, True, True);
+	  if (nelem > data.size()) {
+	    data.resize (nelem);
 	  }
-	  objset (&data[nfound], 0, nelem-nfound);
+	  std::fill(data.begin() + nfound, data.begin() + nelem, 0);
 	}
       }
     }
     break;
   case RATFloat:
     {
-      Block<Float>& data = *(Block<Float>*)valueBlock;
+      std::vector<Float>& data = *(std::vector<Float>*)valueBlock;
       data.resize (nelem);
-      data = Float(0);
+      std::fill(data.begin(), data.end(), Float(0));
       Float value;
       while (getValue (string1, lineSize, first, at1, separator,
 		       type, &value)) {
-	if (nfound == data.nelements()) {
-	  data.resize (2*nfound, True, True);
+	if (nfound == data.size()) {
+	  data.resize (2*nfound);
 	}
 	data[nfound++] = value;
-	if (varAxis < 0  &&  nfound == data.nelements()) {
+	if (varAxis < 0  &&  nfound == data.size()) {
 	  break;
 	}
       }
@@ -839,10 +841,10 @@ IPosition ReadAsciiTable::getArray (char* string1, Int lineSize, char* first,
 	shp(varAxis) = (nfound + nelem - 1) / nelem;
 	nelem = shp.product();
 	if (nelem > nfound) {
-	  if (nelem > data.nelements()) {
-	    data.resize (nelem, True, True);
+	  if (nelem > data.size()) {
+	    data.resize (nelem);
 	  }
-	  objset (&data[nfound], Float(0), nelem-nfound);
+	  std::fill(data.begin() + nfound, data.begin() + nelem, Float(0));
 	}
       }
     }
@@ -851,17 +853,17 @@ IPosition ReadAsciiTable::getArray (char* string1, Int lineSize, char* first,
   case RATDMS:
   case RATHMS:
     {
-      Block<Double>& data = *(Block<Double>*)valueBlock;
+      std::vector<Double>& data = *(std::vector<Double>*)valueBlock;
       data.resize (nelem);
-      data = Double(0);
+      std::fill(data.begin(), data.end(), Double(0));
       Double value;
       while (getValue (string1, lineSize, first, at1, separator,
 		       type, &value)) {
-	if (nfound == data.nelements()) {
-	  data.resize (2*nfound, True, True);
+	if (nfound == data.size()) {
+	  data.resize (2*nfound);
 	}
 	data[nfound++] = value;
-	if (varAxis < 0  &&  nfound == data.nelements()) {
+	if (varAxis < 0  &&  nfound == data.size()) {
 	  break;
 	}
       }
@@ -869,27 +871,27 @@ IPosition ReadAsciiTable::getArray (char* string1, Int lineSize, char* first,
 	shp(varAxis) = (nfound + nelem - 1) / nelem;
 	nelem = shp.product();
 	if (nelem > nfound) {
-	  if (nelem > data.nelements()) {
-	    data.resize (nelem, True, True);
+	  if (nelem > data.size()) {
+	    data.resize (nelem);
 	  }
-	  objset (&data[nfound], Double(0), nelem-nfound);
+	  std::fill(data.begin() + nfound, data.begin() + nelem, Double(0));
 	}
       }
     }
     break;
   case RATString:
     {
-      Block<String>& data = *(Block<String>*)valueBlock;
+      std::vector<String>& data = *(std::vector<String>*)valueBlock;
       data.resize (nelem);
-      data = String();
+      std::fill(data.begin(), data.end(), String());
       String value;
       while (getValue (string1, lineSize, first, at1, separator,
 		       type, &value)) {
-	if (nfound == data.nelements()) {
-	  data.resize (2*nfound, True, True);
+	if (nfound == data.size()) {
+	  data.resize (2*nfound);
 	}
 	data[nfound++] = value;
-	if (varAxis < 0  &&  nfound == data.nelements()) {
+	if (varAxis < 0  &&  nfound == data.size()) {
 	  break;
 	}
       }
@@ -897,10 +899,10 @@ IPosition ReadAsciiTable::getArray (char* string1, Int lineSize, char* first,
 	shp(varAxis) = (nfound + nelem - 1) / nelem;
 	nelem = shp.product();
 	if (nelem > nfound) {
-	  if (nelem > data.nelements()) {
-	    data.resize (nelem, True, True);
+	  if (nelem > data.size()) {
+	    data.resize (nelem);
 	  }
-	  objset (&data[nfound], String(), nelem-nfound);
+	  std::fill(data.begin() + nfound, data.begin() + nelem, String());
 	}
       }
     }
@@ -908,17 +910,17 @@ IPosition ReadAsciiTable::getArray (char* string1, Int lineSize, char* first,
   case RATComX:
   case RATComZ:
     {
-      Block<Complex>& data = *(Block<Complex>*)valueBlock;
+      std::vector<Complex>& data = *(std::vector<Complex>*)valueBlock;
       data.resize (nelem);
-      data = Complex();
+      std::fill(data.begin(), data.end(), Complex());
       Complex value;
       while (getValue (string1, lineSize, first, at1, separator,
 		       type, &value)) {
-	if (nfound == data.nelements()) {
-	  data.resize (2*nfound, True, True);
+	if (nfound == data.size()) {
+	  data.resize (2*nfound);
 	}
 	data[nfound++] = value;
-	if (varAxis < 0  &&  nfound == data.nelements()) {
+	if (varAxis < 0  &&  nfound == data.size()) {
 	  break;
 	}
       }
@@ -926,10 +928,10 @@ IPosition ReadAsciiTable::getArray (char* string1, Int lineSize, char* first,
 	shp(varAxis) = (nfound + nelem - 1) / nelem;
 	nelem = shp.product();
 	if (nelem > nfound) {
-	  if (nelem > data.nelements()) {
-	    data.resize (nelem, True, True);
+	  if (nelem > data.size()) {
+	    data.resize (nelem);
 	  }
-	  objset (&data[nfound], Complex(), nelem-nfound);
+	  std::fill(data.begin() + nfound, data.begin() + nelem, Complex());
 	}
       }
     }
@@ -937,17 +939,17 @@ IPosition ReadAsciiTable::getArray (char* string1, Int lineSize, char* first,
   case RATDComX:
   case RATDComZ:
     {
-      Block<DComplex>& data = *(Block<DComplex>*)valueBlock;
+      std::vector<DComplex>& data = *(std::vector<DComplex>*)valueBlock;
       data.resize (nelem);
-      data = DComplex();
+      std::fill(data.begin(), data.end(), DComplex());
       DComplex value;
       while (getValue (string1, lineSize, first, at1, separator,
 		       type, &value)) {
-	if (nfound == data.nelements()) {
-	  data.resize (2*nfound, True, True);
+	if (nfound == data.size()) {
+	  data.resize (2*nfound);
 	}
 	data[nfound++] = value;
-	if (varAxis < 0  &&  nfound == data.nelements()) {
+	if (varAxis < 0  &&  nfound == data.size()) {
 	  break;
 	}
       }
@@ -955,10 +957,10 @@ IPosition ReadAsciiTable::getArray (char* string1, Int lineSize, char* first,
 	shp(varAxis) = (nfound + nelem - 1) / nelem;
 	nelem = shp.product();
 	if (nelem > nfound) {
-	  if (nelem > data.nelements()) {
-	    data.resize (nelem, True, True);
+	  if (nelem > data.size()) {
+	    data.resize (nelem);
 	  }
-	  objset (&data[nfound], DComplex(), nelem-nfound);
+	  std::fill(data.begin() + nfound, data.begin() + nelem, DComplex());
 	}
       }
     }
@@ -977,37 +979,41 @@ void ReadAsciiTable::handleArray (char* string1, Int lineSize, char* first,
   switch (type) {
   case RATBool:
     {
-      Block<Bool> data;
+      std::vector<Bool> data;
       IPosition shp = getArray (string1, lineSize, first, at1, separator,
 				shape, varAxis, type, &data);
-      Array<Bool> array(shp, data.storage(), SHARE);
+      Array<Bool> array(shp);
+      Bool* aptr = array.data();
+      for (uInt i = 0; i < static_cast<uInt>(shp.product()); i++) {
+	aptr[i] = data[i];
+      }
       ArrayColumn<Bool>(tabcol).put (rownr, array);
     }
     break;
   case RATShort:
     {
-      Block<Short> data;
+      std::vector<Short> data;
       IPosition shp = getArray (string1, lineSize, first, at1, separator,
 				shape, varAxis, type, &data);
-      Array<Short> array(shp, data.storage(), SHARE);
+      Array<Short> array(shp, data.data(), SHARE);
       ArrayColumn<Short>(tabcol).put (rownr, array);
     }
     break;
   case RATInt:
     {
-      Block<Int> data;
+      std::vector<Int> data;
       IPosition shp = getArray (string1, lineSize, first, at1, separator,
 				shape, varAxis, type, &data);
-      Array<Int> array(shp, data.storage(), SHARE);
+      Array<Int> array(shp, data.data(), SHARE);
       ArrayColumn<Int>(tabcol).put (rownr, array);
     }
     break;
   case RATFloat:
     {
-      Block<Float> data;
+      std::vector<Float> data;
       IPosition shp = getArray (string1, lineSize, first, at1, separator,
 				shape, varAxis, type, &data);
-      Array<Float> array(shp, data.storage(), SHARE);
+      Array<Float> array(shp, data.data(), SHARE);
       ArrayColumn<Float>(tabcol).put (rownr, array);
     }
     break;
@@ -1015,39 +1021,39 @@ void ReadAsciiTable::handleArray (char* string1, Int lineSize, char* first,
   case RATDMS:
   case RATHMS:
     {
-      Block<Double> data;
+      std::vector<Double> data;
       IPosition shp = getArray (string1, lineSize, first, at1, separator,
 				shape, varAxis, type, &data);
-      Array<Double> array(shp, data.storage(), SHARE);
+      Array<Double> array(shp, data.data(), SHARE);
       ArrayColumn<Double>(tabcol).put (rownr, array);
     }
     break;
   case RATString:
     {
-      Block<String> data;
+      std::vector<String> data;
       IPosition shp = getArray (string1, lineSize, first, at1, separator,
 				shape, varAxis, type, &data);
-      Array<String> array(shp, data.storage(), SHARE);
+      Array<String> array(shp, data.data(), SHARE);
       ArrayColumn<String>(tabcol).put (rownr, array);
     }
     break;
   case RATComX:
   case RATComZ:
     {
-      Block<Complex> data;
+      std::vector<Complex> data;
       IPosition shp = getArray (string1, lineSize, first, at1, separator,
 				shape, varAxis, type, &data);
-      Array<Complex> array(shp, data.storage(), SHARE);
+      Array<Complex> array(shp, data.data(), SHARE);
       ArrayColumn<Complex>(tabcol).put (rownr, array);
     }
     break;
   case RATDComX:
   case RATDComZ:
     {
-      Block<DComplex> data;
+      std::vector<DComplex> data;
       IPosition shp = getArray (string1, lineSize, first, at1, separator,
 				shape, varAxis, type, &data);
-      Array<DComplex> array(shp, data.storage(), SHARE);
+      Array<DComplex> array(shp, data.data(), SHARE);
       ArrayColumn<DComplex>(tabcol).put (rownr, array);
     }
     break;
